@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance System - Student Login</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #e9ecef; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 380px; box-sizing: border-box; }
+        h2 { margin-top: 0; color: #333; font-weight: 600; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        video, canvas, img { width: 100%; border-radius: 6px; margin-top: 8px; background: #222; aspect-ratio: 4/3; object-fit: cover; }
+        button { width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; margin-top: 12px; transition: 0.2s; }
+        .btn-capture { background: #007bff; color: white; }
+        .btn-capture:hover { background: #0056b3; }
+        .btn-login { background: #28a745; color: white; }
+        .btn-login:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>Student Login</h2>
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email (Must match GitHub pusher email)" required>
+    <input type="text" id="contact" placeholder="Contact Information" required>
+    
+    <label style="font-weight: 500; font-size: 14px; color: #495057;">Webcam Authentication Log:</label>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="photo-preview" style="display:none;">
+    
+    <button type="button" id="capture-btn" class="btn-capture">Snapshot Photo</button>
+    <button type="button" id="login-btn" class="btn-login">Login & Track Attendance</button>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('capture-btn');
+    const photoPreview = document.getElementById('photo-preview');
+    let base64Photo = null;
+
+    // Fetch device video webcam streams
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => { video.srcObject = stream; })
+        .catch(err => alert("Webcam blocked or unavailable. Please grant permissions."));
+
+    // Capture frozen image snapshot
+    captureBtn.addEventListener('click', () => {
+        const ctx = canvas.getContext('2d');
+        canvas.width = video.videoWidth || 640;
+        canvas.height = video.videoHeight || 480;
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        base64Photo = canvas.toDataURL('image/png');
+        photoPreview.src = base64Photo;
+        photoPreview.style.display = 'block';
+        video.style.display = 'none';
+    });
+
+    // Handle Login API stream
+    document.getElementById('login-btn').addEventListener('click', () => {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const contact = document.getElementById('contact').value.trim();
+
+        if (!name || !email || !contact || !base64Photo) {
+            alert("All structural fields along with identity webcam snapshots are required!");
+            return;
+        }
+
+        const payload = {
+            name, email, contact,
+            loginTime: new Date().toString(), // Accurate local desk execution time stamp tracking
+            photo: base64Photo
+        };
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                localStorage.setItem('sessionStudentEmail', email);
+                alert("Login Verified! Redirecting to tracking terminal dashboard.");
+                window.location.href = '/dashboard.html';
+            }
+        });
+    });
+</script>
+</body>
+</html>

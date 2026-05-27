@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin System Monitoring Panel</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f8f9fa; margin: 40px; }
+        .card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); margin-bottom: 25px; display: flex; gap: 25px; align-items: flex-start; }
+        .avatar { width: 130px; height: 130px; border-radius: 8px; object-fit: cover; border: 2px solid #dee2e6; background: #e9ecef; }
+        .info-panel { flex: 1; }
+        .info-panel h2 { margin: 0 0 10px 0; color: #212529; }
+        .log-box { background: #f1f3f5; padding: 15px; border-radius: 6px; list-style-type: none; margin: 10px 0 0 0; padding-left: 20px; font-size: 14px; max-height: 200px; overflow-y: auto; }
+        .log-box li { margin-bottom: 8px; border-bottom: 1px solid #e2e6ea; padding-bottom: 6px; }
+        .time-tag { font-size: 11px; color: #6c757d; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <h1 style="color: #343a40; margin-bottom: 5px;">Admin Control Monitoring Dashboard</h1>
+    <p style="color: #6c757d; margin-top: 0;">Real-Time Student Attendance, Duration Logs, & Live GitHub Commits.</p>
+    <hr style="border:0; border-top: 2px solid #343a40; margin-bottom: 30px;">
+
+    <div id="deck">Loading operational status configurations...</div>
+
+    <script>
+        function queryUpdate() {
+            fetch('/api/admin/dashboard')
+                .then(res => res.json())
+                .then(dataset => {
+                    const deck = document.getElementById('deck');
+                    deck.innerHTML = '';
+
+                    if (Object.keys(dataset).length === 0) {
+                        deck.innerHTML = '<h3>No active student registrations or data logged.</h3>';
+                        return;
+                    }
+
+                    for (const id in dataset) {
+                        const entity = dataset[id];
+                        const prof = entity.profile;
+                        const lastSession = entity.sessions[entity.sessions.length - 1] || {};
+
+                        // Map out log components
+                        let itemsHTML = '';
+                        if (entity.progress && entity.progress.length > 0) {
+                            entity.progress.slice().reverse().forEach(p => {
+                                itemsHTML += `<li><strong>${p.workDone}</strong><br><span class="time-tag">⏱️ ${p.timestamp}</span></li>`;
+                            });
+                        } else {
+                            itemsHTML = '<li>No manual records or GitHub repository pushes received.</li>';
+                        }
+
+                        const cardElement = document.createElement('div');
+                        cardElement.className = 'card';
+                        cardElement.innerHTML = `
+                            <img class="avatar" src="${prof.photo || ''}" alt="Verification Frame">
+                            <div class="info-panel">
+                                <h2>${prof.name}</h2>
+                                <p style="margin: 4px 0;"><strong>Email Reference:</strong> ${prof.email} | <strong>Contact:</strong> ${prof.contact}</p>
+                                <p style="margin: 4px 0; color: #495057;"><strong>Latest System Session Tracker Duration:</strong> <span style="background:#e3faf2; color:#2b8a3e; padding:3px 8px; border-radius:4px; font-weight:bold;">${lastSession.duration || 'Session Active (Counting live...)'}</span></p>
+                                <h4 style="margin: 15px 0 5px 0; color:#495057;">Workspace Synchronization Logs:</h4>
+                                <ul class="log-box">${itemsHTML}</ul>
+                            </div>
+                        `;
+                        deck.appendChild(cardElement);
+                    }
+                })
+                .catch(err => console.error("Error drawing admin telemetry view details:", err));
+        }
+
+        // Long Poll database arrays dynamically every 5 seconds
+        queryUpdate();
+        setInterval(queryUpdate, 5000);
+    </script>
+</body>
+</html>

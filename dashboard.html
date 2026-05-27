@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Control Terminal</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background: #f4f6f9; margin: 40px; color: #333; }
+        .dashboard-box { background: white; padding: 30px; border-radius: 8px; max-width: 500px; margin: 0 auto; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+        textarea { width: 100%; box-sizing: border-box; padding: 12px; border: 1px solid #ced4da; border-radius: 6px; font-size: 14px; resize: vertical; margin-top: 8px; }
+        button { width: 100%; padding: 12px; margin-top: 15px; font-size: 15px; border-radius: 6px; font-weight: bold; border: none; cursor: pointer; }
+        .btn-sync { background: #007bff; color: white; }
+        .btn-out { background: #dc3545; color: white; }
+    </style>
+</head>
+<body>
+
+<div class="dashboard-box">
+    <h2 style="margin-top:0;">Student Tracking Dashboard</h2>
+    <p>Session Identity: <strong id="user-display">None</strong></p>
+    <hr style="border: 0; border-top: 1px solid #eee; margin: 20px 0;">
+
+    <h3>Update Workspace Progress</h3>
+    <label for="work">What structural project mechanics have you completed?</label>
+    <textarea id="work" rows="4" placeholder="Code updates, debugging, architectural design adjustments..."></textarea>
+    <button id="sync-btn" class="btn-sync">Push & Sync Workspace Status</button>
+    
+    <button id="logout-btn" class="btn-out">Logout & Terminate Session Time</button>
+</div>
+
+<script>
+    const currentEmail = localStorage.getItem('sessionStudentEmail');
+    if (!currentEmail) {
+        alert("Authentication context absent. Redirecting to login terminal.");
+        window.location.href = '/login.html';
+    } else {
+        document.getElementById('user-display').textContent = currentEmail;
+    }
+
+    // Submit Work Progress Update
+    document.getElementById('sync-btn').addEventListener('click', () => {
+        const text = document.getElementById('work').value.trim();
+        if (!text) return alert("Write clear complete statements detailing work actions performed!");
+
+        fetch('/api/progress', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: currentEmail,
+                workDone: text,
+                timestamp: new Date().toString()
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                alert("Progress successfully synced and committed!");
+                document.getElementById('work').value = '';
+            }
+        });
+    });
+
+    // Handle logout boundary recording
+    document.getElementById('logout-btn').addEventListener('click', () => {
+        fetch('/api/logout', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                email: currentEmail,
+                logoutTime: new Date().toString()
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.success) {
+                alert(`Session Logged Out!\nCalculated Duration: ${data.duration}`);
+                localStorage.clear();
+                window.location.href = '/login.html';
+            }
+        });
+    });
+</script>
+</body>
+</html>
