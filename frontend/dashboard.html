@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Dashboard</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <button id="darkModeBtn">
+
+        Dark Mode
+
+    </button>
+
+    <div class="dashboard-container">
+
+        <h1>Student Dashboard</h1>
+
+        <div class="card profile-card">
+
+            <img
+                id="profileImage"
+                class="profile-image"
+                src=""
+                alt="Profile Image"
+            >
+
+            <h2 id="studentName"></h2>
+
+            <p id="studentEmail"></p>
+
+        </div>
+
+        <div class="card">
+
+            <h3>Attendance Details</h3>
+
+            <div class="info-group">
+
+                <p>
+
+                    <strong>Status:</strong>
+
+                    <span id="attendanceStatus">
+
+                        Loading...
+
+                    </span>
+
+                </p>
+
+                <p>
+
+                    <strong>Login Time:</strong>
+
+                    <span id="loginTime">
+
+                        --
+
+                    </span>
+
+                </p>
+
+                <p>
+
+                    <strong>Delay:</strong>
+
+                    <span id="delayTime">
+
+                        --
+
+                    </span>
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="card">
+
+            <h3>GitHub Repository</h3>
+
+            <div class="info-group">
+
+                <p>
+
+                    <strong>Repository:</strong>
+
+                    <span id="repoName"></span>
+
+                </p>
+
+                <p>
+
+                    <strong>GitHub Username:</strong>
+
+                    <span id="githubUsername"></span>
+
+                </p>
+
+                <p>
+
+                    <strong>Stars:</strong>
+
+                    <span id="repoStars"></span>
+
+                </p>
+
+                <p>
+
+                    <strong>Forks:</strong>
+
+                    <span id="repoForks"></span>
+
+                </p>
+
+                <p>
+
+                    <strong>Last Push:</strong>
+
+                    <span id="lastPush"></span>
+
+                </p>
+
+                <p>
+
+                    <strong>Visibility:</strong>
+
+                    <span id="repoVisibility"></span>
+
+                </p>
+
+            </div>
+
+        </div>
+
+        <div class="action-buttons">
+
+            <button id="logoutBtn">
+
+                Logout
+
+            </button>
+
+        </div>
+
+    </div>
+
+    <script src="js/dashboard.js"></script>
+
+    <script src="js/darkmode.js"></script>
+
+</body>
+</html>

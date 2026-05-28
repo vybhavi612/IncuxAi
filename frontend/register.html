@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Student Registration</title>
+
+    <link rel="stylesheet" href="css/style.css">
+
+</head>
+
+<body>
+
+    <button id="darkModeBtn">
+
+       Dark Mode
+
+    </button>
+
+    <div class="container">
+
+        <h1>Student Registration</h1>
+
+        <form id="registerForm">
+
+            <input
+                type="text"
+                id="fullName"
+                placeholder="Full Name"
+                required
+            >
+
+            <input
+                type="email"
+                id="email"
+                placeholder="Email Address"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Password"
+                required
+            >
+
+            <input
+                type="text"
+                id="githubUsername"
+                placeholder="GitHub Username"
+                required
+            >
+
+            <input
+                type="text"
+                id="repositoryName"
+                placeholder="Repository Name"
+                required
+            >
+
+            <input
+                type="text"
+                id="profileImage"
+                placeholder="Profile Image URL (Optional)"
+            >
+
+            <button type="submit">
+
+                Register
+
+            </button>
+
+        </form>
+
+        <p class="switch-page">
+
+            Already have an account?
+
+            <a href="index.html">
+
+                Login
+
+            </a>
+
+        </p>
+
+    </div>
+
+    <script src="js/register.js"></script>
+
+    <script src="js/darkmode.js"></script>
+
+</body>
+</html>
