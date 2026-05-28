@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: workpulse-db
+    restart: always
+    environment:
+      POSTGRES_USER: workpulse_user
+      POSTGRES_PASSWORD: workpulse_password
+      POSTGRES_DB: workpulse_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U workpulse_user -d workpulse_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: workpulse-backend
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://workpulse_user:workpulse_password@db:5432/workpulse_db?schema=public
+      - JWT_ACCESS_SECRET=super_secret_access_token_key_123!
+      - JWT_REFRESH_SECRET=super_secret_refresh_token_key_456!
+      - GITHUB_TOKEN=
+      - PORT=3001
+      - FRONTEND_URL=http://localhost:3000
+    ports:
+      - "3001:3001"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: workpulse-frontend
+    restart: always
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+
+volumes:
+  pgdata:

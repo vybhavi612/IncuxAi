@@ -1,0 +1,108 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #090d16;
+  --foreground: #f8fafc;
+  --card-bg: rgba(17, 24, 39, 0.7);
+  --card-border: rgba(255, 255, 255, 0.06);
+  --primary-glow: radial-gradient(circle, rgba(99, 102, 241, 0.15) 0%, transparent 70%);
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Glassmorphism custom classes */
+.glass-panel {
+  background: var(--card-bg);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid var(--card-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.glass-panel-glow {
+  position: relative;
+}
+
+.glass-panel-glow::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.4) 0%, transparent 40%, rgba(139, 92, 246, 0.3) 100%);
+  border-radius: inherit;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+/* Scrollbar customizations */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #1f2937;
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4f46e5;
+}
+
+/* Animations */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1);
+    box-shadow: 0 0 15px rgba(99, 102, 241, 0.4);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(1.03);
+    box-shadow: 0 0 30px rgba(99, 102, 241, 0.8);
+  }
+}
+
+.pulse-glowing {
+  animation: pulse-glow 2s infinite ease-in-out;
+}
+
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(0.9);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.3);
+    opacity: 1;
+  }
+}
+
+.live-dot {
+  animation: pulse-dot 1.5s infinite ease-in-out;
+}
+
+/* Glowing text highlight */
+.glow-text {
+  text-shadow: 0 0 10px rgba(99, 102, 241, 0.5);
+}
+
+/* Custom chart bars */
+.chart-bar-glow {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.chart-bar-glow:hover {
+  filter: drop-shadow(0 0 8px rgba(99, 102, 241, 0.7));
+}

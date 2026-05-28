@@ -1,0 +1,135 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  ADMIN
+  USER
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  INCOMPLETE
+}
+
+enum SessionState {
+  ACTIVE
+  CLOSED
+  FORCE_CLOSED
+}
+
+model User {
+  id              String       @id @default(uuid())
+  name            String
+  email           String       @unique
+  passwordHash    String       @map("password_hash")
+  role            Role         @default(USER)
+  active          Boolean      @default(true)
+  githubUsername  String?      @map("github_username")
+  githubToken     String?      @map("github_token")
+  timezone        String       @default("UTC")
+  createdAt       DateTime     @default(now()) @map("created_at")
+  updatedAt       DateTime     @updatedAt @map("updated_at")
+
+  attendances     Attendance[]
+  sessions        Session[]
+  repositories    Repository[]
+  auditLogs       AuditLog[]
+
+  @@map("users")
+}
+
+model Attendance {
+  id             String           @id @default(uuid())
+  userId         String           @map("user_id")
+  user           User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  checkIn        DateTime         @map("check_in")
+  checkOut       DateTime?        @map("check_out")
+  localCheckIn   String           @map("local_check_in") // Stored client representation
+  localCheckOut  String?          @map("local_check_out")
+  timezone       String           @default("UTC")
+  status         AttendanceStatus @default(PRESENT)
+  duration       Int?             @default(0) // Duration in minutes
+  adminOverride  Boolean          @default(false) @map("admin_override")
+  overrideReason String?          @map("override_reason")
+  createdAt      DateTime         @default(now()) @map("created_at")
+  updatedAt      DateTime         @updatedAt @map("updated_at")
+
+  @@map("attendances")
+}
+
+model Session {
+  id                 String       @id @default(uuid())
+  userId             String       @map("user_id")
+  user               User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  loginTime          DateTime     @default(now()) @map("login_time")
+  logoutTime         DateTime?    @map("logout_time")
+  sessionState       SessionState @default(ACTIVE) @map("session_state")
+  deviceMetadata     String?      @map("device_metadata") // Browser agent metadata
+  ipAddress          String?      @map("ip_address")
+  browserFingerprint String?      @map("browser_fingerprint")
+  createdAt          DateTime     @default(now()) @map("created_at")
+  updatedAt          DateTime     @updatedAt @map("updated_at")
+
+  @@map("sessions")
+}
+
+model Repository {
+  id            String          @id @default(uuid())
+  userId        String          @map("user_id")
+  user          User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  repoName      String          @map("repo_name")
+  repoUrl       String          @map("repo_url")
+  provider      String          @default("github")
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+  githubMetrics GitHubMetric[]
+
+  @@map("repositories")
+}
+
+model GitHubMetric {
+  id           String     @id @default(uuid())
+  repoId       String     @map("repo_id")
+  repository   Repository @relation(fields: [repoId], references: [id], onDelete: Cascade)
+  commits      Int        @default(0)
+  prs          Int        @default(0)
+  issues       Int        @default(0)
+  mergedPrs    Int        @default(0) @map("merged_prs")
+  additions    Int        @default(0)
+  deletions    Int        @default(0)
+  snapshotDate DateTime   @map("snapshot_date")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+
+  @@map("github_metrics")
+}
+
+model AuditLog {
+  id         String   @id @default(uuid())
+  actorId    String?  @map("actor_id")
+  actor      User?    @relation(fields: [actorId], references: [id], onDelete: SetNull)
+  action     String
+  entityType String   @map("entity_type")
+  entityId   String?  @map("entity_id")
+  timestamp  DateTime @default(now())
+  metadata   String?  @map("metadata") // JSON details string
+
+  @@map("audit_logs")
+}
+
+model Setting {
+  id        String   @id @default(uuid())
+  key       String   @unique
+  value     String
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("settings")
+}
