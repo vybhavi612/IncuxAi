@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Meta Tags -->
+  <title>IMS Sync - Professional Intern Management System</title>
+  <meta name="description" content="A complete Intern Management System featuring role-based dashboards, automated webcam photo capture attendance logging, and real-time task workflow synchronizations.">
+  
+  <!-- Favicon Mockup -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+
+  <!-- FontAwesome for Premium Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  
+  <!-- Chart.js for Gorgeous Analytics Reports -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.3.0/dist/chart.umd.min.js"></script>
+
+  <!-- Core Styling Sheet -->
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+  <!-- Root Application Container Mount -->
+  <div id="app-root">
+    <!-- Loaded dynamically by App Coordinator -->
+    <div style="display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; gap:1.5rem; font-family: 'Outfit', sans-serif;">
+      <div style="border: 4px solid var(--border-color); border-top-color: var(--primary); border-radius: 50%; width: 40px; height: 40px; animation: spin-loader 0.8s linear infinite;"></div>
+      <div style="font-weight:600; font-size:1.1rem; color:var(--text-secondary);">Initializing System Engine...</div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes spin-loader {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
+  <!-- Core Database & Sync Modules -->
+  <script src="./db.js"></script>
+  <script src="./broadcast.js"></script>
+
+  <!-- Dashboard Views -->
+  <script src="./components/landing.js"></script>
+  <script src="./components/intern.js"></script>
+  <script src="./components/manager.js"></script>
+  <script src="./components/admin.js"></script>
+
+  <!-- Main Application Coordinator -->
+  <script src="./app.js"></script>
+</body>
+</html>
