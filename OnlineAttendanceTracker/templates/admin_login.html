@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Login</title>
+
+    <link rel="stylesheet"
+    href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <div class="header">
+        <h1>Online Attendance Tracking System</h1>
+    </div>
+
+    <div class="form-container">
+
+        <h2>Admin Login</h2>
+
+        <form action="/admin_auth" method="POST">
+
+            <label>Email</label>
+
+            <input type="email"
+                   name="email"
+                   placeholder="Enter Admin Email"
+                   required>
+
+            <label>Password</label>
+
+            <input type="password"
+                   name="password"
+                   placeholder="Enter Admin Password"
+                   required>
+
+            <button type="submit">
+                Login
+            </button>
+
+        </form>
+
+        <br>
+
+        <p style="text-align:center;">
+            <a href="/">
+                Back to Student Login
+            </a>
+        </p>
+
+    </div>
+
+    <div class="footer">
+        © 2026 Online Attendance Tracking System
+    </div>
+
+</body>
+</html>
