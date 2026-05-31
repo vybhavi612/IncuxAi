@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>InternTrack</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+<!-- ═══════════════════════════════════
+     LOGIN
+════════════════════════════════════ -->
+<div id="login-page" class="page active">
+  <div class="login-box">
+    <h1>InternTrack</h1>
+    <p class="tagline">Intern progress &amp; task management</p>
+
+    <div class="login-tabs">
+      <button class="active" id="tab-intern" onclick="switchTab('intern')">Intern Login</button>
+      <button id="tab-admin" onclick="switchTab('admin')">Admin Login</button>
+    </div>
+
+    <div id="login-error" class="error-msg">Incorrect credentials. Please try again.</div>
+
+    <div id="form-intern">
+      <div class="form-group">
+        <label>Email or Phone</label>
+        <input type="text" id="intern-email" placeholder="arjun@example.com" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="intern-pass" placeholder="••••••••" />
+      </div>
+      <button class="btn-primary" onclick="doLogin('intern')">Sign In</button>
+    </div>
+
+    <div id="form-admin" style="display:none">
+      <div class="form-group">
+        <label>Username</label>
+        <input type="text" id="admin-user" placeholder="admin" />
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input type="password" id="admin-pass" placeholder="••••••••" />
+      </div>
+      <button class="btn-primary" onclick="doLogin('admin')">Sign In as Admin</button>
+    </div>
+
+    <div id="db-connect-area" style="margin-top:18px;padding-top:16px;border-top:1px solid #eee;">
+      <div style="font-size:12px;color:#888;margin-bottom:8px;">Database connection</div>
+      <div id="db-status-bar" style="font-size:12px;color:#aaa;margin-bottom:10px;min-height:16px;">Loading db.json…</div>
+      <button id="connect-db-btn" onclick="connectDB()"
+        style="font-size:12px;padding:6px 14px;border:1px solid #3a6ea5;background:#fff;
+               color:#3a6ea5;cursor:pointer;font-family:Georgia,serif;display:none;">
+        ⟳ Connect db.json for live saves
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     INTERN DASHBOARD
+════════════════════════════════════ -->
+<div id="intern-page" class="page">
+
+  <div class="topbar">
+    <div class="brand">Intern<span>Track</span></div>
+    <nav>
+      <a href="#" class="active-nav">Dashboard</a>
+      <a href="#">My Tasks</a>
+      <a href="#">Attendance</a>
+      <a href="#">Submissions</a>
+    </nav>
+    <div class="user-info">
+      <span id="intern-greeting">Hi</span>
+      <button class="logout-btn" onclick="doLogout()">Log out</button>
+    </div>
+  </div>
+
+  <div class="session-bar">
+    <span>✓ Session active &nbsp;·&nbsp; Logged in at <strong id="login-time-display">—</strong></span>
+    <span style="display:flex;align-items:center;gap:12px;">
+      <span id="db-status-bar-2" style="font-size:11px;color:#5a8a6a;font-style:italic;"></span>
+      <span>Today: <span id="today-date">—</span></span>
+    </span>
+  </div>
+
+  <div class="main-wrap">
+    <p class="page-title">My Dashboard</p>
+    <p class="page-subtitle">Here's where things stand today.</p>
+
+    <!-- stat cards -->
+    <div class="stat-row">
+      <div class="stat-card blue">
+        <div class="label">Assigned</div>
+        <div class="value" id="stat-assigned">—</div>
+        <div class="sub">tasks total</div>
+      </div>
+      <div class="stat-card green">
+        <div class="label">Completed</div>
+        <div class="value" id="stat-completed">—</div>
+        <div class="sub">submitted &amp; reviewed</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="label">Pending</div>
+        <div class="value" id="stat-pending">—</div>
+        <div class="sub">in progress / not started</div>
+      </div>
+      <div class="stat-card red">
+        <div class="label">Overdue</div>
+        <div class="value" id="stat-overdue">—</div>
+        <div class="sub">past deadline</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Attendance</div>
+        <div class="value" id="stat-attend">—</div>
+        <div class="sub">this month</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+
+      <div class="col-left">
+
+        <div class="section-block">
+          <div class="section-head">
+            My Tasks
+            <a href="#" onclick="openSubmitModal(null); return false;">+ Submit a task</a>
+          </div>
+          <div id="intern-task-list">
+            <div class="empty-state">Loading…</div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-head">Recent Submissions</div>
+          <div id="intern-submission-list">
+            <div class="empty-state">No submissions yet.</div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="col-right">
+
+        <div class="section-block">
+          <div class="section-head">Attendance — May 2026</div>
+          <div class="cal-grid">
+            <!-- day labels -->
+            <div class="cal-day-label">M</div>
+            <div class="cal-day-label">T</div>
+            <div class="cal-day-label">W</div>
+            <div class="cal-day-label">T</div>
+            <div class="cal-day-label">F</div>
+            <div class="cal-day-label">S</div>
+            <div class="cal-day-label">S</div>
+            <!-- days injected by renderCalendar() -->
+            <div id="cal-body" style="display:contents"></div>
+          </div>
+          <div class="cal-legend">
+            <span><span class="dot" style="background:#c8e6c9"></span>Present</span>
+            <span><span class="dot" style="background:#fff9c4;border:1px solid #ddd"></span>Late</span>
+            <span><span class="dot" style="background:#ffcdd2"></span>Absent</span>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-head">Today's Activity</div>
+          <div id="intern-activity-feed">
+            <div class="empty-state">No activity logged yet.</div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /two-col -->
+  </div><!-- /main-wrap -->
+
+</div><!-- /intern-page -->
+
+<!-- ═══════════════════════════════════
+     ADMIN DASHBOARD
+════════════════════════════════════ -->
+<div id="admin-page" class="page">
+
+  <div class="topbar">
+    <div class="brand">Intern<span>Track</span> <span style="font-size:12px;color:#aaa;font-weight:normal;font-style:italic">Admin</span></div>
+    <nav>
+      <a href="#" class="active-nav">Dashboard</a>
+      <a href="#">Interns</a>
+      <a href="#">Tasks</a>
+      <a href="#">Submissions</a>
+      <a href="#">Reports</a>
+    </nav>
+    <div class="user-info">
+      <span>Admin</span>
+      <button class="logout-btn" onclick="doLogout()">Log out</button>
+    </div>
+  </div>
+
+  <div class="main-wrap">
+
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px">
+      <div>
+        <p class="page-title">Admin Dashboard</p>
+        <p class="page-subtitle">Cohort overview — May 2026</p>
+      </div>
+      <div style="display:flex;gap:8px;padding-top:6px">
+        <button class="btn-secondary" onclick="openAssignModal()">+ Assign Task</button>
+        <button class="btn-secondary">⬇ Export CSV</button>
+      </div>
+    </div>
+
+    <div id="late-alert" class="alert-banner" style="display:none"></div>
+
+    <!-- stat cards -->
+    <div class="stat-row">
+      <div class="stat-card blue">
+        <div class="label">Total Interns</div>
+        <div class="value" id="admin-stat-total">—</div>
+        <div class="sub">enrolled</div>
+      </div>
+      <div class="stat-card green">
+        <div class="label">Active Today</div>
+        <div class="value" id="admin-stat-active">—</div>
+        <div class="sub">logged in</div>
+      </div>
+      <div class="stat-card red">
+        <div class="label">Overdue Tasks</div>
+        <div class="value" id="admin-stat-overdue">—</div>
+        <div class="sub">across cohort</div>
+      </div>
+      <div class="stat-card orange">
+        <div class="label">Submissions</div>
+        <div class="value" id="admin-stat-subs">—</div>
+        <div class="sub">this week</div>
+      </div>
+      <div class="stat-card">
+        <div class="label">Avg. Attendance</div>
+        <div class="value" id="admin-stat-attend">—</div>
+        <div class="sub">cohort average</div>
+      </div>
+    </div>
+
+    <div class="two-col">
+
+      <div class="col-left">
+        <div class="section-block">
+          <div class="section-head">
+            Intern Performance
+            <input type="text" placeholder="Search…"
+              style="font-size:12px;padding:3px 8px;border:1px solid #ddd;font-family:Georgia,serif;outline:none"
+              oninput="filterInternTable(this.value)" />
+          </div>
+          <div style="overflow-x:auto">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Today</th>
+                  <th>Attend.</th>
+                  <th>Done/Asgn</th>
+                  <th>Overdue</th>
+                  <th>Score</th>
+                  <th>Last seen</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody id="intern-table-body">
+                <tr><td colspan="8" class="empty-state">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-right">
+
+        <div class="section-block">
+          <div class="section-head">Live Activity</div>
+          <div id="admin-activity-feed">
+            <div class="empty-state">No recent activity.</div>
+          </div>
+        </div>
+
+        <div class="section-block">
+          <div class="section-head">Pending Review</div>
+          <div id="pending-reviews">
+            <div class="empty-state">Nothing pending.</div>
+          </div>
+        </div>
+
+      </div>
+    </div><!-- /two-col -->
+
+  </div><!-- /main-wrap -->
+</div><!-- /admin-page -->
+
+<!-- ═══════════════════════════════════
+     SUBMIT TASK MODAL
+════════════════════════════════════ -->
+<div id="submit-modal" class="modal-bg">
+  <div class="modal">
+    <h2>Submit Task</h2>
+    <p class="modal-sub">Include a GitHub URL, a file, or both.</p>
+
+    <div class="form-group">
+      <label>Task</label>
+      <select id="submit-task-select"></select>
+    </div>
+    <div class="form-group">
+      <label>GitHub Repository URL</label>
+      <input type="text" id="submit-github" placeholder="https://github.com/yourname/repo" />
+    </div>
+    <div class="form-group">
+      <label>Upload File <span style="color:#aaa;font-size:12px">(PDF, DOCX, ZIP — max 10 MB)</span></label>
+      <input type="file" id="submit-file" accept=".pdf,.docx,.txt,.zip" />
+    </div>
+    <div class="form-group">
+      <label>Notes <span style="color:#aaa;font-size:12px">(optional)</span></label>
+      <textarea id="submit-notes" placeholder="Any notes for your mentor…"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeSubmitModal()">Cancel</button>
+      <button class="btn-submit" onclick="doSubmit()">Submit Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     ASSIGN TASK MODAL
+════════════════════════════════════ -->
+<div id="assign-modal" class="modal-bg">
+  <div class="modal">
+    <h2>Assign New Task</h2>
+    <p class="modal-sub">Task will appear on the intern's dashboard.</p>
+
+    <div class="form-group">
+      <label>Task Title</label>
+      <input type="text" id="assign-title" placeholder="e.g. Implement JWT middleware" />
+    </div>
+    <div class="form-group">
+      <label>Description</label>
+      <textarea id="assign-desc" placeholder="Describe what the intern needs to do…"></textarea>
+    </div>
+    <div class="form-group">
+      <label>Assign To</label>
+      <select id="assign-intern-select"></select>
+    </div>
+    <div class="form-group">
+      <label>Deadline</label>
+      <input type="datetime-local" id="assign-deadline" />
+    </div>
+    <div class="form-group">
+      <label>Priority</label>
+      <select id="assign-priority">
+        <option>Medium</option>
+        <option>Low</option>
+        <option>High</option>
+        <option>Critical</option>
+      </select>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeAssignModal()">Cancel</button>
+      <button class="btn-submit" onclick="doAssign()">Assign Task</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════
+     REVIEW MODAL
+════════════════════════════════════ -->
+<div id="review-modal" class="modal-bg">
+  <div class="modal">
+    <h2>Review Submission</h2>
+    <p class="modal-sub">Check the work, then mark reviewed or request revision.</p>
+
+    <table style="width:100%;font-size:13px;margin-bottom:16px;border-collapse:collapse">
+      <tr>
+        <td style="color:#888;padding:4px 0;width:90px">Task</td>
+        <td id="review-title" style="font-weight:bold">—</td>
+      </tr>
+      <tr>
+        <td style="color:#888;padding:4px 0">Intern</td>
+        <td id="review-intern">—</td>
+      </tr>
+      <tr>
+        <td style="color:#888;padding:4px 0">Submitted</td>
+        <td id="review-time">—</td>
+      </tr>
+      <tr>
+        <td style="color:#888;padding:4px 0">Status</td>
+        <td id="review-late">—</td>
+      </tr>
+      <tr>
+        <td style="color:#888;padding:4px 0">GitHub</td>
+        <td id="review-github">—</td>
+      </tr>
+      <tr>
+        <td style="color:#888;padding:4px 0;vertical-align:top">Notes</td>
+        <td id="review-notes" style="color:#555;font-style:italic">—</td>
+      </tr>
+    </table>
+
+    <div class="form-group">
+      <label>Feedback for intern <span style="color:#aaa;font-size:12px">(required for revision)</span></label>
+      <textarea id="review-feedback" placeholder="Leave feedback…"></textarea>
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn-secondary" onclick="closeReviewModal()">Cancel</button>
+      <button class="btn-danger" onclick="doRequestRevision()">Request Revision</button>
+      <button class="btn-submit" onclick="doMarkReviewed()">Mark Reviewed ✓</button>
+    </div>
+  </div>
+</div>
+
+<!-- toast -->
+<div id="toast"></div>
+
+<!-- scripts — db first, then app -->
+<script src="js/db.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+  // filter intern table
+  function filterInternTable(query) {
+    const rows = document.querySelectorAll('#intern-table-body tr');
+    rows.forEach(row => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(query.toLowerCase()) ? '' : 'none';
+    });
+  }
+
+  // "Connect Database" button — real user gesture so picker opens
+  async function connectDB() {
+    const ok = await DB.connectFile();
+    if (ok) {
+      // re-render whichever dashboard is open if already logged in
+      if (document.getElementById('admin-page').classList.contains('active'))  renderAdminDashboard();
+      if (document.getElementById('intern-page').classList.contains('active')) renderInternDashboard();
+    }
+  }
+
+  // on page load: just fetch db.json (no picker), then show button if Chrome supports FSA
+  window.addEventListener('DOMContentLoaded', async () => {
+    const ok = await DB.init();
+    if (!ok) {
+      document.getElementById('db-status-bar').textContent = '✗ db.json not found — check db/ folder.';
+    }
+    // show the "connect" button only in browsers that support FSA write-back
+    if ('showOpenFilePicker' in window) {
+      document.getElementById('connect-db-btn').style.display = 'inline-block';
+    }
+  });
+</script>
+
+</body>
+</html>

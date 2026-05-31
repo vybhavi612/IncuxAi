@@ -1,0 +1,312 @@
+/* ── reset ── */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: Georgia, serif;
+  background: #f0ede8;
+  color: #222;
+  font-size: 15px;
+  line-height: 1.5;
+}
+
+a { color: #3a6ea5; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ─────────────────────────────
+   PAGES
+───────────────────────────── */
+.page { display: none; }
+.page.active { display: block; }
+#login-page { flex-direction: column; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+#login-page.active { display: flex; }
+
+/* ─────────────────────────────
+   LOGIN
+───────────────────────────── */
+.login-box {
+  background: #fff;
+  border: 1px solid #ccc;
+  padding: 32px 36px;
+  width: 100%;
+  max-width: 380px;
+}
+.login-box h1 { font-size: 22px; margin-bottom: 4px; font-weight: bold; }
+.login-box .tagline { font-size: 13px; color: #777; margin-bottom: 24px; font-style: italic; }
+
+.login-tabs { display: flex; margin-bottom: 20px; border-bottom: 1px solid #ccc; }
+.login-tabs button {
+  flex: 1; background: none; border: none; padding: 8px 0;
+  cursor: pointer; font-size: 14px; color: #777;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  font-family: Georgia, serif;
+}
+.login-tabs button.active { color: #222; border-bottom: 2px solid #3a6ea5; font-weight: bold; }
+
+.error-msg {
+  background: #fff3f3; border: 1px solid #e88;
+  padding: 7px 10px; font-size: 13px; color: #a00;
+  margin-bottom: 12px; display: none;
+}
+
+/* ─────────────────────────────
+   FORMS
+───────────────────────────── */
+.form-group { margin-bottom: 14px; }
+.form-group label { display: block; font-size: 13px; margin-bottom: 4px; color: #444; }
+.form-group input,
+.form-group textarea,
+.form-group select {
+  width: 100%; padding: 7px 10px;
+  border: 1px solid #bbb; font-size: 14px;
+  font-family: Georgia, serif; background: #fafafa; outline: none;
+}
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus { border-color: #3a6ea5; background: #fff; }
+.form-group textarea { height: 80px; resize: vertical; }
+
+/* ─────────────────────────────
+   BUTTONS
+───────────────────────────── */
+.btn-primary {
+  width: 100%; padding: 9px; background: #3a6ea5;
+  color: #fff; border: none; font-size: 14px;
+  cursor: pointer; font-family: Georgia, serif; margin-top: 4px;
+}
+.btn-primary:hover { background: #038aff; }
+
+.btn-secondary {
+  padding: 8px 16px; background: none; border: 1px solid #bbb;
+  font-size: 13px; cursor: pointer; font-family: Georgia, serif; color: #555;
+}
+.btn-secondary:hover { background: #f5f5f5; }
+
+.btn-submit {
+  padding: 8px 20px; background: #2a7a3b; color: #fff;
+  border: none; font-size: 13px; cursor: pointer; font-family: Georgia, serif;
+}
+.btn-submit:hover { background: #226030; }
+
+.btn-danger {
+  padding: 6px 14px; background: #b00020; color: #fff;
+  border: none; font-size: 12px; cursor: pointer; font-family: Georgia, serif;
+}
+.btn-danger:hover { background: #8a0018; }
+
+/* ─────────────────────────────
+   TOPBAR
+───────────────────────────── */
+.topbar {
+  background: #fff; border-bottom: 1px solid #ccc;
+  padding: 0 24px; display: flex; align-items: center;
+  justify-content: space-between; height: 48px;
+}
+.topbar .brand { font-size: 17px; font-weight: bold; color: #222; letter-spacing: 0.3px; }
+.topbar .brand span { color: #3a6ea5; }
+.topbar nav a { font-size: 13px; color: #555; margin-left: 18px; }
+.topbar nav a:hover { color: #222; }
+.topbar nav a.active-nav { color: #3a6ea5; font-weight: bold; text-decoration: none; }
+.topbar .user-info { font-size: 13px; color: #555; display: flex; align-items: center; gap: 12px; }
+.topbar .user-info .logout-btn {
+  font-size: 12px; color: #888; cursor: pointer;
+  background: none; border: 1px solid #ccc; padding: 3px 10px;
+  font-family: Georgia, serif;
+}
+.topbar .user-info .logout-btn:hover { background: #f5f5f5; color: #333; }
+
+/* ─────────────────────────────
+   SESSION BAR
+───────────────────────────── */
+.session-bar {
+  background: #e8f5e9; border-bottom: 3px solid #c8e6c9;
+  padding: 10px 24px; font-size: 15px; color: #2a7a3b;
+  display: flex; justify-content: space-between;
+}
+
+/* ─────────────────────────────
+   LAYOUT
+───────────────────────────── */
+.main-wrap { max-width: 1100px; margin: 0 auto; padding: 24px 10px; }
+.page-title { font-size: 20px; font-weight: bold; margin-bottom: 4px; }
+.page-subtitle { font-size: 13px; color: #777; margin-bottom: 24px; font-style: italic; }
+
+.two-col { display: flex; gap: 20px; align-items: flex-start; }
+.col-left { flex: 1.4; min-width: 0; }
+.col-right { flex: 1; min-width: 0; }
+
+/* ─────────────────────────────
+   STAT CARDS
+───────────────────────────── */
+.stat-row { display: flex; gap: 14px; margin-bottom: 28px; flex-wrap: wrap; }
+.stat-card {
+  background: #fff; border: 2px solid #ccc;
+  padding: 16px 20px; flex: 1; min-width: 140px;
+}
+.stat-card .label { font-size: 12px; color: #000000; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.stat-card .value { font-size: 30px; font-weight: bold; color: #222; line-height: 1; }
+.stat-card .sub { font-size: 12px; color: #aaa; margin-top: 4px; }
+.stat-card.green .value { color: #2a7a3b; }
+.stat-card.orange .value { color: #b96a00; }
+.stat-card.red .value { color: #b00020; }
+.stat-card.blue .value { color: #3a6ea5; }
+
+/* ─────────────────────────────
+   SECTION BLOCKS
+───────────────────────────── */
+.section-block { background: #fff; border: 2px solid #ccc; margin-bottom: 20px; }
+.section-block .section-head {
+  padding: 10px 16px; border-bottom: 1px solid #eee;
+  font-size: 13px; font-weight: bold; color: #444;
+  background: #fafafa; display: flex; justify-content: space-between; align-items: center;
+}
+.section-head a { font-size: 12px; font-weight: normal; }
+
+/* ─────────────────────────────
+   TASK LIST
+───────────────────────────── */
+.task-item {
+  padding: 12px 16px; border-bottom: 1px solid #f0f0f0;
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.task-item:last-child { border-bottom: none; }
+.task-item .task-left { flex: 1; }
+.task-item .task-title { font-size: 16px; font-weight: bold; color: #222; margin-bottom: 2px; }
+.task-item .task-meta { font-size: 14px; color: #888; }
+.task-item .task-meta .due-red { color: #b00020; }
+.task-item .task-meta .due-orange { color: #b96a00; }
+.task-item .task-actions { display: flex; gap: 6px; align-items: center; flex-shrink: 0; }
+
+/* ─────────────────────────────
+   BADGES
+───────────────────────────── */
+.badge {
+  font-size: 12px; padding: 3px 8px; border: 1px solid #ccc;
+  white-space: nowrap; background: #f5f5f5; color: #555;
+}
+.badge.green  { background: #e8f5e9; border-color: #a5d6a7; color: #2a7a3b; }
+.badge.orange { background: #fff3e0; border-color: #ffcc80; color: #b96a00; }
+.badge.red    { background: #ffebee; border-color: #ef9a9a; color: #b00020; }
+.badge.blue   { background: #e3f2fd; border-color: #90caf9; color: #1565c0; }
+.badge.grey   { background: #f5f5f5; border-color: #ccc;    color: #888; }
+
+/* ─────────────────────────────
+   ATTENDANCE CALENDAR
+───────────────────────────── */
+.cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  gap: 3px; padding: 12px 16px;
+}
+.cal-day-label { font-size: 20px; text-align: center; color: #656565; padding: 2px 0; }
+.cal-day {
+  aspect-ratio: 1; display: flex; align-items: center;
+  justify-content: center; font-size: 16px; color: #888; background: #f5f5f5;
+}
+.cal-day.present { background: #c8e6c9; color: #2a7a3b; border: 1px solid #15ff00 }
+.cal-day.absent  { background: #ffcdd2; color: #b00020; border: 1px solid #ff5252; }
+.cal-day.late    { background: #fff9c4; color: #827717; border: 1px solid #ffeb3b; }
+.cal-day.today   { outline: 2px solid #3a6ea5; font-weight: bold; color: #3a6ea5; }
+.cal-day.empty   { background: transparent; }
+.cal-legend { padding: 6px 16px 12px; font-size: 11px; color: #aaa; display: flex; gap: 14px; }
+.cal-legend span { display: flex; align-items: center; gap: 4px; }
+.cal-legend .dot { width: 10px; height: 10px; display: inline-block; }
+
+/* ─────────────────────────────
+   ACTIVITY FEED
+───────────────────────────── */
+.activity-item {
+  padding: 10px 18px ; border-bottom: 1px solid #f0f0f0;
+  font-size: 14px; display: flex; gap: 10px; align-items: flex-start;
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-item .dot {
+  width: 7px; height: 7px; border-radius: 50%; background: #ccc;
+  margin-top: 5px; flex-shrink: 0;
+}
+.activity-item .dot.green  { background: #4caf50; }
+.activity-item .dot.orange { background: #ff9800; }
+.activity-item .dot.blue   { background: #3a6ea5; }
+.activity-item .dot.red    { background: #e53935; }
+.activity-item .act-text { flex: 1; color: #444; }
+.activity-item .act-time { font-size: 12px; color: #5c5c5c; white-space: nowrap; }
+
+/* ─────────────────────────────
+   PROGRESS BAR
+───────────────────────────── */
+.progress-wrap { background: #eee; height: 7px; margin-top: 6px; }
+.progress-fill { height: 100%; background: #3a6ea5; }
+.progress-fill.green  { background: #4caf50; }
+.progress-fill.orange { background: #ff9800; }
+.progress-fill.red    { background: #e53935; }
+
+/* ─────────────────────────────
+   ADMIN TABLE
+───────────────────────────── */
+.data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.data-table th {
+  text-align: left; padding: 8px 12px; background: #f5f5f5;
+  border-bottom: 2px solid #ddd; font-size: 12px; color: #555;
+  text-transform: uppercase; letter-spacing: 0.4px; font-weight: bold;
+}
+.data-table td { padding: 9px 12px; border-bottom: 1px solid #f0f0f0; color: #333; vertical-align: middle; }
+.data-table tr:last-child td { border-bottom: none; }
+.data-table tr:hover td { background: #fafafa; }
+.intern-name { font-weight: bold; color: #222; }
+.intern-dept { font-size: 11px; color: #aaa; }
+
+.score-chip { font-size: 13px; font-weight: bold; padding: 2px 8px; background: #e8f5e9; color: #2a7a3b; border: 1px solid #a5d6a7; }
+.score-chip.mid { background: #fff3e0; color: #b96a00; border-color: #ffcc80; }
+.score-chip.low { background: #ffebee; color: #b00020; border-color: #ef9a9a; }
+
+/* ─────────────────────────────
+   ALERT BANNER
+───────────────────────────── */
+.alert-banner {
+  background: #fff8e1; border: 1px solid #ffe082; border-left: 4px solid #f9a825;
+  padding: 9px 14px; font-size: 13px; color: #5d4037; margin-bottom: 20px;
+}
+
+/* ─────────────────────────────
+   MODAL
+───────────────────────────── */
+.modal-bg {
+  display: none; position: fixed; inset: 0;
+  background: rgba(0,0,0,0.35); z-index: 100;
+  align-items: center; justify-content: center;
+}
+.modal-bg.open { display: flex; }
+.modal {
+  background: #fff; border: 1px solid #ccc;
+  padding: 28px 30px; width: 100%; max-width: 460px;
+  max-height: 90vh; overflow-y: auto;
+}
+.modal h2 { font-size: 17px; margin-bottom: 4px; }
+.modal .modal-sub { font-size: 13px; color: #888; margin-bottom: 20px; font-style: italic; }
+.modal-actions { display: flex; gap: 10px; margin-top: 20px; justify-content: flex-end; }
+
+/* ─────────────────────────────
+   TOAST
+───────────────────────────── */
+#toast {
+  position: fixed; bottom: 24px; right: 24px;
+  background: #222; color: #fff; padding: 10px 18px;
+  font-size: 13px; font-family: Georgia, serif;
+  border-left: 4px solid #4caf50; opacity: 0;
+  transition: opacity 0.3s; pointer-events: none; z-index: 999;
+}
+#toast.show { opacity: 1; }
+#toast.error { border-left-color: #e53935; }
+
+/* ─────────────────────────────
+   MISC
+───────────────────────────── */
+.inline-link { font-size: 12px; color: #3a6ea5; cursor: pointer; }
+.inline-link:hover { text-decoration: underline; }
+.empty-state { padding: 28px 16px; text-align: center; color: #bbb; font-size: 13px; font-style: italic; }
+.db-status { font-size: 11px; color: #aaa; text-align: right; padding: 4px 20px; background: #fafafa; border-top: 1px solid #eee; }
+
+@media (max-width: 700px) {
+  .two-col { flex-direction: column; }
+  .stat-row { gap: 8px; }
+  .stat-card { min-width: calc(50% - 8px); }
+  .topbar nav { display: none; }
+}

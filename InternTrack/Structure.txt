@@ -1,0 +1,12 @@
+# Project Structure
+
+```
+├── css
+│   └── style.css
+├── db
+│   └── db.json
+├── js
+│   ├── app.js
+│   └── db.js
+└── index.html
+```
