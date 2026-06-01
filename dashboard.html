@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<title>Student Attendance Portal</title>
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+
+<body class="bg-light">
+
+<nav class="navbar navbar-dark bg-primary">
+
+<div class="container-fluid">
+
+<span class="navbar-brand">
+Student Attendance Portal
+</span>
+
+<button
+class="btn btn-danger"
+onclick="logout()">
+
+Logout
+
+</button>
+
+</div>
+
+</nav>
+
+<div class="container mt-4">
+
+<div class="row">
+
+<div class="col-md-4">
+
+<div class="card shadow">
+
+<div class="card-body text-center">
+
+<img
+id="dashboardPhoto"
+width="150"
+height="150"
+class="rounded-circle border mb-3">
+
+<h4>Student Profile</h4>
+
+<hr>
+
+<h4>Student Profile</h4>
+
+<hr>
+
+<p>
+<b>Name:</b>
+<span id="studentName"></span>
+</p>
+
+<p>
+<b>Roll No:</b>
+<span id="studentRollNo"></span>
+</p>
+
+<p>
+<b>Department:</b>
+<span id="studentDepartment"></span>
+</p>
+
+<p>
+<b>Email:</b>
+<span id="studentEmail"></span>
+</p>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-8">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h4>Attendance Information</h4>
+
+<hr>
+
+<p>
+<b>Login Time:</b>
+<span id="loginTime"></span>
+</p>
+
+<p>
+<b>Logout Time:</b>
+<span id="logoutTime">
+Not Logged Out
+</span>
+</p>
+
+<p>
+<b>Delay Time:</b>
+<span id="delayTime"></span>
+</p>
+
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<br>
+
+<div class="row">
+
+<div class="col-md-6">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h4>Attendance Percentage</h4>
+
+<canvas id="attendanceChart"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="col-md-6">
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h4>Working Hours Chart</h4>
+
+<canvas id="hoursChart"></canvas>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<br>
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<div class="card shadow mt-4">
+
+<div class="card-body">
+
+<h4>Assignment Submission</h4>
+
+<hr>
+
+<div class="mb-3">
+
+<label>Assignment Title</label>
+
+<input
+type="text"
+id="title"
+class="form-control">
+
+</div>
+
+<div class="mb-3">
+
+<label>GitHub Repository Link</label>
+
+<input
+type="text"
+id="github"
+class="form-control">
+
+</div>
+
+<div class="mb-3">
+
+<label>Description</label>
+
+<textarea
+id="description"
+class="form-control">
+</textarea>
+
+</div>
+
+<button
+class="btn btn-success"
+onclick="submitAssignment()">
+
+Submit Assignment
+
+</button>
+
+<hr>
+
+<h5>Submitted Assignments</h5>
+
+<table class="table table-bordered">
+
+<thead>
+
+<tr>
+
+<th>Title</th>
+
+<th>GitHub Link</th>
+
+<th>Status</th>
+
+</tr>
+
+</thead>
+
+<tbody id="assignmentTable">
+
+</tbody>
+
+</table>
+
+</div>
+
+</div>
+
+<hr>
+
+<table class="table table-bordered">
+
+<tr>
+
+<th>Title</th>
+
+<th>GitHub Link</th>
+
+<th>Status</th>
+
+</tr>
+
+<tr>
+
+<td>Student Attendance Portal</td>
+
+<td>
+github.com/student/project
+</td>
+
+<td class="text-success">
+Submitted
+</td>
+
+</tr>
+
+</table>
+
+</div>
+
+</div>
+
+</div>
+
+<script>
+
+/* Profile Photo */
+
+const photo =
+localStorage.getItem(
+"studentPhoto"
+);
+
+if(photo){
+
+document.getElementById(
+"dashboardPhoto"
+).src = photo;
+
+}
+
+/* Login Time */
+
+const loginTime =
+localStorage.getItem(
+"loginTime"
+);
+
+if(loginTime){
+
+const loginDate =
+new Date(loginTime);
+
+document.getElementById(
+"loginTime"
+).innerText =
+loginDate.toLocaleTimeString();
+
+/* Delay Calculation */
+
+const expectedLogin =
+new Date(loginDate);
+
+expectedLogin.setHours(
+10,
+0,
+0,
+0
+);
+
+let delayMinutes = 0;
+
+if(loginDate > expectedLogin){
+
+delayMinutes =
+Math.floor(
+(loginDate - expectedLogin)
+/ 60000
+);
+
+}
+
+const delayHours =
+Math.floor(
+delayMinutes / 60
+);
+
+const remainingMinutes =
+delayMinutes % 60;
+
+document.getElementById(
+"delayTime"
+).innerText =
+delayHours +
+" Hours " +
+remainingMinutes +
+" Minutes";
+
+}
+
+/* Logout Time */
+
+const logoutTime =
+localStorage.getItem(
+"logoutTime"
+);
+
+if(logoutTime){
+
+const logoutDate =
+new Date(logoutTime);
+
+document.getElementById(
+"logoutTime"
+).innerText =
+logoutDate.toLocaleTimeString();
+
+
+
+}else{
+
+
+
+}
+
+/* Logout */
+
+function logout(){
+
+const logoutTime = new Date();
+
+const loginTime =
+new Date(
+localStorage.getItem(
+"loginTime"
+)
+);
+
+const diff =
+logoutTime - loginTime;
+
+const totalMinutes =
+Math.floor(
+diff / (1000 * 60)
+);
+
+const hours =
+Math.floor(
+totalMinutes / 60
+);
+
+const minutes =
+totalMinutes % 60;
+
+const timeSpent =
+hours +
+" Hours " +
+minutes +
+" Minutes";
+
+localStorage.setItem(
+"logoutTime",
+logoutTime
+);
+
+localStorage.setItem(
+"timeSpent",
+timeSpent
+);
+
+alert(
+"Logout Time Saved"
+);
+
+window.location.href =
+"login.html";
+
+}
+
+/* Attendance Chart */
+
+new Chart(
+document.getElementById(
+"attendanceChart"
+),
+{
+type:"pie",
+data:{
+labels:[
+"Present",
+"Absent"
+],
+datasets:[
+{
+data:[
+90,
+10
+]
+}
+]
+}
+}
+);
+
+/* Working Hours Chart */
+
+new Chart(
+document.getElementById(
+"hoursChart"
+),
+{
+type:"bar",
+data:{
+labels:[
+"Mon",
+"Tue",
+"Wed",
+"Thu",
+"Fri"
+],
+datasets:[
+{
+label:"Hours",
+data:[
+8,
+7,
+8,
+6,
+8
+]
+}
+]
+}
+}
+);
+
+</script>
+
+<script>
+
+function submitAssignment(){
+
+const title =
+document.getElementById(
+"title"
+).value;
+
+const github =
+document.getElementById(
+"github"
+).value;
+
+const description =
+document.getElementById(
+"description"
+).value;
+
+if(
+title === "" ||
+github === ""
+){
+
+alert(
+"Please fill all fields"
+);
+
+return;
+
+}
+
+const assignment = {
+
+title: title,
+
+github: github,
+
+description: description,
+
+studentName:
+localStorage.getItem(
+"studentName"
+)
+
+};
+
+let assignments =
+
+JSON.parse(
+localStorage.getItem(
+"assignments"
+)
+) || [];
+
+assignments.push(
+assignment
+);
+
+localStorage.setItem(
+"assignments",
+JSON.stringify(
+assignments
+)
+);
+
+loadAssignments();
+
+alert(
+"Assignment Submitted Successfully"
+);
+
+document.getElementById(
+"title"
+).value = "";
+
+document.getElementById(
+"github"
+).value = "";
+
+document.getElementById(
+"description"
+).value = "";
+
+}
+
+function loadAssignments(){
+
+const assignments =
+
+JSON.parse(
+localStorage.getItem(
+"assignments"
+)
+) || [];
+
+let rows = "";
+
+assignments.forEach(
+function(item){
+
+rows +=
+
+`
+<tr>
+
+<td>${item.title}</td>
+
+<td>${item.github}</td>
+
+<td class="text-success">
+Submitted
+</td>
+
+</tr>
+`;
+
+}
+);
+
+document.getElementById(
+"assignmentTable"
+).innerHTML = rows;
+
+}
+
+document.getElementById(
+"studentName"
+).innerText =
+localStorage.getItem(
+"studentName"
+);
+
+document.getElementById(
+"studentRollNo"
+).innerText =
+localStorage.getItem(
+"studentRollNo"
+);
+
+document.getElementById(
+"studentDepartment"
+).innerText =
+localStorage.getItem(
+"studentDepartment"
+);
+
+document.getElementById(
+"studentEmail"
+).innerText =
+localStorage.getItem(
+"studentEmail"
+);
+
+loadAssignments();
+
+</script>
+
+</body>
+</html>
