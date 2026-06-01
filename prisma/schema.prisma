@@ -1,0 +1,106 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+
+
+// NOTE: Ensure .env uses mysql://... when switching from MongoDB to MySQL.
+
+
+}
+
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+enum Role {
+  STUDENT
+  ADMIN
+}
+
+enum AttendanceStatus {
+  PRESENT
+  LATE
+  ABSENT
+}
+
+enum ActivityStatus {
+  SUBMITTED
+  NO_WORK_SUBMITTED
+  INACTIVE_SESSION
+}
+
+model User {
+  id             String          @id @default(cuid())
+
+  username       String?         @unique // Student ID (e.g. STU001) or Admin Email
+  email          String?         @unique
+  password       String
+  role           Role            @default(STUDENT)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  
+  studentProfile StudentProfile?
+  adminProfile   AdminProfile?
+}
+
+model AdminProfile {
+  id        String   @id @default(cuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  createdAt DateTime @default(now())
+}
+
+model StudentProfile {
+  id           String       @id @default(cuid())
+  userId       String       @unique
+
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  studentId    String       @unique
+  name         String
+  batch        String
+  profilePhoto String?      // Cloudinary URL or fallback base64
+  createdAt    DateTime     @default(now())
+  
+  attendances  Attendance[]
+  activities   Activity[]
+}
+
+model Attendance {
+  id             String           @id @default(cuid())
+  studentId      String
+
+  student        StudentProfile   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  loginTime      DateTime
+  logoutTime     DateTime?
+  duration       Float?           // Total duration in hours
+  date           String           // YYYY-MM-DD
+  status         AttendanceStatus @default(PRESENT)
+  activityStatus ActivityStatus   @default(NO_WORK_SUBMITTED)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  activity       Activity?
+
+  @@unique([studentId, date])
+}
+
+model Activity {
+  id            String         @id @default(cuid())
+  studentId     String
+
+  student       StudentProfile @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  attendanceId  String         @unique
+  attendance    Attendance     @relation(fields: [attendanceId], references: [id], onDelete: Cascade)
+
+  projectTitle  String
+  dailyTask     String
+  progressNotes String
+  gitHubLink    String
+  date          String         // YYYY-MM-DD
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
