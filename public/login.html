@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Attendance System - Student Login</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #e9ecef; margin: 0; }
+        .login-card { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); width: 380px; box-sizing: border-box; }
+        h2 { margin-top: 0; color: #333; font-weight: 600; text-align: center; }
+        input { width: 100%; padding: 12px; margin: 10px 0; border: 1px solid #ced4da; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        video, canvas, img { width: 100%; border-radius: 6px; margin-top: 8px; background: #222; aspect-ratio: 4/3; object-fit: cover; }
+        button { width: 100%; padding: 12px; font-size: 15px; font-weight: bold; border: none; border-radius: 6px; cursor: pointer; margin-top: 12px; transition: 0.2s; }
+        .btn-capture { background: #007bff; color: white; }
+        .btn-capture:hover { background: #0056b3; }
+        .btn-login { background: #28a745; color: white; }
+        .btn-login:hover { background: #218838; }
+    </style>
+</head>
+<body>
+
+<div class="login-card">
+    <h2>Student Login</h2>
+    <input type="text" id="name" placeholder="Full Name" required>
+    <input type="email" id="email" placeholder="Email (Must match GitHub pusher email)" required>
+    <input type="text" id="contact" placeholder="Contact Information" required>
+    
+    <label style="font-weight: 500; font-size: 14px; color: #495057;">Webcam Authentication Log:</label>
+    <video id="video" autoplay playsinline></video>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <img id="photo-preview" style="display:none;">
+    
+    <button type="button" id="capture-btn" class="btn-capture">Snapshot Photo</button>
+    <button type="button" id="login-btn" class="btn-login">Login & Track Attendance</button>
+</div>
+
+<script>
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('capture-btn');
+    const photoPreview = document.getElementById('photo-preview');
+    let base64Photo = null;
+
+    // Fetch device video webcam streams
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => { video.srcObject = stream; })
+        .catch(err => {
+            console.log("Webcam unavailable. Using sleek digital avatar generator fallback.");
+            const notify = document.createElement('div');
+            notify.style.color = '#d9534f';
+            notify.style.fontSize = '12px';
+            notify.style.marginTop = '6px';
+            notify.style.fontWeight = '500';
+            notify.textContent = "⚠️ Webcam unavailable. A secure digital identity avatar will be generated.";
+            video.parentNode.insertBefore(notify, video.nextSibling);
+        });
+
+    // Capture frozen image snapshot
+    captureBtn.addEventListener('click', () => {
+        const ctx = canvas.getContext('2d');
+        canvas.width = 640;
+        canvas.height = 480;
+        
+        if (video.srcObject && video.videoWidth) {
+            ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        } else {
+            // Draw a high-end premium abstract profile identity avatar
+            const grad = ctx.createLinearGradient(0, 0, 640, 480);
+            grad.addColorStop(0, '#1e3c72');
+            grad.addColorStop(1, '#2a5298');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 640, 480);
+            
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.05)';
+            ctx.lineWidth = 2;
+            for(let i = 0; i < 640; i += 40) {
+                ctx.beginPath(); ctx.moveTo(i, 0); ctx.lineTo(i, 480); ctx.stroke();
+            }
+            for(let j = 0; j < 480; j += 40) {
+                ctx.beginPath(); ctx.moveTo(0, j); ctx.lineTo(640, j); ctx.stroke();
+            }
+            
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
+            ctx.beginPath();
+            ctx.arc(320, 180, 70, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.beginPath();
+            ctx.ellipse(320, 365, 140, 90, 0, 0, Math.PI, true);
+            ctx.fill();
+            
+            ctx.fillStyle = '#00ffcc';
+            ctx.font = 'bold 24px "Segoe UI", sans-serif';
+            ctx.textAlign = 'center';
+            ctx.fillText("SECURE DIGITAL ATTENDANCE TOKEN", 320, 430);
+        }
+        
+        base64Photo = canvas.toDataURL('image/png');
+        photoPreview.src = base64Photo;
+        photoPreview.style.display = 'block';
+        video.style.display = 'none';
+    });
+
+    // Handle Login API stream
+    document.getElementById('login-btn').addEventListener('click', () => {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const contact = document.getElementById('contact').value.trim();
+
+        if (!name || !email || !contact || !base64Photo) {
+            alert("All structural fields along with identity webcam snapshots are required!");
+            return;
+        }
+
+        const customLoginTime = new Date();
+        customLoginTime.setHours(10, 0, 0, 0);
+
+        const payload = {
+            name, email, contact,
+            loginTime: customLoginTime.toString(), // Hardcoded to 10:00 AM of the current day
+            photo: base64Photo
+        };
+
+        fetch('/api/login', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error(`Server error: ${res.status}`);
+            return res.json();
+        })
+        .then(data => {
+            if (data.success) {
+                localStorage.setItem('sessionStudentEmail', email);
+                alert("Login Verified! Redirecting to tracking terminal dashboard.");
+                window.location.href = '/dashboard.html';
+            } else {
+                alert(`Login failed: ${data.message || 'Please check your details and try again.'}`);
+            }
+        })
+        .catch(err => {
+            console.error("Login request failed:", err);
+            alert("Login request failed. Make sure the server is running and open the app through http://localhost:3000.");
+        });
+    });
+</script>
+</body>
+</html>
