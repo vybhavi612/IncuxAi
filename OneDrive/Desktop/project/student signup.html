@@ -143,9 +143,14 @@ photo:reader.result
 
 };
 
+let students =
+JSON.parse(localStorage.getItem("students")) || [];
+
+students.push(student);
+
 localStorage.setItem(
-"student",
-JSON.stringify(student)
+"students",
+JSON.stringify(students)
 );
 
 alert("Account Created Successfully");

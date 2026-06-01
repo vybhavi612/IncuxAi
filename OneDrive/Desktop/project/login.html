@@ -71,8 +71,8 @@ Login
 
 function login(){
 
-const savedStudent =
-JSON.parse(localStorage.getItem("student"));
+const students =
+JSON.parse(localStorage.getItem("students")) || [];
 
 const email =
 document.getElementById("email").value;
@@ -80,14 +80,23 @@ document.getElementById("email").value;
 const password =
 document.getElementById("password").value;
 
-if(
-email === savedStudent.email &&
-password === savedStudent.password
-){
+const foundStudent = students.find(student =>
+
+student.email === email &&
+student.password === password
+
+);
+
+if(foundStudent){
 
 localStorage.setItem(
 "currentStudent",
-JSON.stringify(savedStudent)
+JSON.stringify(foundStudent)
+);
+
+localStorage.setItem(
+"loginTime",
+new Date().toLocaleTimeString()
 );
 
 alert("Login Successful");
@@ -103,5 +112,6 @@ alert("Invalid Email or Password");
 }
 
 </script>
+
 </body>
 </html>

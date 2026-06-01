@@ -1,81 +1,134 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin Dashboard</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
 
-  <style>
+<style>
 
-    body{
-      background:#071226;
-      color:white;
-      font-family:Arial;
-      padding:40px;
-    }
+body{
+background:#071226;
+color:white;
+font-family:Arial;
+padding:40px;
+}
 
-    h1{
-      margin-bottom:30px;
-    }
+h1{
+margin-bottom:30px;
+}
 
-    .student-card{
-      background:#111c34;
-      padding:20px;
-      margin-top:20px;
-      border-radius:15px;
-    }
+.student-card{
+background:#111c34;
+padding:20px;
+margin-top:20px;
+border-radius:15px;
+}
 
-  </style>
+button{
+padding:10px 20px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+background:#00d9ff;
+cursor:pointer;
+font-weight:bold;
+}
+
+input{
+padding:10px;
+border-radius:10px;
+border:none;
+}
+
+</style>
 
 </head>
+
 <body>
 
-<h1>Student Records</h1>
+<script>
+
+const password = prompt("Enter Admin Password");
+
+if(password !== "admin123"){
+
+alert("Access Denied");
+
+window.location.href = "index.html";
+
+}
+
+</script>
+
+<h1>Admin Dashboard</h1>
+
 <input type="time" id="startTime">
 
 <button onclick="saveTime()">
 Save Attendance Time
 </button>
 
-<div id="students"></div>
+<div id="workList"></div>
 
 <script>
 
-const students = JSON.parse(localStorage.getItem("students")) || [];
+const students =
+JSON.parse(localStorage.getItem("students")) || [];
 
-const studentsDiv = document.getElementById("students");
+const student =
+students[students.length - 1];
 
-students.forEach(student => {
+const workList =
+document.getElementById("workList");
 
-   studentsDiv.innerHTML += `
+if(student){
 
-   <div class="student-card">
+workList.innerHTML = `
 
-      <h2>${student.name}</h2>
+<div class="student-card">
 
-      <p>Email: ${student.email}</p>
+<h2>${student.name}</h2>
 
-      <p>Login Time: ${student.loginTime}</p>
+<p><b>Email:</b> ${student.email}</p>
 
-      <p>Status: ${student.status}</p>
+<p><b>Login Time:</b> ${localStorage.getItem("loginTime")}</p>
 
-   </div>
+<p><b>GitHub Link:</b> ${localStorage.getItem("githubLink")}</p>
 
-   `;
+<p><b>Work Progress:</b> ${localStorage.getItem("progress")}</p>
 
-});
+<p><b>Attendance Time:</b> ${localStorage.getItem("attendanceTime")}</p>
 
-</script>
-<script>
+</div>
+
+`;
+
+}else{
+
+workList.innerHTML = `
+
+<div class="student-card">
+
+No Student Data Found
+
+</div>
+
+`;
+
+}
 
 function saveTime(){
 
-   const time =
-   document.getElementById("startTime").value;
+const time =
+document.getElementById("startTime").value;
 
-   localStorage.setItem("attendanceTime",time);
+localStorage.setItem(
+"attendanceTime",
+time
+);
 
-   alert("Attendance Time Saved");
+alert("Attendance Time Saved");
 
 }
 
