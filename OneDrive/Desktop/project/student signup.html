@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Signup</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial;
+    }
+
+    body{
+      background:#071226;
+      height:100vh;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      color:white;
+    }
+
+    .login-box{
+      width:400px;
+      background:rgba(255,255,255,0.05);
+      padding:40px;
+      border-radius:20px;
+      backdrop-filter:blur(10px);
+      border:1px solid rgba(255,255,255,0.1);
+    }
+
+    h1{
+      text-align:center;
+      margin-bottom:30px;
+    }
+
+    input{
+      width:100%;
+      padding:15px;
+      margin-top:15px;
+      border:none;
+      border-radius:10px;
+      background:rgba(255,255,255,0.1);
+      color:white;
+    }
+
+    button{
+      width:100%;
+      padding:15px;
+      margin-top:20px;
+      border:none;
+      border-radius:10px;
+      background:#00d9ff;
+      font-size:18px;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+<div class="login-box">
+
+<h1>Student Signup</h1>
+
+<input type="text" id="name"
+placeholder="Enter Name">
+
+<input type="email" id="email"
+placeholder="Enter Email">
+
+<input type="password" id="password"
+placeholder="Create Password">
+
+<input type="password" id="confirmPassword"
+placeholder="Confirm Password">
+
+<input type="file" id="photo">
+
+<button onclick="signup()">
+Create Account
+</button>
+
+</div>
+
+<script>
+
+function signup(){
+
+const name =
+document.getElementById("name").value;
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+const confirmPassword =
+document.getElementById("confirmPassword").value;
+
+const photo =
+document.getElementById("photo").files[0];
+
+if(
+name === "" ||
+email === "" ||
+password === "" ||
+confirmPassword === "" ||
+!photo
+){
+
+alert("Please fill all details");
+
+return;
+
+}
+
+if(password !== confirmPassword){
+
+alert("Passwords do not match");
+
+return;
+
+}
+
+const reader = new FileReader();
+
+reader.onload = function(){
+
+const student = {
+
+name:name,
+email:email,
+password:password,
+photo:reader.result
+
+};
+
+let students =
+JSON.parse(localStorage.getItem("students")) || [];
+
+students.push(student);
+
+localStorage.setItem(
+"students",
+JSON.stringify(students)
+);
+
+alert("Account Created Successfully");
+
+window.location.href = "login.html";
+
+};
+
+reader.readAsDataURL(photo);
+
+}
+
+</script>
+
+</body>
+</html>

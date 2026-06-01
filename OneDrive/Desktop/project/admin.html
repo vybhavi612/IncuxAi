@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard</title>
+
+<style>
+
+body{
+background:#071226;
+color:white;
+font-family:Arial;
+padding:40px;
+}
+
+h1{
+margin-bottom:30px;
+}
+
+.student-card{
+background:#111c34;
+padding:20px;
+margin-top:20px;
+border-radius:15px;
+}
+
+button{
+padding:10px 20px;
+margin-top:10px;
+border:none;
+border-radius:10px;
+background:#00d9ff;
+cursor:pointer;
+font-weight:bold;
+}
+
+input{
+padding:10px;
+border-radius:10px;
+border:none;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<script>
+
+const password = prompt("Enter Admin Password");
+
+if(password !== "admin123"){
+
+alert("Access Denied");
+
+window.location.href = "index.html";
+
+}
+
+</script>
+
+<h1>Admin Dashboard</h1>
+
+<input type="time" id="startTime">
+
+<button onclick="saveTime()">
+Save Attendance Time
+</button>
+
+<div id="workList"></div>
+
+<script>
+
+const students =
+JSON.parse(localStorage.getItem("students")) || [];
+
+const student =
+students[students.length - 1];
+
+const workList =
+document.getElementById("workList");
+
+if(student){
+
+workList.innerHTML = `
+
+<div class="student-card">
+
+<h2>${student.name}</h2>
+
+<p><b>Email:</b> ${student.email}</p>
+
+<p><b>Login Time:</b> ${localStorage.getItem("loginTime")}</p>
+
+<p><b>GitHub Link:</b> ${localStorage.getItem("githubLink")}</p>
+
+<p><b>Work Progress:</b> ${localStorage.getItem("progress")}</p>
+
+<p><b>Attendance Time:</b> ${localStorage.getItem("attendanceTime")}</p>
+
+</div>
+
+`;
+
+}else{
+
+workList.innerHTML = `
+
+<div class="student-card">
+
+No Student Data Found
+
+</div>
+
+`;
+
+}
+
+function saveTime(){
+
+const time =
+document.getElementById("startTime").value;
+
+localStorage.setItem(
+"attendanceTime",
+time
+);
+
+alert("Attendance Time Saved");
+
+}
+
+</script>
+
+</body>
+</html>

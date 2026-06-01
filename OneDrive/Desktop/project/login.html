@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login</title>
+
+<style>
+
+body{
+background:#071226;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Arial;
+color:white;
+}
+
+.box{
+width:400px;
+padding:40px;
+background:rgba(255,255,255,0.05);
+border-radius:20px;
+}
+
+input{
+width:100%;
+padding:15px;
+margin-top:15px;
+border:none;
+border-radius:10px;
+background:rgba(255,255,255,0.1);
+color:white;
+}
+
+button{
+width:100%;
+padding:15px;
+margin-top:20px;
+border:none;
+border-radius:10px;
+background:#00d9ff;
+font-weight:bold;
+cursor:pointer;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<h1>Student Login</h1>
+
+<input type="email" id="email"
+placeholder="Enter Email">
+
+<input type="password" id="password"
+placeholder="Enter Password">
+
+<button onclick="login()">
+Login
+</button>
+
+</div>
+
+<script>
+
+function login(){
+
+const students =
+JSON.parse(localStorage.getItem("students")) || [];
+
+const email =
+document.getElementById("email").value;
+
+const password =
+document.getElementById("password").value;
+
+const foundStudent = students.find(student =>
+
+student.email === email &&
+student.password === password
+
+);
+
+if(foundStudent){
+
+localStorage.setItem(
+"currentStudent",
+JSON.stringify(foundStudent)
+);
+
+localStorage.setItem(
+"loginTime",
+new Date().toLocaleTimeString()
+);
+
+alert("Login Successful");
+
+window.location.href = "dashboard.html";
+
+}else{
+
+alert("Invalid Email or Password");
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

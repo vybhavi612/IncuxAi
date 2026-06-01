@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Dashboard</title>
+
+  <style>
+
+    *{
+      margin:0;
+      padding:0;
+      box-sizing:border-box;
+      font-family:Arial;
+    }
+
+    body{
+      background:#071226;
+      color:white;
+      padding:40px;
+    }
+
+    .box{
+      max-width:700px;
+      margin:auto;
+      background:rgba(255,255,255,0.05);
+      padding:40px;
+      border-radius:20px;
+      border:1px solid rgba(255,255,255,0.1);
+    }
+
+    h1{
+      margin-bottom:20px;
+    }
+
+    .card{
+      background:rgba(255,255,255,0.08);
+      padding:20px;
+      margin-top:20px;
+      border-radius:15px;
+    }
+
+    input, textarea{
+      width:100%;
+      padding:15px;
+      margin-top:15px;
+      border:none;
+      border-radius:10px;
+      background:rgba(255,255,255,0.1);
+      color:white;
+    }
+
+    button{
+      padding:15px 25px;
+      margin-top:20px;
+      border:none;
+      border-radius:10px;
+      background:#00d9ff;
+      font-weight:bold;
+      cursor:pointer;
+    }
+
+    img{
+      border-radius:50%;
+      object-fit:cover;
+      border:4px solid #00d9ff;
+      margin-bottom:20px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <div class="box">
+
+    <h1>Student Dashboard</h1>
+
+    <div class="card">
+
+      <img id="studentPhoto"
+      width="120"
+      height="120">
+
+      <h2 id="studentName"></h2>
+
+      <p id="studentEmail"></p>
+
+    </div>
+
+    <div class="card">
+
+      <h2>Attendance Status</h2>
+
+      <p id="time"></p>
+
+      <p id="status"></p>
+
+    </div>
+
+    <div class="card">
+
+      <h2>GitHub Repository</h2>
+
+      <input type="text"
+      id="githubLink"
+      placeholder="Paste GitHub Link">
+
+      <button onclick="saveGithub()">
+        Submit GitHub Link
+      </button>
+
+    </div>
+
+    <div class="card">
+
+      <h2>Hourly Progress Update</h2>
+
+      <textarea rows="5"
+      id="progressText"
+      placeholder="Enter your work progress"></textarea>
+
+      <button onclick="saveProgress()">
+        Submit Progress
+      </button>
+
+    </div>
+
+    <button onclick="logout()">
+      Logout
+    </button>
+
+  </div>
+
+<script>
+
+const now = new Date();
+
+const time = now.toLocaleTimeString();
+
+document.getElementById("time").innerHTML =
+"Login Time: " + time;
+
+let status = "On Time";
+
+const adminTime =
+localStorage.getItem("attendanceTime");
+
+if(adminTime){
+
+const splitTime = adminTime.split(":");
+
+const adminHour = parseInt(splitTime[0]);
+
+const adminMinute = parseInt(splitTime[1]);
+
+if(
+   now.getHours() > adminHour ||
+
+   (now.getHours() === adminHour &&
+   now.getMinutes() > adminMinute)
+
+){
+
+   status = "Late";
+
+}
+
+}
+
+document.getElementById("status").innerHTML =
+"Status: " + status;
+
+const student =
+JSON.parse(localStorage.getItem("currentStudent"));
+
+if(student){
+
+document.getElementById("studentPhoto").src =
+student.photo;
+
+document.getElementById("studentName").innerHTML =
+student.name;
+
+document.getElementById("studentEmail").innerHTML =
+student.email;
+
+}
+
+function saveGithub(){
+
+const github =
+document.getElementById("githubLink").value;
+
+localStorage.setItem(
+"githubLink",
+github
+);
+
+alert("GitHub Link Submitted");
+
+}
+
+function saveProgress(){
+
+const progress =
+document.getElementById("progressText").value;
+
+localStorage.setItem(
+"progress",
+progress
+);
+
+alert("Progress Submitted");
+
+}
+
+function logout(){
+
+localStorage.removeItem("currentStudent");
+
+alert("Logged Out Successfully");
+
+window.location.href = "login.html";
+
+}
+
+</script>
+
+</body>
+</html>
