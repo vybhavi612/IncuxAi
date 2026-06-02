@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>TrackTime Dashboard</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <style>
+
+        body{
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: #f4f8f9;
+            margin: 0;
+        }
+
+        header{
+            background-color: rgb(3,147,152);
+            color: white;
+            padding: 20px;
+        }
+
+        main{
+            flex: 1;
+            padding: 20px;
+        }
+
+        .dashboard-box{
+
+            background-color: white;
+
+            border-radius: 20px;
+
+            padding: 35px;
+
+            margin-top: 30px;
+
+            box-shadow:
+            0px 4px 12px rgba(0,0,0,0.1);
+
+        }
+
+        .time-container{
+
+            display: grid;
+
+            grid-template-columns:
+            repeat(auto-fit,minmax(280px,1fr));
+
+            gap: 20px;
+
+            margin-top: 30px;
+
+        }
+
+        .time-card{
+
+            background: #f8ffff;
+
+            padding: 25px;
+
+            border-radius: 15px;
+
+            border: 2px solid rgb(210,235,236);
+
+            transition: 0.3s;
+
+            word-wrap: break-word;
+
+        }
+
+        .time-card:hover{
+
+            transform: translateY(-5px);
+
+            box-shadow:
+            0px 5px 15px rgba(0,0,0,0.1);
+
+        }
+
+        .time-card h5{
+
+            color: rgb(3,147,152);
+
+            font-weight: bold;
+
+            margin-bottom: 20px;
+
+            text-align: center;
+
+        }
+
+        .time-card p{
+
+            font-size: 16px;
+
+            color: #333;
+
+            margin-bottom: 12px;
+
+        }
+
+        .logout-btn{
+
+            background-color: rgb(96,234,234);
+
+            border: 2px solid rgb(3,147,152);
+
+            color: rgb(2,66,66);
+
+            font-weight: bold;
+
+            width: 220px;
+
+            padding: 10px;
+
+            border-radius: 10px;
+
+            transition: 0.3s;
+
+        }
+
+        .logout-btn:hover{
+
+            background-color: rgb(44,185,185);
+
+            color: white;
+
+        }
+
+        footer{
+
+            background-color: rgb(3,147,152);
+
+            color: white;
+
+            text-align: center;
+
+            padding: 15px;
+
+            margin-top: auto;
+
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+
+    <header class="text-center">
+
+        <h2>
+            TrackTime Dashboard
+        </h2>
+
+    </header>
+
+    <main class="container">
+
+        <div class="dashboard-box">
+
+            <h3 class="text-center mb-4">
+
+                Time Tracker
+
+            </h3>
+
+            <div class="time-container"
+            id="historyList">
+
+            </div>
+
+        </div>
+
+    </main>
+
+    <footer>
+
+        TrackTime System
+
+    </footer>
+
+<script>
+let currentUser =
+sessionStorage.getItem("currentUser");
+
+if(!currentUser)
+{
+
+    alert("Please Login First");
+
+    window.location.href =
+    "login.html";
+
+}
+
+let historyList =
+document.getElementById("historyList");
+
+async function loadHistory()
+{
+
+    try
+    {
+
+        historyList.innerHTML = "";
+
+        let response = await fetch(
+
+            `http://localhost:5000/history/${currentUser}`
+
+        );
+
+        let history = await response.json();
+
+        console.log(history);
+
+        if(history.length === 0)
+        {
+
+            historyList.innerHTML =
+            "<h3>No History Found</h3>";
+
+        }
+
+        else
+        {
+
+            history.forEach((item,index)=>{
+
+                historyList.innerHTML += `
+
+                <div class="time-card">
+
+                    <h5>
+
+                    Session ${index + 1}
+
+                    </h5>
+
+                    <p>
+
+                    <strong>Login Time:</strong>
+
+                    ${new Date(item.login).toLocaleString()}
+
+                    </p>
+
+                    <p>
+
+                    <strong>Logout Time:</strong>
+
+                    ${item.logout
+                    ? new Date(item.logout).toLocaleString()
+                    : "Active Session"}
+
+                    </p>
+
+                </div>
+
+                `;
+
+            });
+
+        }
+
+    }
+
+    catch(err)
+    {
+
+        console.log(err);
+
+        historyList.innerHTML =
+        "<h3>Error Loading History</h3>";
+
+    }
+
+}
+
+loadHistory();
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AddTask</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css"
+  rel="stylesheet"/>
+
+  <style>
+
+    body{
+      background-color: rgb(223, 244, 244);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    form{
+      box-shadow: 5px 5px 15px rgb(180, 248, 248);
+      border-radius: 20px;
+      color: rgb(1, 58, 59);
+      width: 100%;
+      max-width: 700px;
+    }
+
+    h2{
+      color: rgb(1, 58, 59);
+      text-align: center;
+      font-weight: bold;
+    }
+
+    .frm{
+      background-color: rgb(30, 176, 178);
+      color: rgb(1, 58, 59);
+    }
+
+    .btn{
+      background-color: rgb(169, 240, 240);
+      width: 220px;
+      color: rgb(1, 58, 59);
+      border: 2px solid rgb(3, 147, 152);
+      font-weight: bold;
+      transition: 0.3s;
+    }
+
+    .btn:hover{
+      background-color: rgb(44, 185, 185);
+      border: 2px solid rgb(3, 147, 152);
+      color: white;
+    }
+
+    input{
+      background-color: rgb(159, 232, 232);
+      border: 2px solid rgb(3, 147, 152);
+      border-radius: 10px;
+      padding: 10px;
+      width: 100%;
+    }
+
+    input:focus{
+      outline: none;
+      border: 2px solid rgb(1, 58, 59);
+    }
+
+    label{
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    #PError{
+      color: brown;
+      margin-top: 10px;
+      text-align: center;
+    }
+
+    .input-box{
+      margin-bottom: 25px;
+    }
+
+  </style>
+
+</head>
+
+<body>
+
+  <form action=""
+  class="frm mx-auto fs-5"
+  id="Admin">
+
+    <div class="m-5 pt-3 pb-3">
+
+      <h2 class="mb-5">
+        Add Task
+      </h2>
+
+      <div class="input-box">
+
+        <label for="productName">
+          Github Link
+        </label>
+
+        <input type="text"
+        id="productName"
+        name="productName"
+        placeholder="Enter Github Link"
+        required />
+
+      </div>
+
+      <div class="input-box">
+
+        <label for="productDsc">
+          Description
+        </label>
+
+        <input type="text"
+        id="productDsc"
+        placeholder="Enter Description" />
+
+      </div>
+
+      <div id="PError"></div>
+
+      <div class="text-center mt-4">
+
+        <button type="submit"
+        class="btn p-2">
+
+          Add Task
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </form>
+
+<script>
+
+document.getElementById("Admin")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    let currentUser =
+    sessionStorage.getItem("currentUser");
+
+    let task = {
+
+        userEmail : currentUser,
+
+        github : document.getElementById("productName").value,
+
+        desc : document.getElementById("productDsc").value,
+
+        time : new Date().toLocaleString()
+
+    };
+
+    let response = await fetch(
+        "http://localhost:5000/add-task",
+        {
+            method : "POST",
+
+            headers : {
+                "Content-Type" : "application/json"
+            },
+
+            body : JSON.stringify(task)
+        }
+    );
+
+    let data = await response.json();
+
+    alert(data.message);
+
+    document.getElementById("Admin").reset();
+
+});
+
+</script>
+
+</body>
+</html>

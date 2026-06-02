@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+    content="width=device-width, initial-scale=1.0">
+
+    <title>Registration</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+    rel="stylesheet">
+
+    <style>
+
+        body{
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background-color: rgb(239,249,249);
+        }
+
+        .hd{
+            background-color: rgb(21,146,146);
+            color: rgb(2,66,66);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .register-box{
+
+            box-shadow:
+            5px 5px 15px rgb(169,240,240);
+
+            background-color: rgb(45,195,195);
+
+            border-radius: 20px;
+
+            color: rgb(1,27,28);
+
+            padding: 35px;
+
+            border: 2px solid rgb(3,147,152);
+
+            font-weight: bold;
+
+            width: 100%;
+
+            max-width: 500px;
+
+        }
+
+        label{
+            margin-bottom: 8px;
+        }
+
+        input{
+
+            background-color: rgb(169,240,240);
+
+            border: 2px solid rgb(3,147,152);
+
+            border-radius: 10px;
+
+            padding: 10px;
+
+            width: 100%;
+
+        }
+
+        input:hover{
+
+            border: 2.5px solid rgb(4,100,104);
+
+        }
+
+        .register{
+
+            background-color: rgb(169,240,240);
+
+            width: 100%;
+
+            color: rgb(1,58,59);
+
+            border: 2px solid rgb(3,147,152);
+
+            font-weight: bold;
+
+            padding: 10px;
+
+            border-radius: 10px;
+
+            margin-top: 15px;
+
+            transition: 0.3s;
+
+        }
+
+        .register:hover{
+
+            background-color: rgb(165,227,227);
+
+        }
+
+        footer{
+
+            background-color: rgb(21,146,146);
+
+            margin-top: auto;
+
+            height: 50px;
+
+        }
+
+
+    </style>
+
+</head>
+
+<body>
+
+<header class="hd">
+
+    <h1>Register</h1>
+
+</header>
+
+<div class="container d-flex justify-content-center align-items-center flex-grow-1 my-4">
+
+<form method="POST"
+class="register-box">
+
+    <div class="mb-3">
+
+        <label for="name">
+            Enter Name
+        </label>
+
+        <input type="text"
+        id="name"
+        placeholder="Enter Name"
+        required>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label for="Cname">
+            College Name
+        </label>
+
+        <input type="text"
+        id="Cname"
+        placeholder="Enter College Name"
+        required>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label for="phone">
+            Enter Number
+        </label>
+
+        <input type="number"
+        id="phone"
+        placeholder="Enter Number"
+        required>
+
+    </div>
+
+    <div class="mb-3">
+
+        <label for="Email">
+            Enter Email ID
+        </label>
+
+        <input type="email"
+        id="Email"
+        placeholder="Enter Email"
+        required>
+
+    </div>
+
+    <button class="register">
+
+        Register
+
+    </button>
+
+</form>
+
+</div>
+
+<footer></footer>
+
+
+<script>
+
+document.querySelector("form")
+.addEventListener("submit", async function(e){
+
+    e.preventDefault();
+
+    let user = {
+
+        name : document.getElementById("name").value,
+
+        college : document.getElementById("Cname").value,
+
+        phone : document.getElementById("phone").value,
+
+        email : document.getElementById("Email").value
+
+    };
+
+    let response = await fetch(
+        "http://localhost:5000/register",
+        {
+            method : "POST",
+
+            headers : {
+                "Content-Type" : "application/json"
+            },
+
+            body : JSON.stringify(user)
+        }
+    );
+
+    let data = await response.json();
+
+    alert(data.message);
+
+    if(data.success)
+    {
+        window.location.href = "login.html";
+    }
+
+});
+
+</script>
+
+</body>
+</html>
