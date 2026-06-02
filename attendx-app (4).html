@@ -1,0 +1,1586 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AttendX — Attendance & GitHub Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500&family=Sora:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#08090c;--bg2:#0f1117;--bg3:#161a24;--surface:#1b2030;--surface2:#222840;
+  --border:rgba(255,255,255,0.06);--border2:rgba(255,255,255,0.11);--border3:rgba(255,255,255,0.18);
+  --text:#eef0f8;--text2:#9aa0ba;--text3:#5a6080;
+  --blue:#4a8fff;--blue-dim:rgba(74,143,255,0.12);--blue-glow:rgba(74,143,255,0.25);
+  --green:#3ecf8e;--green-dim:rgba(62,207,142,0.12);
+  --orange:#ff8c42;--orange-dim:rgba(255,140,66,0.12);
+  --red:#ff5555;--red-dim:rgba(255,85,85,0.12);
+  --purple:#a78bfa;--purple-dim:rgba(167,139,250,0.12);
+  --r:10px;--r2:14px;--r3:18px;
+  --font:'Sora',sans-serif;--mono:'Geist Mono',monospace;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.6;min-height:100vh}
+
+/* ── UTILS ── */
+.hidden{display:none!important}
+.flex{display:flex}.flex-col{flex-direction:column}
+.items-center{align-items:center}.justify-between{justify-content:space-between}.justify-center{justify-content:center}
+.gap-4{gap:4px}.gap-8{gap:8px}.gap-12{gap:12px}.gap-16{gap:16px}.gap-20{gap:20px}.gap-24{gap:24px}
+.text-muted{color:var(--text2)}.text-faint{color:var(--text3)}
+.text-blue{color:var(--blue)}.text-green{color:var(--green)}.text-orange{color:var(--orange)}.text-red{color:var(--red)}
+.fw-500{font-weight:500}.fw-600{font-weight:600}.fw-700{font-weight:700}
+.fs-12{font-size:12px}.fs-13{font-size:13px}.fs-14{font-size:14px}
+.mono{font-family:var(--mono)}
+.w-full{width:100%}
+.mt-4{margin-top:4px}.mt-8{margin-top:8px}.mt-12{margin-top:12px}.mt-16{margin-top:16px}.mt-24{margin-top:24px}
+.badge{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:100px;font-size:11px;font-weight:600;letter-spacing:.3px}
+.badge-green{background:var(--green-dim);color:var(--green)}
+.badge-orange{background:var(--orange-dim);color:var(--orange)}
+.badge-red{background:var(--red-dim);color:var(--red)}
+.badge-blue{background:var(--blue-dim);color:var(--blue)}
+.badge-purple{background:var(--purple-dim);color:var(--purple)}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor;display:inline-block}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--blue-dim);border:1.5px solid var(--blue-glow);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--blue);flex-shrink:0;text-transform:uppercase}
+.avatar.lg{width:56px;height:56px;font-size:20px}
+
+/* ── CARDS ── */
+.card{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r2);padding:20px}
+.card-lg{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r3);padding:28px}
+
+/* ── INPUTS ── */
+input,select,textarea{
+  width:100%;background:var(--bg3);border:0.5px solid var(--border2);border-radius:var(--r);
+  color:var(--text);font-family:var(--font);font-size:14px;padding:11px 14px;
+  outline:none;transition:border-color .2s;
+}
+input:focus,select:focus,textarea:focus{border-color:var(--blue)}
+input::placeholder{color:var(--text3)}
+select option{background:var(--bg3)}
+label{font-size:13px;color:var(--text2);font-weight:500;display:block;margin-bottom:6px}
+
+/* ── BUTTONS ── */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 20px;border-radius:var(--r);font-family:var(--font);font-size:14px;font-weight:600;cursor:pointer;border:none;transition:opacity .15s,transform .1s;text-decoration:none}
+.btn:active{transform:scale(.97)}
+.btn-primary{background:var(--blue);color:#fff}
+.btn-primary:hover{opacity:.85}
+.btn-ghost{background:transparent;color:var(--text2);border:0.5px solid var(--border2)}
+.btn-ghost:hover{background:var(--surface);color:var(--text)}
+.btn-danger{background:var(--red-dim);color:var(--red);border:0.5px solid rgba(255,85,85,.2)}
+.btn-danger:hover{opacity:.8}
+.btn-sm{padding:7px 14px;font-size:13px}
+.btn-full{width:100%}
+.btn-icon{width:34px;height:34px;padding:0;border-radius:8px}
+
+/* ── TABLES ── */
+.tbl{width:100%;border-collapse:collapse}
+.tbl th{font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;color:var(--text3);padding:10px 14px;text-align:left;border-bottom:0.5px solid var(--border)}
+.tbl td{padding:12px 14px;font-size:13px;color:var(--text2);border-bottom:0.5px solid var(--border);vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.tbl tr:hover td{background:rgba(255,255,255,.02)}
+
+/* ── TOAST ── */
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast-item{background:var(--surface2);border:0.5px solid var(--border2);border-radius:10px;padding:12px 18px;font-size:13px;font-weight:500;display:flex;align-items:center;gap:10px;min-width:220px;animation:slideIn .25s ease}
+.toast-item.success{border-color:rgba(62,207,142,.3);color:var(--green)}
+.toast-item.error{border-color:rgba(255,85,85,.3);color:var(--red)}
+.toast-item.info{border-color:rgba(74,143,255,.3);color:var(--blue)}
+@keyframes slideIn{from{opacity:0;transform:translateX(20px)}to{opacity:1;transform:translateX(0)}}
+
+/* ══════════════════════════════
+   LOGIN PAGE
+══════════════════════════════ */
+#page-login{
+  min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding-top:60px;
+  background:var(--bg);position:relative;overflow:hidden;
+}
+@media(min-height:700px){#page-login{align-items:center;padding-top:0}}
+#page-login::before{
+  content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);
+  width:700px;height:700px;
+  background:radial-gradient(ellipse,rgba(74,143,255,.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+.login-box{width:100%;max-width:420px;padding:24px}
+.login-logo{display:flex;align-items:center;gap:10px;margin-bottom:40px;justify-content:center}
+.login-logo-mark{width:40px;height:40px;background:var(--blue);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:#fff}
+.login-logo-name{font-size:22px;font-weight:700;letter-spacing:-.5px}
+.login-title{font-size:24px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.login-sub{font-size:14px;color:var(--text2);margin-bottom:32px}
+.login-profile-preview{
+  display:flex;align-items:center;gap:14px;
+  background:var(--bg3);border:0.5px solid var(--border2);border-radius:12px;
+  padding:14px 16px;margin-bottom:20px;
+  animation:fadeIn .3s ease;
+}
+@keyframes fadeIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.form-group{margin-bottom:18px}
+.input-row{position:relative}
+.input-suffix{position:absolute;right:12px;top:50%;transform:translateY(-50%);cursor:pointer;color:var(--text3)}
+.divider{height:0.5px;background:var(--border);margin:28px 0}
+.login-hint{text-align:center;font-size:13px;color:var(--text3);margin-top:16px}
+.auth-switch{text-align:center;font-size:13px;color:var(--text3);margin-top:20px}
+.auth-switch a{color:var(--blue);cursor:pointer;font-weight:600;text-decoration:none}
+.auth-switch a:hover{opacity:.8}
+.signup-steps{display:flex;justify-content:center;gap:6px;margin-bottom:28px}
+.signup-step-dot{width:8px;height:8px;border-radius:50%;background:var(--border2);transition:background .2s}
+.signup-step-dot.active{background:var(--blue)}
+
+/* ══════════════════════════════
+   SIGNUP PAGE
+══════════════════════════════ */
+#page-signup{
+  min-height:100vh;display:none;align-items:center;justify-content:center;
+  background:var(--bg);position:relative;overflow:hidden;
+}
+#page-signup::before{
+  content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);
+  width:700px;height:700px;
+  background:radial-gradient(ellipse,rgba(74,143,255,.07) 0%,transparent 65%);
+  pointer-events:none;
+}
+.signup-box{width:100%;max-width:460px;padding:24px}
+
+/* ══════════════════════════════
+   APP SHELL
+══════════════════════════════ */
+#page-app{display:none;height:100vh;overflow:hidden}
+.app-shell{display:grid;grid-template-columns:240px 1fr;height:100vh}
+
+/* SIDEBAR */
+.sidebar{background:var(--bg2);border-right:0.5px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.sidebar-header{padding:20px 20px 16px;border-bottom:0.5px solid var(--border);flex-shrink:0}
+.sidebar-logo{display:flex;align-items:center;gap:10px}
+.sidebar-logo-mark{width:32px;height:32px;background:var(--blue);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff}
+.sidebar-logo-name{font-size:17px;font-weight:700;letter-spacing:-.5px}
+.sidebar-user{padding:14px 16px;margin:12px 12px 0;background:var(--bg3);border:0.5px solid var(--border);border-radius:10px}
+.sidebar-nav{flex:1;overflow-y:auto;padding:12px}
+.nav-section{font-size:10px;font-weight:600;letter-spacing:1.2px;text-transform:uppercase;color:var(--text3);padding:12px 10px 6px;margin-top:4px}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;cursor:pointer;font-size:14px;color:var(--text2);transition:background .15s,color .15s;margin-bottom:2px;border:none;background:none;width:100%;text-align:left;font-family:var(--font)}
+.nav-item:hover{background:var(--surface);color:var(--text)}
+.nav-item.active{background:var(--blue-dim);color:var(--blue);font-weight:500}
+.nav-item svg{width:16px;height:16px;flex-shrink:0;stroke:currentColor;fill:none;stroke-width:1.8}
+.sidebar-footer{padding:16px 12px;border-top:0.5px solid var(--border);flex-shrink:0}
+
+/* MAIN */
+.main{display:flex;flex-direction:column;overflow:hidden}
+.topbar{background:var(--bg2);border-bottom:0.5px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-title{font-size:16px;font-weight:600;letter-spacing:-.3px}
+.page-body{flex:1;overflow-y:auto;padding:28px;background:var(--bg)}
+
+/* ══════════════════════════════
+   VIEWS
+══════════════════════════════ */
+.view{display:none}
+.view.active{display:block}
+
+/* METRICS ROW */
+.metrics{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-bottom:24px}
+.metric{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:18px 20px}
+.metric-label{font-size:11px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--text3);margin-bottom:10px}
+.metric-val{font-size:28px;font-weight:700;letter-spacing:-1px;font-family:var(--mono);line-height:1}
+.metric-sub{font-size:12px;color:var(--text3);margin-top:6px}
+
+/* CHART BAR */
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:80px;padding:0 4px}
+.bar-col{flex:1;border-radius:4px 4px 0 0;transition:height .3s ease;min-height:4px}
+.chart-wrap{background:var(--bg3);border-radius:10px;padding:14px 16px;border:0.5px solid var(--border)}
+.chart-labels{display:flex;gap:6px;margin-top:6px;padding:0 4px}
+.chart-label{flex:1;text-align:center;font-size:10px;color:var(--text3)}
+
+/* ACTIVITY FEED */
+.activity-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:0.5px solid var(--border)}
+.activity-item:last-child{border-bottom:none}
+.activity-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+
+/* PROFILE VIEW */
+.profile-header{background:var(--bg2);border:0.5px solid var(--border);border-radius:var(--r3);padding:28px;display:flex;align-items:center;gap:24px;margin-bottom:20px}
+.profile-info h2{font-size:22px;font-weight:700;letter-spacing:-.5px;margin-bottom:4px}
+.profile-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.profile-field{background:var(--bg2);border:0.5px solid var(--border);border-radius:10px;padding:14px 16px}
+.profile-field-label{font-size:11px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--text3);margin-bottom:4px}
+.profile-field-val{font-size:14px;color:var(--text);font-weight:500}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);backdrop-filter:blur(4px);z-index:900;display:flex;align-items:center;justify-content:center;padding:24px}
+.modal{background:var(--bg2);border:0.5px solid var(--border2);border-radius:var(--r3);width:100%;max-width:500px;max-height:90vh;overflow-y:auto}
+.modal-head{padding:22px 24px;border-bottom:0.5px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{font-size:17px;font-weight:700;letter-spacing:-.3px}
+.modal-body{padding:24px}
+.modal-foot{padding:16px 24px;border-top:0.5px solid var(--border);display:flex;gap:10px;justify-content:flex-end}
+
+/* GITHUB SECTION */
+.gh-card{background:var(--bg2);border:0.5px solid var(--border);border-radius:12px;padding:20px}
+.gh-stat{text-align:center;padding:16px}
+.gh-num{font-size:32px;font-weight:700;font-family:var(--mono);letter-spacing:-1px;margin-bottom:4px}
+.gh-label{font-size:12px;color:var(--text3);font-weight:500}
+.commit-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:0.5px solid var(--border)}
+.commit-item:last-child{border-bottom:none}
+.commit-hash{font-family:var(--mono);font-size:12px;color:var(--blue);background:var(--blue-dim);padding:2px 8px;border-radius:5px}
+
+/* VARIANCE PILL */
+.var-early{color:var(--blue);background:var(--blue-dim);padding:3px 10px;border-radius:100px;font-size:12px;font-weight:600}
+.var-ontime{color:var(--green);background:var(--green-dim);padding:3px 10px;border-radius:100px;font-size:12px;font-weight:600}
+.var-late{color:var(--orange);background:var(--orange-dim);padding:3px 10px;border-radius:100px;font-size:12px;font-weight:600}
+.var-overtime{color:var(--purple);background:var(--purple-dim);padding:3px 10px;border-radius:100px;font-size:12px;font-weight:600}
+
+/* ATTENDANCE STATUS */
+.status-present{color:var(--green)}
+.status-absent{color:var(--text3)}
+.status-partial{color:var(--orange)}
+
+/* SEARCH BAR */
+.search-bar{background:var(--bg3);border:0.5px solid var(--border2);border-radius:9px;padding:9px 14px;display:flex;align-items:center;gap:10px;width:280px}
+.search-bar input{background:none;border:none;font-size:13px;padding:0;color:var(--text)}
+.search-bar svg{width:15px;height:15px;flex-shrink:0;stroke:var(--text3);fill:none;stroke-width:2}
+
+/* EMPTY STATE */
+.empty{text-align:center;padding:60px 24px;color:var(--text3)}
+.empty svg{width:40px;height:40px;stroke:var(--text3);fill:none;stroke-width:1.5;margin:0 auto 12px;display:block}
+.empty p{font-size:14px;margin-top:6px}
+
+/* LOGOUT CONFIRM */
+.logout-time-display{background:var(--bg3);border:0.5px solid var(--border2);border-radius:10px;padding:20px;text-align:center;margin:16px 0}
+.logout-time-display .time-big{font-size:36px;font-weight:700;font-family:var(--mono);letter-spacing:-1px;color:var(--text)}
+
+/* SETTINGS */
+.settings-section{margin-bottom:28px}
+.settings-section h3{font-size:15px;font-weight:600;margin-bottom:14px;letter-spacing:-.2px}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .app-shell{grid-template-columns:1fr}
+  .sidebar{display:none}
+  .metrics{grid-template-columns:repeat(2,1fr)}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════════════════════
+     LOGIN PAGE
+════════════════════════════ -->
+<div id="page-login">
+  <div class="login-box">
+    <div class="login-logo">
+      <div class="login-logo-mark">A</div>
+      <span class="login-logo-name">AttendX</span>
+    </div>
+    <h1 class="login-title">Welcome back</h1>
+    <p class="login-sub">Sign in to your workspace</p>
+
+    <div id="profile-preview" class="login-profile-preview hidden">
+      <div class="avatar lg" id="preview-avatar">--</div>
+      <div>
+        <div class="fw-600" id="preview-name">—</div>
+        <div class="fs-13 text-muted" id="preview-dept">—</div>
+        <div class="mt-4"><span class="badge badge-blue" id="preview-role">—</span></div>
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="login-email">Work Email</label>
+      <input type="email" id="login-email" placeholder="you@company.com" autocomplete="off">
+    </div>
+    <div class="form-group" id="password-field" style="display:none">
+      <label for="login-pass">Password</label>
+      <div class="input-row">
+        <input type="password" id="login-pass" placeholder="Enter your password">
+        <span class="input-suffix" onclick="togglePw()">👁</span>
+      </div>
+    </div>
+    <div id="login-error" class="fs-13 text-red mt-8 hidden"></div>
+    <button class="btn btn-primary btn-full mt-16" id="login-btn" onclick="handleLogin()">Continue →</button>
+
+    <div class="divider"></div>
+    <div class="login-hint fs-12">
+      <strong>Demo credentials</strong><br>
+      Admin: admin@company.com / admin123<br>
+      Employee: priya@company.com / pass123<br>
+      Employee: arjun@company.com / pass123
+    </div>
+    <div class="auth-switch">
+      New member? <a onclick="showSignup()">Create an account →</a>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP PAGE -->
+<div id="page-signup" style="min-height:100vh;display:none;align-items:center;justify-content:center;background:var(--bg);position:relative;overflow:hidden;">
+  <div style="content:'';position:absolute;top:-200px;left:50%;transform:translateX(-50%);width:700px;height:700px;background:radial-gradient(ellipse,rgba(74,143,255,.07) 0%,transparent 65%);pointer-events:none;"></div>
+  <div class="login-box" style="max-width:480px">
+    <div class="login-logo">
+      <div class="login-logo-mark">A</div>
+      <span class="login-logo-name">AttendX</span>
+    </div>
+    <h1 class="login-title">Create account</h1>
+    <p class="login-sub">Join your workspace as a new member</p>
+
+    <div id="signup-error" class="fs-13 text-red hidden" style="margin-bottom:14px"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group">
+        <label for="su-name">Full Name</label>
+        <input type="text" id="su-name" placeholder="Priya Sharma">
+      </div>
+      <div class="form-group">
+        <label for="su-email">Work Email</label>
+        <input type="email" id="su-email" placeholder="you@company.com">
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group">
+        <label for="su-dept">Department</label>
+        <select id="su-dept">
+          <option value="">Select department</option>
+          <option>Engineering</option>
+          <option>Design</option>
+          <option>Management</option>
+          <option>Marketing</option>
+          <option>Sales</option>
+          <option>HR</option>
+          <option>Finance</option>
+          <option>Operations</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="su-designation">Designation</label>
+        <input type="text" id="su-designation" placeholder="e.g. Frontend Developer">
+      </div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group">
+        <label for="su-login-time">Official Login Time</label>
+        <input type="time" id="su-login-time" value="09:00">
+      </div>
+      <div class="form-group">
+        <label for="su-logout-time">Official Logout Time</label>
+        <input type="time" id="su-logout-time" value="18:00">
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="su-github">GitHub Username <span style="color:var(--text3)">(optional)</span></label>
+      <input type="text" id="su-github" placeholder="your-github-username">
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group">
+        <label for="su-pass">Password</label>
+        <div class="input-row">
+          <input type="password" id="su-pass" placeholder="Min 6 characters">
+          <span class="input-suffix" onclick="toggleSignupPw()">👁</span>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="su-confirm">Confirm Password</label>
+        <input type="password" id="su-confirm" placeholder="Re-enter password">
+      </div>
+    </div>
+
+    <button class="btn btn-primary btn-full mt-8" onclick="handleSignup()">Create Account →</button>
+    <div class="auth-switch mt-16">
+      Already have an account? <a onclick="showLogin()">Sign in →</a>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════
+     APP SHELL
+════════════════════════════ -->
+<div id="page-app">
+  <div class="app-shell">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">
+          <div class="sidebar-logo-mark">A</div>
+          <span class="sidebar-logo-name">AttendX</span>
+        </div>
+      </div>
+      <div class="sidebar-user" id="sidebar-user-info"></div>
+      <nav class="sidebar-nav" id="sidebar-nav"></nav>
+      <div class="sidebar-footer">
+        <button class="nav-item w-full" onclick="confirmLogout()" style="color:var(--red)">
+          <svg viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
+          Log Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+      <header class="topbar">
+        <div class="topbar-title" id="topbar-title">Dashboard</div>
+        <div class="flex items-center gap-12">
+          <div id="attendance-status-chip"></div>
+          <div id="topbar-time" class="mono fs-13 text-muted"></div>
+        </div>
+      </header>
+      <div class="page-body" id="page-body">
+        <!-- views injected here -->
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODALS -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal(event)">
+  <div class="modal" id="modal-content" onclick="event.stopPropagation()"></div>
+</div>
+
+<!-- LOGOUT CONFIRM MODAL -->
+<div id="logout-modal-overlay" class="modal-overlay hidden">
+  <div class="modal" style="max-width:400px">
+    <div class="modal-head">
+      <h3>Confirm Logout</h3>
+    </div>
+    <div class="modal-body">
+      <div class="logout-time-display">
+        <div class="fs-12 text-muted mb-4" style="margin-bottom:8px">Current Server Time</div>
+        <div class="time-big" id="logout-time-display">--:--:--</div>
+        <div class="fs-13 text-muted mt-8" id="logout-date-display">—</div>
+      </div>
+      <div id="logout-variance-info" class="fs-13 text-muted" style="text-align:center"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeLogoutModal()">Cancel</button>
+      <button class="btn btn-danger" onclick="executeLogout()">Confirm Logout</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+'use strict';
+
+/* ════════════════════════════
+   DATA LAYER (localStorage)
+════════════════════════════ */
+const DB = {
+  get(key){try{return JSON.parse(localStorage.getItem('attendx_'+key))||null}catch{return null}},
+  set(key,val){localStorage.setItem('attendx_'+key,JSON.stringify(val))},
+  init(){
+    if(!DB.get('employees')){
+      DB.set('employees',[
+        {id:'EMP001',name:'Admin User',email:'admin@company.com',password:'admin123',dept:'Management',designation:'System Administrator',github:'admin-user',role:'admin',officialLogin:'09:00',officialLogout:'18:00',avatar:'AU'},
+        {id:'EMP002',name:'Priya Sharma',email:'priya@company.com',password:'pass123',dept:'Engineering',designation:'Frontend Developer',github:'priya-codes',role:'employee',officialLogin:'09:00',officialLogout:'18:00',avatar:'PS'},
+        {id:'EMP003',name:'Arjun Mehta',email:'arjun@company.com',password:'pass123',dept:'Engineering',designation:'Backend Developer',github:'arjunm-dev',role:'employee',officialLogin:'09:00',officialLogout:'18:00',avatar:'AM'},
+        {id:'EMP004',name:'Sneha Nair',email:'sneha@company.com',password:'pass123',dept:'Design',designation:'UI/UX Designer',github:'snehacreates',role:'employee',officialLogin:'09:30',officialLogout:'18:30',avatar:'SN'},
+        {id:'EMP005',name:'Rahul Verma',email:'rahul@company.com',password:'pass123',dept:'Engineering',designation:'DevOps Engineer',github:'rahulv-ops',role:'employee',officialLogin:'09:00',officialLogout:'18:00',avatar:'RV'},
+      ]);
+    }
+    if(!DB.get('attendance')){
+      // seed past attendance
+      const now = new Date();
+      const logs = [];
+      const emps = DB.get('employees').filter(e=>e.role==='employee');
+      for(let d=6;d>=1;d--){
+        const date = new Date(now);
+        date.setDate(date.getDate()-d);
+        if(date.getDay()===0||date.getDay()===6) continue;
+        const dateStr = date.toISOString().split('T')[0];
+        emps.forEach(emp=>{
+          const loginHr = 9 + Math.floor(Math.random()*1.5);
+          const loginMin = Math.floor(Math.random()*40);
+          const logoutHr = 17 + Math.floor(Math.random()*2);
+          const logoutMin = Math.floor(Math.random()*60);
+          logs.push({
+            id: Date.now()+Math.random(),
+            empId: emp.id,
+            date: dateStr,
+            loginTime: `${String(loginHr).padStart(2,'0')}:${String(loginMin).padStart(2,'0')}:00`,
+            logoutTime: `${String(logoutHr).padStart(2,'0')}:${String(logoutMin).padStart(2,'0')}:00`,
+            loginVariance: calcVariance(emp.officialLogin, `${String(loginHr).padStart(2,'0')}:${String(loginMin).padStart(2,'0')}`),
+            logoutVariance: calcVariance(emp.officialLogout, `${String(logoutHr).padStart(2,'0')}:${String(logoutMin).padStart(2,'0')}`),
+          });
+        });
+      }
+      DB.set('attendance', logs);
+    }
+    if(!DB.get('github_cache')) DB.set('github_cache',{});
+  }
+};
+
+/* ════════════════════════════
+   HELPERS
+════════════════════════════ */
+function calcVariance(official, actual){
+  const [oh,om]=official.split(':').map(Number);
+  const [ah,am]=actual.split(':').map(Number);
+  const diffMin=(ah*60+am)-(oh*60+om);
+  return diffMin; // negative = early, positive = late/overtime
+}
+
+function formatVariance(min, type='login'){
+  const abs=Math.abs(min);
+  const h=Math.floor(abs/60),m=abs%60;
+  const str=h>0?`${h}h ${m}m`:`${m}m`;
+  if(type==='login'){
+    if(min<-2) return `<span class="var-early">−${str} early</span>`;
+    if(min<=5) return `<span class="var-ontime">On time</span>`;
+    return `<span class="var-late">+${str} late</span>`;
+  } else {
+    if(min<-5) return `<span class="var-early">−${str} early</span>`;
+    if(min<=15) return `<span class="var-ontime">Normal</span>`;
+    return `<span class="var-overtime">+${str} OT</span>`;
+  }
+}
+
+function fmtTime(timeStr){
+  if(!timeStr) return '—';
+  const [h,m]=timeStr.split(':').map(Number);
+  const ampm=h>=12?'PM':'AM';
+  const h12=h%12||12;
+  return `${h12}:${String(m).padStart(2,'0')} ${ampm}`;
+}
+
+function today(){return new Date().toISOString().split('T')[0]}
+function nowTime(){
+  const n=new Date();
+  return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}:${String(n.getSeconds()).padStart(2,'0')}`;
+}
+function nowTimeHM(){
+  const n=new Date();
+  return `${String(n.getHours()).padStart(2,'0')}:${String(n.getMinutes()).padStart(2,'0')}`;
+}
+
+function showToast(msg, type='info'){
+  const t=document.getElementById('toast');
+  const el=document.createElement('div');
+  el.className=`toast-item ${type}`;
+  const icons={success:'✓',error:'✗',info:'ℹ'};
+  el.innerHTML=`<span>${icons[type]||'•'}</span><span>${msg}</span>`;
+  t.appendChild(el);
+  setTimeout(()=>el.remove(),3500);
+}
+
+function openModal(html){
+  document.getElementById('modal-content').innerHTML=html;
+  document.getElementById('modal-overlay').classList.remove('hidden');
+}
+function closeModal(e){
+  if(!e||e.target===document.getElementById('modal-overlay'))
+    document.getElementById('modal-overlay').classList.add('hidden');
+}
+function closeModalDirect(){
+  document.getElementById('modal-overlay').classList.add('hidden');
+}
+
+/* ════════════════════════════
+   AUTH
+════════════════════════════ */
+let session = null;
+let loginStep = 'email';
+
+function handleLogin(){
+  const email = document.getElementById('login-email').value.trim();
+  const employees = DB.get('employees');
+
+  if(loginStep === 'email'){
+    const emp = employees.find(e=>e.email.toLowerCase()===email.toLowerCase());
+    if(!emp){
+      showError('No account found with that email');
+      return;
+    }
+    // show profile preview
+    document.getElementById('preview-avatar').textContent = emp.avatar;
+    document.getElementById('preview-name').textContent = emp.name;
+    document.getElementById('preview-dept').textContent = emp.dept + ' · ' + emp.designation;
+    document.getElementById('preview-role').textContent = emp.role.charAt(0).toUpperCase()+emp.role.slice(1);
+    document.getElementById('profile-preview').classList.remove('hidden');
+    document.getElementById('password-field').style.display='block';
+    document.getElementById('login-email').disabled=true;
+    document.getElementById('login-btn').textContent='Sign In →';
+    loginStep='password';
+    document.getElementById('login-pass').focus();
+  } else {
+    const pass = document.getElementById('login-pass').value;
+    const emp = employees.find(e=>e.email.toLowerCase()===email.toLowerCase()&&e.password===pass);
+    if(!emp){showError('Incorrect password');return;}
+
+    session={empId:emp.id, role:emp.role, name:emp.name};
+    DB.set('session', session);
+
+    // check if already logged in today
+    const logs=DB.get('attendance')||[];
+    const todayLog=logs.find(l=>l.empId===emp.id&&l.date===today());
+    if(!todayLog && emp.role==='employee'){
+      // auto-record login
+      const loginTime=nowTimeHM();
+      const variance=calcVariance(emp.officialLogin, loginTime);
+      const newLog={
+        id: Date.now(),
+        empId:emp.id,
+        date:today(),
+        loginTime: nowTime(),
+        logoutTime:null,
+        loginVariance:variance,
+        logoutVariance:null
+      };
+      logs.push(newLog);
+      DB.set('attendance',logs);
+      showToast(`Login recorded at ${fmtTime(loginTime)}`, 'success');
+    }
+
+    bootApp(emp);
+  }
+}
+
+function showError(msg){
+  const el=document.getElementById('login-error');
+  el.textContent=msg;
+  el.classList.remove('hidden');
+  setTimeout(()=>el.classList.add('hidden'),3000);
+}
+
+function togglePw(){
+  const inp=document.getElementById('login-pass');
+  inp.type=inp.type==='password'?'text':'password';
+}
+
+// Check email on input for live preview reset
+document.addEventListener('DOMContentLoaded',()=>{
+  DB.init();
+  // check persisted session
+  const s=DB.get('session');
+  if(s){
+    const emp=DB.get('employees').find(e=>e.id===s.empId);
+    if(emp){session=s;bootApp(emp);return;}
+  }
+  document.getElementById('login-email').addEventListener('keydown',e=>{
+    if(e.key==='Enter') handleLogin();
+  });
+  document.getElementById('login-pass').addEventListener('keydown',e=>{
+    if(e.key==='Enter') handleLogin();
+  });
+  document.getElementById('su-confirm').addEventListener('keydown',e=>{
+    if(e.key==='Enter') handleSignup();
+  });
+  // live clock
+  setInterval(()=>{
+    const el=document.getElementById('topbar-time');
+    if(el) el.textContent=nowTime();
+  },1000);
+});
+
+/* ════════════════════════════
+   APP BOOT
+════════════════════════════ */
+function bootApp(emp){
+  document.getElementById('page-login').style.display='none';
+  document.getElementById('page-app').style.display='block';
+
+  buildSidebar(emp);
+  navigate(emp.role==='admin'?'admin-overview':'my-dashboard');
+  updateAttendanceChip(emp);
+}
+
+function updateAttendanceChip(emp){
+  const el=document.getElementById('attendance-status-chip');
+  if(emp.role==='admin'){el.innerHTML='';return;}
+  const logs=DB.get('attendance')||[];
+  const todayLog=logs.find(l=>l.empId===emp.id&&l.date===today());
+  if(!todayLog){
+    el.innerHTML='<span class="badge badge-orange"><span class="dot"></span>Not Checked In</span>';
+  } else if(todayLog.logoutTime){
+    el.innerHTML='<span class="badge badge-blue"><span class="dot"></span>Logged Out</span>';
+  } else {
+    el.innerHTML='<span class="badge badge-green"><span class="dot"></span>Checked In</span>';
+  }
+}
+
+function buildSidebar(emp){
+  const userDiv=document.getElementById('sidebar-user-info');
+  userDiv.innerHTML=`
+    <div class="flex items-center gap-10">
+      <div class="avatar">${emp.avatar}</div>
+      <div>
+        <div class="fw-500 fs-14">${emp.name}</div>
+        <div class="fs-12 text-muted">${emp.designation}</div>
+      </div>
+    </div>`;
+
+  const nav=document.getElementById('sidebar-nav');
+  const isAdmin=emp.role==='admin';
+  const items=isAdmin?[
+    {id:'admin-overview',icon:'grid',label:'Overview'},
+    {id:'admin-employees',icon:'users',label:'Employees'},
+    {id:'admin-attendance',icon:'calendar',label:'Attendance'},
+    {id:'admin-github',icon:'git-branch',label:'GitHub Activity'},
+    {id:'admin-reports',icon:'bar-chart',label:'Reports'},
+  ]:[
+    {id:'my-dashboard',icon:'home',label:'Dashboard'},
+    {id:'my-attendance',icon:'clock',label:'My Attendance'},
+    {id:'my-github',icon:'git-branch',label:'GitHub Activity'},
+    {id:'my-profile',icon:'user',label:'My Profile'},
+  ];
+
+  nav.innerHTML='<div class="nav-section">'+( isAdmin?'Admin Panel':'My Space')+'</div>'+
+    items.map(i=>`<button class="nav-item" id="nav-${i.id}" onclick="navigate('${i.id}')">${svgIcon(i.icon)} ${i.label}</button>`).join('');
+}
+
+function svgIcon(name){
+  const icons={
+    grid:`<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>`,
+    users:`<svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>`,
+    calendar:`<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>`,
+    'git-branch':`<svg viewBox="0 0 24 24"><line x1="6" y1="3" x2="6" y2="15"/><circle cx="18" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M18 9a9 9 0 01-9 9"/></svg>`,
+    'bar-chart':`<svg viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/><line x1="2" y1="20" x2="22" y2="20"/></svg>`,
+    home:`<svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    clock:`<svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    user:`<svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+  };
+  return icons[name]||'';
+}
+
+let currentView='';
+function navigate(view){
+  currentView=view;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const navEl=document.getElementById('nav-'+view);
+  if(navEl) navEl.classList.add('active');
+
+  const titles={
+    'admin-overview':'Admin Overview','admin-employees':'Employees','admin-attendance':'Attendance Monitor',
+    'admin-github':'GitHub Activity','admin-reports':'Reports',
+    'my-dashboard':'My Dashboard','my-attendance':'My Attendance','my-github':'My GitHub','my-profile':'My Profile'
+  };
+  document.getElementById('topbar-title').textContent=titles[view]||view;
+
+  const body=document.getElementById('page-body');
+  const emp=getCurrentEmp();
+
+  const renderers={
+    'admin-overview':renderAdminOverview,
+    'admin-employees':renderAdminEmployees,
+    'admin-attendance':renderAdminAttendance,
+    'admin-github':renderAdminGitHub,
+    'admin-reports':renderAdminReports,
+    'my-dashboard':renderMyDashboard,
+    'my-attendance':renderMyAttendance,
+    'my-github':renderMyGitHub,
+    'my-profile':renderMyProfile,
+  };
+
+  body.innerHTML='<div style="opacity:0;transition:opacity .2s" id="view-anim">'+(renderers[view]?renderers[view](emp):'<p>View not found</p>')+'</div>';
+  requestAnimationFrame(()=>{
+    const el=document.getElementById('view-anim');
+    if(el) el.style.opacity='1';
+  });
+}
+
+function getCurrentEmp(){
+  return DB.get('employees').find(e=>e.id===session.empId);
+}
+
+/* ════════════════════════════
+   ADMIN: OVERVIEW
+════════════════════════════ */
+function renderAdminOverview(){
+  const employees=DB.get('employees').filter(e=>e.role==='employee');
+  const attendance=DB.get('attendance')||[];
+  const todayLogs=attendance.filter(l=>l.date===today());
+  const present=todayLogs.length;
+  const onTime=todayLogs.filter(l=>l.loginVariance<=5).length;
+  const late=todayLogs.filter(l=>l.loginVariance>5).length;
+
+  // week data
+  const weekDays=['Mon','Tue','Wed','Thu','Fri'];
+  const weekCounts=weekDays.map((_,i)=>{
+    const d=new Date(); d.setDate(d.getDate()-4+i);
+    const ds=d.toISOString().split('T')[0];
+    return attendance.filter(l=>l.date===ds).length;
+  });
+  const maxW=Math.max(...weekCounts,1);
+
+  const recentActivity=attendance.slice(-6).reverse();
+
+  return `
+  <div class="metrics">
+    <div class="metric">
+      <div class="metric-label">Total Employees</div>
+      <div class="metric-val">${employees.length}</div>
+      <div class="metric-sub">Active workforce</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Present Today</div>
+      <div class="metric-val text-green">${present}</div>
+      <div class="metric-sub">${today()}</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">On Time</div>
+      <div class="metric-val text-blue">${onTime}</div>
+      <div class="metric-sub">Of ${present} present</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Late Arrivals</div>
+      <div class="metric-val text-orange">${late}</div>
+      <div class="metric-sub">Today</div>
+    </div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px">
+    <div class="card">
+      <div class="flex justify-between items-center" style="margin-bottom:14px">
+        <span class="fw-600 fs-14">Weekly Attendance</span>
+        <span class="badge badge-blue">This week</span>
+      </div>
+      <div class="chart-wrap">
+        <div class="bar-chart">
+          ${weekCounts.map(c=>`<div class="bar-col" style="height:${Math.round((c/maxW)*100)}%;background:var(--blue);opacity:.7"></div>`).join('')}
+        </div>
+        <div class="chart-labels">${weekDays.map(d=>`<div class="chart-label">${d}</div>`).join('')}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="fw-600 fs-14" style="margin-bottom:14px">Today's Status</div>
+      ${employees.map(emp=>{
+        const log=todayLogs.find(l=>l.empId===emp.id);
+        return `<div class="flex items-center justify-between" style="padding:8px 0;border-bottom:0.5px solid var(--border)">
+          <div class="flex items-center gap-8">
+            <div class="avatar">${emp.avatar}</div>
+            <div>
+              <div class="fw-500 fs-13">${emp.name}</div>
+              <div class="fs-12 text-muted">${emp.dept}</div>
+            </div>
+          </div>
+          ${log ? `<div>
+            <div class="fs-12 mono text-muted">${log.loginTime.substring(0,5)}</div>
+            ${log.logoutTime?`<span class="badge badge-blue">Out</span>`:`<span class="badge badge-green">In</span>`}
+          </div>` : `<span class="badge" style="background:rgba(90,96,128,.1);color:var(--text3)">Absent</span>`}
+        </div>`;
+      }).join('')}
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="fw-600 fs-14" style="margin-bottom:14px">Recent Activity</div>
+    ${recentActivity.length ? recentActivity.map(log=>{
+      const emp=DB.get('employees').find(e=>e.id===log.empId);
+      if(!emp) return '';
+      return `<div class="activity-item">
+        <div class="avatar">${emp.avatar}</div>
+        <div style="flex:1">
+          <div class="fs-13 fw-500">${emp.name} <span class="text-muted">checked in</span></div>
+          <div class="fs-12 text-muted">${log.date} at ${fmtTime(log.loginTime.substring(0,5))}</div>
+        </div>
+        <div>${formatVariance(log.loginVariance,'login')}</div>
+      </div>`;
+    }).join('') : '<div class="empty"><p>No activity yet today</p></div>'}
+  </div>`;
+}
+
+/* ════════════════════════════
+   ADMIN: EMPLOYEES
+════════════════════════════ */
+function renderAdminEmployees(filter=''){
+  const employees=DB.get('employees').filter(e=>e.role==='employee');
+  const filtered=filter?employees.filter(e=>e.name.toLowerCase().includes(filter.toLowerCase())||e.email.toLowerCase().includes(filter.toLowerCase())):employees;
+  return `
+  <div class="flex justify-between items-center" style="margin-bottom:20px">
+    <div class="search-bar">
+      <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input placeholder="Search employees…" oninput="searchEmployees(this.value)" value="${filter}" style="background:none;border:none;padding:0;font-size:13px;color:var(--text)">
+    </div>
+    <button class="btn btn-primary btn-sm" onclick="openAddEmployee()">+ Add Employee</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="tbl">
+      <thead><tr>
+        <th>Employee</th><th>Department</th><th>GitHub</th><th>Office Hours</th><th>Role</th><th>Actions</th>
+      </tr></thead>
+      <tbody>
+        ${filtered.map(emp=>`<tr>
+          <td>
+            <div class="flex items-center gap-10">
+              <div class="avatar">${emp.avatar}</div>
+              <div>
+                <div class="fw-500">${emp.name}</div>
+                <div class="fs-12 text-muted">${emp.email}</div>
+              </div>
+            </div>
+          </td>
+          <td><div>${emp.dept}</div><div class="fs-12 text-muted">${emp.designation}</div></td>
+          <td><span class="mono fs-13 text-blue">@${emp.github}</span></td>
+          <td class="mono fs-12 text-muted">${emp.officialLogin} – ${emp.officialLogout}</td>
+          <td><span class="badge ${emp.role==='admin'?'badge-purple':'badge-blue'}">${emp.role}</span></td>
+          <td>
+            <div class="flex gap-8">
+              <button class="btn btn-ghost btn-sm" onclick="openEditEmployee('${emp.id}')">Edit</button>
+              <button class="btn btn-danger btn-sm" onclick="deleteEmployee('${emp.id}')">Delete</button>
+            </div>
+          </td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+    ${filtered.length===0?`<div class="empty"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><p>No employees found</p></div>`:''}
+  </div>`;
+}
+
+function searchEmployees(val){
+  document.getElementById('view-anim').innerHTML=renderAdminEmployees(val);
+}
+
+function openAddEmployee(){
+  openModal(`
+    <div class="modal-head"><h3>Add New Employee</h3><button class="btn btn-ghost btn-sm btn-icon" onclick="closeModalDirect()">✕</button></div>
+    <div class="modal-body">
+      ${employeeForm()}
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModalDirect()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEmployee()">Save Employee</button>
+    </div>`);
+}
+
+function openEditEmployee(id){
+  const emp=DB.get('employees').find(e=>e.id===id);
+  openModal(`
+    <div class="modal-head"><h3>Edit Employee</h3><button class="btn btn-ghost btn-sm btn-icon" onclick="closeModalDirect()">✕</button></div>
+    <div class="modal-body">
+      <input type="hidden" id="edit-id" value="${id}">
+      ${employeeForm(emp)}
+    </div>
+    <div class="modal-foot">
+      <button class="btn btn-ghost" onclick="closeModalDirect()">Cancel</button>
+      <button class="btn btn-primary" onclick="saveEmployee(true)">Update Employee</button>
+    </div>`);
+}
+
+function employeeForm(emp={}){
+  return `
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+      <div class="form-group"><label>Full Name</label><input id="ef-name" value="${emp.name||''}"></div>
+      <div class="form-group"><label>Employee ID</label><input id="ef-id" value="${emp.id||'EMP00'+(DB.get('employees').length+1)}" ${emp.id?'disabled':''}></div>
+      <div class="form-group"><label>Email</label><input id="ef-email" type="email" value="${emp.email||''}"></div>
+      <div class="form-group"><label>Password</label><input id="ef-pass" type="password" placeholder="${emp.id?'Leave blank to keep':'Set password'}"></div>
+      <div class="form-group"><label>Department</label><input id="ef-dept" value="${emp.dept||''}"></div>
+      <div class="form-group"><label>Designation</label><input id="ef-desig" value="${emp.designation||''}"></div>
+      <div class="form-group"><label>GitHub Username</label><input id="ef-github" value="${emp.github||''}"></div>
+      <div class="form-group"><label>Role</label>
+        <select id="ef-role">
+          <option value="employee" ${emp.role==='employee'?'selected':''}>Employee</option>
+          <option value="admin" ${emp.role==='admin'?'selected':''}>Admin</option>
+        </select>
+      </div>
+      <div class="form-group"><label>Official Login Time</label><input id="ef-login" type="time" value="${emp.officialLogin||'09:00'}"></div>
+      <div class="form-group"><label>Official Logout Time</label><input id="ef-logout" type="time" value="${emp.officialLogout||'18:00'}"></div>
+    </div>`;
+}
+
+function saveEmployee(isEdit=false){
+  const employees=DB.get('employees');
+  const id=isEdit?document.getElementById('edit-id').value:document.getElementById('ef-id').value;
+  const name=document.getElementById('ef-name').value;
+  const email=document.getElementById('ef-email').value;
+  const pass=document.getElementById('ef-pass').value;
+  const dept=document.getElementById('ef-dept').value;
+  const desig=document.getElementById('ef-desig').value;
+  const github=document.getElementById('ef-github').value;
+  const role=document.getElementById('ef-role').value;
+  const login=document.getElementById('ef-login').value;
+  const logout=document.getElementById('ef-logout').value;
+  if(!name||!email){showToast('Name and email required','error');return;}
+  if(isEdit){
+    const idx=employees.findIndex(e=>e.id===id);
+    if(idx>-1){
+      employees[idx]={...employees[idx],name,email,dept,designation:desig,github,role,officialLogin:login,officialLogout:logout,avatar:name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()};
+      if(pass) employees[idx].password=pass;
+    }
+  } else {
+    if(employees.find(e=>e.email===email)){showToast('Email already exists','error');return;}
+    employees.push({id,name,email,password:pass||'pass123',dept,designation:desig,github,role,officialLogin:login,officialLogout:logout,avatar:name.split(' ').map(w=>w[0]).join('').substring(0,2).toUpperCase()});
+  }
+  DB.set('employees',employees);
+  closeModalDirect();
+  showToast(isEdit?'Employee updated':'Employee added','success');
+  navigate('admin-employees');
+}
+
+function deleteEmployee(id){
+  if(!confirm('Delete this employee? This cannot be undone.')) return;
+  const employees=DB.get('employees').filter(e=>e.id!==id);
+  DB.set('employees',employees);
+  showToast('Employee deleted','info');
+  navigate('admin-employees');
+}
+
+/* ════════════════════════════
+   ADMIN: ATTENDANCE
+════════════════════════════ */
+function renderAdminAttendance(){
+  const attendance=DB.get('attendance')||[];
+  const employees=DB.get('employees').filter(e=>e.role==='employee');
+  const dates=[...new Set(attendance.map(l=>l.date))].sort().reverse().slice(0,14);
+
+  return `
+  <div class="flex justify-between items-center" style="margin-bottom:20px">
+    <div class="flex gap-12 items-center">
+      <label class="fs-13 text-muted">Filter date:</label>
+      <input type="date" id="att-date-filter" value="${today()}" style="width:170px" onchange="filterAttendance()">
+    </div>
+    <button class="btn btn-ghost btn-sm" onclick="exportAttendance()">⬇ Export CSV</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden" id="att-table-wrap">
+    ${renderAttendanceTable(today())}
+  </div>`;
+}
+
+function renderAttendanceTable(dateFilter){
+  const attendance=DB.get('attendance')||[];
+  const employees=DB.get('employees').filter(e=>e.role==='employee');
+  const logs=attendance.filter(l=>l.date===dateFilter);
+  return `<table class="tbl">
+    <thead><tr><th>Employee</th><th>Date</th><th>Login</th><th>Login Variance</th><th>Logout</th><th>Logout Variance</th><th>Status</th></tr></thead>
+    <tbody>
+      ${employees.map(emp=>{
+        const log=logs.find(l=>l.empId===emp.id);
+        if(!log) return `<tr>
+          <td><div class="flex items-center gap-8"><div class="avatar">${emp.avatar}</div><div><div class="fw-500">${emp.name}</div><div class="fs-12 text-muted">${emp.dept}</div></div></div></td>
+          <td class="mono fs-13">${dateFilter}</td>
+          <td class="text-muted">—</td><td>—</td><td class="text-muted">—</td><td>—</td>
+          <td><span class="badge" style="background:rgba(90,96,128,.1);color:var(--text3)">Absent</span></td>
+        </tr>`;
+        return `<tr>
+          <td><div class="flex items-center gap-8"><div class="avatar">${emp.avatar}</div><div><div class="fw-500">${emp.name}</div><div class="fs-12 text-muted">${emp.dept}</div></div></div></td>
+          <td class="mono fs-13">${log.date}</td>
+          <td class="mono fs-13">${fmtTime(log.loginTime.substring(0,5))}</td>
+          <td>${formatVariance(log.loginVariance,'login')}</td>
+          <td class="mono fs-13">${log.logoutTime?fmtTime(log.logoutTime.substring(0,5)):'<span class="text-muted">Active</span>'}</td>
+          <td>${log.logoutVariance!==null?formatVariance(log.logoutVariance,'logout'):'<span class="text-muted">—</span>'}</td>
+          <td>${log.logoutTime?`<span class="badge badge-blue">Complete</span>`:`<span class="badge badge-green">In Office</span>`}</td>
+        </tr>`;
+      }).join('')}
+    </tbody>
+  </table>`;
+}
+
+function filterAttendance(){
+  const d=document.getElementById('att-date-filter').value;
+  document.getElementById('att-table-wrap').innerHTML=renderAttendanceTable(d);
+}
+
+function exportAttendance(){
+  const attendance=DB.get('attendance')||[];
+  const employees=DB.get('employees');
+  const rows=['Employee,Email,Date,Login,Login Variance (min),Logout,Logout Variance (min)'];
+  attendance.forEach(l=>{
+    const emp=employees.find(e=>e.id===l.empId);
+    if(emp) rows.push(`"${emp.name}","${emp.email}","${l.date}","${l.loginTime}","${l.loginVariance}","${l.logoutTime||''}","${l.logoutVariance||''}"`);
+  });
+  const blob=new Blob([rows.join('\n')],{type:'text/csv'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='attendance_export.csv';a.click();
+  showToast('CSV exported','success');
+}
+
+/* ════════════════════════════
+   ADMIN: GITHUB
+════════════════════════════ */
+function renderAdminGitHub(){
+  const employees=DB.get('employees').filter(e=>e.role==='employee');
+  return `
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Team Members</div><div class="metric-val">${employees.length}</div></div>
+    <div class="metric"><div class="metric-label">GitHub Integrated</div><div class="metric-val text-blue">${employees.filter(e=>e.github).length}</div></div>
+    <div class="metric"><div class="metric-label">Tracked Repos</div><div class="metric-val text-green">Live</div><div class="metric-sub">via GitHub API</div></div>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="tbl">
+      <thead><tr><th>Employee</th><th>GitHub Username</th><th>Profile</th><th>Actions</th></tr></thead>
+      <tbody>
+        ${employees.map(emp=>`<tr>
+          <td><div class="flex items-center gap-8"><div class="avatar">${emp.avatar}</div><div class="fw-500">${emp.name}</div></div></td>
+          <td><span class="mono fs-13 text-blue">@${emp.github||'—'}</span></td>
+          <td>${emp.github?`<a href="https://github.com/${emp.github}" target="_blank" class="btn btn-ghost btn-sm">View on GitHub ↗</a>`:'<span class="text-muted fs-13">Not set</span>'}</td>
+          <td><button class="btn btn-primary btn-sm" onclick="fetchGitHubForEmp('${emp.id}')">Fetch Activity</button></td>
+        </tr>`).join('')}
+      </tbody>
+    </table>
+  </div>
+  <div id="gh-admin-result" class="mt-16"></div>`;
+}
+
+/* ════════════════════════════
+   ADMIN: REPORTS
+════════════════════════════ */
+function renderAdminReports(){
+  const attendance=DB.get('attendance')||[];
+  const employees=DB.get('employees').filter(e=>e.role==='employee');
+
+  const summary=employees.map(emp=>{
+    const logs=attendance.filter(l=>l.empId===emp.id);
+    const totalDays=logs.length;
+    const lateDays=logs.filter(l=>l.loginVariance>5).length;
+    const avgVariance=totalDays?Math.round(logs.reduce((a,l)=>a+l.loginVariance,0)/totalDays):0;
+    const completed=logs.filter(l=>l.logoutTime).length;
+    return {...emp,totalDays,lateDays,avgVariance,completed};
+  });
+
+  return `
+  <div class="flex justify-between items-center" style="margin-bottom:20px">
+    <h2 class="fw-600" style="font-size:15px">Attendance Summary Report</h2>
+    <button class="btn btn-ghost btn-sm" onclick="exportAttendance()">⬇ Export Full CSV</button>
+  </div>
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="tbl">
+      <thead><tr><th>Employee</th><th>Total Days</th><th>Late Days</th><th>Avg Login Variance</th><th>Completed Days</th><th>Punctuality</th></tr></thead>
+      <tbody>
+        ${summary.map(emp=>{
+          const pct=emp.totalDays?Math.round(((emp.totalDays-emp.lateDays)/emp.totalDays)*100):100;
+          return `<tr>
+            <td><div class="flex items-center gap-8"><div class="avatar">${emp.avatar}</div><div><div class="fw-500">${emp.name}</div><div class="fs-12 text-muted">${emp.dept}</div></div></div></td>
+            <td class="mono">${emp.totalDays}</td>
+            <td class="mono text-orange">${emp.lateDays}</td>
+            <td>${formatVariance(emp.avgVariance,'login')}</td>
+            <td class="mono">${emp.completed}/${emp.totalDays}</td>
+            <td>
+              <div style="display:flex;align-items:center;gap:8px">
+                <div style="flex:1;height:6px;background:var(--bg3);border-radius:3px;min-width:60px">
+                  <div style="height:100%;width:${pct}%;background:${pct>=90?'var(--green)':pct>=70?'var(--blue)':'var(--orange)'};border-radius:3px"></div>
+                </div>
+                <span class="mono fs-13">${pct}%</span>
+              </div>
+            </td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+/* ════════════════════════════
+   EMPLOYEE: DASHBOARD
+════════════════════════════ */
+function renderMyDashboard(emp){
+  const attendance=DB.get('attendance')||[];
+  const myLogs=attendance.filter(l=>l.empId===emp.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const todayLog=myLogs.find(l=>l.date===today());
+  const totalDays=myLogs.length;
+  const lateDays=myLogs.filter(l=>l.loginVariance>5).length;
+  const onTimeDays=totalDays-lateDays;
+
+  // week bars
+  const days=['Mon','Tue','Wed','Thu','Fri'];
+  const weekData=days.map((_,i)=>{
+    const d=new Date();d.setDate(d.getDate()-4+i);
+    const ds=d.toISOString().split('T')[0];
+    return myLogs.find(l=>l.date===ds)?1:0;
+  });
+
+  return `
+  ${todayLog ? `
+    <div class="card-lg flex items-center justify-between" style="margin-bottom:20px;background:var(--blue-dim);border-color:rgba(74,143,255,.2)">
+      <div>
+        <div class="fs-12 text-muted fw-600" style="letter-spacing:.5px;text-transform:uppercase;margin-bottom:4px">Today's Attendance</div>
+        <div class="fw-700" style="font-size:20px;letter-spacing:-.3px">Checked in at <span class="text-blue mono">${fmtTime(todayLog.loginTime.substring(0,5))}</span></div>
+        <div class="fs-13 text-muted mt-4">${formatVariance(todayLog.loginVariance,'login')} ${todayLog.logoutTime?`· Left at <span class="mono">${fmtTime(todayLog.logoutTime.substring(0,5))}</span>`:'· Still in office'}</div>
+      </div>
+      ${!todayLog.logoutTime?`<button class="btn btn-danger" onclick="confirmLogout()">Log Out</button>`:`<span class="badge badge-blue">Day Complete</span>`}
+    </div>` : `
+    <div class="card-lg flex items-center justify-between" style="margin-bottom:20px;border-color:rgba(255,140,66,.2);background:var(--orange-dim)">
+      <div>
+        <div class="fw-600" style="font-size:16px">Not checked in yet today</div>
+        <div class="fs-13 text-muted mt-4">Your attendance will be recorded on next login.</div>
+      </div>
+      <span class="badge badge-orange">No Record</span>
+    </div>`}
+
+  <div class="metrics">
+    <div class="metric"><div class="metric-label">Total Days</div><div class="metric-val">${totalDays}</div></div>
+    <div class="metric"><div class="metric-label">On Time</div><div class="metric-val text-green">${onTimeDays}</div></div>
+    <div class="metric"><div class="metric-label">Late Days</div><div class="metric-val text-orange">${lateDays}</div></div>
+    <div class="metric"><div class="metric-label">Punctuality</div><div class="metric-val text-blue">${totalDays?Math.round((onTimeDays/totalDays)*100):100}%</div></div>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+    <div class="card">
+      <div class="fw-600 fs-14" style="margin-bottom:14px">This Week</div>
+      <div class="chart-wrap">
+        <div class="bar-chart">
+          ${weekData.map(v=>`<div class="bar-col" style="height:${v?100:20}%;background:${v?'var(--blue)':'var(--border2)'}"></div>`).join('')}
+        </div>
+        <div class="chart-labels">${days.map(d=>`<div class="chart-label">${d}</div>`).join('')}</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="fw-600 fs-14" style="margin-bottom:14px">Recent Logs</div>
+      ${myLogs.slice(0,4).map(log=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:0.5px solid var(--border)">
+          <div>
+            <div class="fw-500 fs-13">${log.date}</div>
+            <div class="fs-12 text-muted mono">${fmtTime(log.loginTime.substring(0,5))} → ${log.logoutTime?fmtTime(log.logoutTime.substring(0,5)):'Active'}</div>
+          </div>
+          ${formatVariance(log.loginVariance,'login')}
+        </div>`).join('')}
+    </div>
+  </div>`;
+}
+
+/* ════════════════════════════
+   EMPLOYEE: ATTENDANCE
+════════════════════════════ */
+function renderMyAttendance(emp){
+  const attendance=(DB.get('attendance')||[]).filter(l=>l.empId===emp.id).sort((a,b)=>b.date.localeCompare(a.date));
+  const todayLog=attendance.find(l=>l.date===today());
+
+  return `
+  ${!todayLog?.logoutTime && todayLog ? `
+    <div class="card flex justify-between items-center" style="margin-bottom:20px;border-color:rgba(255,85,85,.2);background:var(--red-dim)">
+      <div>
+        <div class="fw-600">Ready to log out?</div>
+        <div class="fs-13 text-muted">Logout will be timestamped by the server.</div>
+      </div>
+      <button class="btn btn-danger" onclick="confirmLogout()">Log Out Now</button>
+    </div>` : ''}
+
+  <div class="card" style="padding:0;overflow:hidden">
+    <table class="tbl">
+      <thead><tr><th>Date</th><th>Login Time</th><th>Login Variance</th><th>Logout Time</th><th>Logout Variance</th><th>Status</th></tr></thead>
+      <tbody>
+        ${attendance.length ? attendance.map(log=>`<tr>
+          <td class="mono fw-500">${log.date}</td>
+          <td class="mono">${fmtTime(log.loginTime.substring(0,5))}</td>
+          <td>${formatVariance(log.loginVariance,'login')}</td>
+          <td class="mono">${log.logoutTime?fmtTime(log.logoutTime.substring(0,5)):'<span class="text-green">In Office</span>'}</td>
+          <td>${log.logoutVariance!==null?formatVariance(log.logoutVariance,'logout'):'<span class="text-muted">—</span>'}</td>
+          <td>${log.logoutTime?`<span class="badge badge-blue">Complete</span>`:`<span class="badge badge-green">Active</span>`}</td>
+        </tr>`).join('') : `<tr><td colspan="6"><div class="empty"><p>No attendance records yet</p></div></td></tr>`}
+      </tbody>
+    </table>
+  </div>`;
+}
+
+/* ════════════════════════════
+   GITHUB
+════════════════════════════ */
+function renderMyGitHub(emp){
+  return renderGitHubView(emp, 'my-gh-result');
+}
+
+function renderAdminGitHubView(emp){
+  return renderGitHubView(emp, 'my-gh-result');
+}
+
+function renderGitHubView(emp, resultId){
+  return `
+  <div class="card-lg" style="margin-bottom:20px">
+    <div class="flex items-center justify-between">
+      <div>
+        <div class="fw-700 fs-16 mb-4" style="margin-bottom:6px">GitHub Productivity</div>
+        <div class="fs-13 text-muted">Connected as <span class="mono text-blue">@${emp.github||'not set'}</span></div>
+      </div>
+      ${emp.github?`<button class="btn btn-primary" onclick="fetchMyGitHub()">🔄 Fetch Latest</button>`:'<span class="badge badge-orange">GitHub Not Configured</span>'}
+    </div>
+  </div>
+  <div id="${resultId}">
+    ${emp.github ? renderGHPlaceholder() : '<div class="empty"><p>No GitHub username set. Contact admin.</p></div>'}
+  </div>`;
+}
+
+function renderGHPlaceholder(){
+  return `
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px">
+    <div class="card text-center"><div class="gh-stat"><div class="gh-num text-blue" id="gh-commits">—</div><div class="gh-label">Public Repos</div></div></div>
+    <div class="card text-center"><div class="gh-stat"><div class="gh-num text-green" id="gh-prs">—</div><div class="gh-label">Followers</div></div></div>
+    <div class="card text-center"><div class="gh-stat"><div class="gh-num text-purple" id="gh-repos">—</div><div class="gh-label">Following</div></div></div>
+  </div>
+  <div class="card">
+    <div class="fw-600 fs-14" style="margin-bottom:14px">Recent Repositories</div>
+    <div id="gh-repo-list"><div class="text-muted fs-13">Click "Fetch Latest" to load GitHub data.</div></div>
+  </div>`;
+}
+
+function fetchMyGitHub(){
+  const emp=getCurrentEmp();
+  fetchGitHubData(emp.github, 'my-gh-result');
+}
+
+function fetchGitHubForEmp(empId){
+  const emp=DB.get('employees').find(e=>e.id===empId);
+  if(!emp||!emp.github){showToast('No GitHub username set','error');return;}
+  const resultEl=document.getElementById('gh-admin-result');
+  if(resultEl){
+    resultEl.innerHTML=`<div class="card"><div class="fw-600 fs-14" style="margin-bottom:12px">GitHub Data: @${emp.github}</div><div id="gh-emp-result">${renderGHPlaceholder()}</div></div>`;
+    fetchGitHubData(emp.github,'gh-emp-result');
+  }
+}
+
+async function fetchGitHubData(username, targetId){
+  showToast('Fetching GitHub data…','info');
+  try{
+    const [userRes, repoRes] = await Promise.all([
+      fetch(`https://api.github.com/users/${username}`),
+      fetch(`https://api.github.com/users/${username}/repos?sort=updated&per_page=5`)
+    ]);
+    if(!userRes.ok) throw new Error('User not found');
+    const user=await userRes.json();
+    const repos=await repoRes.json();
+
+    const container=document.getElementById(targetId);
+    if(!container) return;
+
+    document.getElementById('gh-commits').textContent=user.public_repos;
+    document.getElementById('gh-prs').textContent=user.followers;
+    document.getElementById('gh-repos').textContent=user.following;
+
+    const repoList=document.getElementById('gh-repo-list');
+    if(repoList){
+      repoList.innerHTML=repos.map(r=>`
+        <div class="commit-item">
+          <div style="flex:1">
+            <div class="flex items-center gap-8">
+              <span class="fw-500 fs-14">${r.name}</span>
+              ${r.language?`<span class="badge badge-blue">${r.language}</span>`:''}
+              ${r.private?`<span class="badge badge-orange">Private</span>`:''}
+            </div>
+            <div class="fs-12 text-muted mt-4">${r.description||'No description'}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="fs-12 mono text-muted">⭐ ${r.stargazers_count}</div>
+            <div class="fs-12 text-muted">${new Date(r.updated_at).toLocaleDateString()}</div>
+          </div>
+        </div>`).join('');
+    }
+    showToast('GitHub data loaded','success');
+  } catch(err){
+    showToast('GitHub fetch failed: '+err.message,'error');
+    const container=document.getElementById(targetId);
+    if(container) container.innerHTML=`<div class="card"><div class="text-muted fs-13">Could not load GitHub data. Check username or API rate limit.<br><span class="fs-12">Error: ${err.message}</span></div></div>`;
+  }
+}
+
+/* ════════════════════════════
+   EMPLOYEE: PROFILE
+════════════════════════════ */
+function renderMyProfile(emp){
+  return `
+  <div class="profile-header">
+    <div class="avatar lg">${emp.avatar}</div>
+    <div class="profile-info">
+      <h2>${emp.name}</h2>
+      <div class="text-muted">${emp.designation}</div>
+      <div class="flex gap-8 mt-8">
+        <span class="badge badge-blue">${emp.role}</span>
+        <span class="badge badge-purple">${emp.dept}</span>
+      </div>
+    </div>
+  </div>
+  <div class="profile-grid">
+    <div class="profile-field"><div class="profile-field-label">Employee ID</div><div class="profile-field-val mono">${emp.id}</div></div>
+    <div class="profile-field"><div class="profile-field-label">Email</div><div class="profile-field-val">${emp.email}</div></div>
+    <div class="profile-field"><div class="profile-field-label">Department</div><div class="profile-field-val">${emp.dept}</div></div>
+    <div class="profile-field"><div class="profile-field-label">Designation</div><div class="profile-field-val">${emp.designation}</div></div>
+    <div class="profile-field"><div class="profile-field-label">GitHub Username</div><div class="profile-field-val mono text-blue">@${emp.github||'—'}</div></div>
+    <div class="profile-field"><div class="profile-field-label">Official Hours</div><div class="profile-field-val mono">${emp.officialLogin} – ${emp.officialLogout}</div></div>
+  </div>
+  <div class="card mt-16">
+    <div class="fw-600 fs-14" style="margin-bottom:16px">Change Password</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;max-width:480px">
+      <div class="form-group"><label>New Password</label><input type="password" id="new-pass" placeholder="New password"></div>
+      <div class="form-group"><label>Confirm Password</label><input type="password" id="confirm-pass" placeholder="Confirm password"></div>
+    </div>
+    <button class="btn btn-primary btn-sm mt-8" onclick="changePassword()">Update Password</button>
+  </div>`;
+}
+
+function changePassword(){
+  const np=document.getElementById('new-pass').value;
+  const cp=document.getElementById('confirm-pass').value;
+  if(!np){showToast('Enter a new password','error');return;}
+  if(np!==cp){showToast('Passwords do not match','error');return;}
+  const employees=DB.get('employees');
+  const idx=employees.findIndex(e=>e.id===session.empId);
+  employees[idx].password=np;
+  DB.set('employees',employees);
+  showToast('Password updated successfully','success');
+}
+
+/* ════════════════════════════
+   LOGOUT FLOW
+════════════════════════════ */
+let logoutInterval=null;
+
+function confirmLogout(){
+  const emp=getCurrentEmp();
+  if(emp.role==='admin'){
+    if(confirm('Log out of AttendX?')) doSignOut();
+    return;
+  }
+
+  const logs=DB.get('attendance')||[];
+  const todayLog=logs.find(l=>l.empId===emp.id&&l.date===today());
+
+  // Clear any previous interval before starting a new one
+  if(logoutInterval){ clearInterval(logoutInterval); logoutInterval=null; }
+
+  document.getElementById('logout-modal-overlay').classList.remove('hidden');
+
+  const updateTime=()=>{
+    document.getElementById('logout-time-display').textContent=nowTime();
+    document.getElementById('logout-date-display').textContent=new Date().toDateString();
+
+    if(todayLog && !todayLog.logoutTime){
+      const v=calcVariance(emp.officialLogout, nowTimeHM());
+      document.getElementById('logout-variance-info').innerHTML=
+        'Logout variance: '+formatVariance(v,'logout');
+    } else if(todayLog && todayLog.logoutTime){
+      document.getElementById('logout-variance-info').innerHTML=
+        '<span style="color:var(--text3)">Already logged out today — signing out of session.</span>';
+    } else {
+      document.getElementById('logout-variance-info').innerHTML=
+        '<span style="color:var(--text3)">No check-in recorded today. Session will be closed.</span>';
+    }
+  };
+  updateTime();
+  logoutInterval=setInterval(updateTime,1000);
+}
+
+function closeLogoutModal(){
+  document.getElementById('logout-modal-overlay').classList.add('hidden');
+  clearInterval(logoutInterval);
+  logoutInterval=null;
+}
+
+function executeLogout(){
+  clearInterval(logoutInterval);
+  const emp=getCurrentEmp();
+  const logs=DB.get('attendance')||[];
+  const todayIdx=logs.findIndex(l=>l.empId===emp.id&&l.date===today());
+  if(todayIdx>-1 && !logs[todayIdx].logoutTime){
+    const logoutTime=nowTimeHM();
+    logs[todayIdx].logoutTime=nowTime();
+    logs[todayIdx].logoutVariance=calcVariance(emp.officialLogout, logoutTime);
+    DB.set('attendance',logs);
+    showToast('Logout recorded at '+fmtTime(logoutTime),'success');
+  }
+  // Hide modal, clear interval, then fully sign out to login page
+  document.getElementById('logout-modal-overlay').classList.add('hidden');
+  logoutInterval=null;
+  // Small delay so the toast is briefly visible before the page switches
+  setTimeout(()=>doSignOut(), 800);
+}
+
+function doSignOut(){
+  DB.set('session',null);
+  session=null;
+  loginStep='email';
+  // Hide app
+  document.getElementById('page-app').style.display='none';
+  // Reset and show login
+  document.getElementById('login-email').disabled=false;
+  document.getElementById('login-email').value='';
+  document.getElementById('login-pass').value='';
+  document.getElementById('password-field').style.display='none';
+  document.getElementById('profile-preview').classList.add('hidden');
+  document.getElementById('preview-avatar').textContent='--';
+  document.getElementById('preview-name').textContent='—';
+  document.getElementById('preview-dept').textContent='—';
+  document.getElementById('preview-role').textContent='—';
+  document.getElementById('login-btn').textContent='Continue →';
+  document.getElementById('login-error').classList.add('hidden');
+  showLogin();
+}
+
+/* ════════════════════════════
+   SIGNUP / PAGE SWITCHING
+════════════════════════════ */
+function showLogin(){
+  document.getElementById('page-login').style.display='flex';
+  document.getElementById('page-signup').style.display='none';
+  document.getElementById('page-app').style.display='none';
+}
+
+function showSignup(){
+  document.getElementById('page-login').style.display='none';
+  document.getElementById('page-signup').style.display='flex';
+  document.getElementById('page-app').style.display='none';
+  // clear signup form
+  ['su-name','su-email','su-designation','su-github','su-pass','su-confirm'].forEach(id=>{
+    document.getElementById(id).value='';
+  });
+  document.getElementById('su-dept').value='';
+  document.getElementById('su-login-time').value='09:00';
+  document.getElementById('su-logout-time').value='18:00';
+  document.getElementById('signup-error').classList.add('hidden');
+}
+
+function toggleSignupPw(){
+  const inp=document.getElementById('su-pass');
+  inp.type=inp.type==='password'?'text':'password';
+}
+
+function showSignupError(msg){
+  const el=document.getElementById('signup-error');
+  el.textContent=msg;
+  el.classList.remove('hidden');
+  setTimeout(()=>el.classList.add('hidden'),4000);
+}
+
+function handleSignup(){
+  const name=document.getElementById('su-name').value.trim();
+  const email=document.getElementById('su-email').value.trim();
+  const dept=document.getElementById('su-dept').value;
+  const designation=document.getElementById('su-designation').value.trim();
+  const loginTime=document.getElementById('su-login-time').value;
+  const logoutTime=document.getElementById('su-logout-time').value;
+  const github=document.getElementById('su-github').value.trim();
+  const pass=document.getElementById('su-pass').value;
+  const confirm=document.getElementById('su-confirm').value;
+
+  if(!name){showSignupError('Please enter your full name');return;}
+  if(!email||!email.includes('@')){showSignupError('Please enter a valid work email');return;}
+  if(!dept){showSignupError('Please select a department');return;}
+  if(!designation){showSignupError('Please enter your designation');return;}
+  if(pass.length<6){showSignupError('Password must be at least 6 characters');return;}
+  if(pass!==confirm){showSignupError('Passwords do not match');return;}
+
+  const employees=DB.get('employees')||[];
+  if(employees.find(e=>e.email.toLowerCase()===email.toLowerCase())){
+    showSignupError('An account with this email already exists');
+    return;
+  }
+
+  // generate avatar initials
+  const parts=name.split(' ').filter(Boolean);
+  const avatar=(parts[0]?.[0]||'')+(parts[1]?.[0]||'');
+
+  // generate next employee ID
+  const maxId=employees.reduce((max,e)=>{
+    const n=parseInt(e.id.replace('EMP',''))||0;
+    return Math.max(max,n);
+  },0);
+  const newId='EMP'+String(maxId+1).padStart(3,'0');
+
+  const newEmp={
+    id:newId,
+    name,
+    email,
+    password:pass,
+    dept,
+    designation,
+    github:github||'',
+    role:'employee',
+    officialLogin:loginTime||'09:00',
+    officialLogout:logoutTime||'18:00',
+    avatar:avatar.toUpperCase()||name.slice(0,2).toUpperCase(),
+  };
+
+  employees.push(newEmp);
+  DB.set('employees',employees);
+  showToast('Account created! You can now sign in.','success');
+
+  // auto-fill login form and switch to login
+  showLogin();
+  document.getElementById('login-email').value=email;
+  loginStep='email';
+}
+</script>
+</body>
+</html>
