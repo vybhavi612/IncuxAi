@@ -118,6 +118,7 @@ tracktime_project/
 ## 🗄️ MongoDB Database
 Database Name
  * tracktime
+   
  Collections
  * users
  * tasks
