@@ -123,7 +123,7 @@ Database Name
  * users
  * tasks
  * histories
-  *admins
+ * admins
 
 ---
 
