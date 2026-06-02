@@ -114,6 +114,18 @@ tracktime_project/
 
 ---
 
+
+🗄️ MongoDB Database
+Database Name
+tracktime
+Collections
+users
+tasks
+histories
+admins
+
+---
+
 # ⚙️ Installation Process
 
 ## 1️⃣ Clone Repository
