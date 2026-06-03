@@ -229,29 +229,7 @@ document.querySelector("form")
             }
         );
 
-        await fetch(
-
-"http://localhost:5000/login-history",
-
-{
-
-    method : "POST",
-
-    headers : {
-
-        "Content-Type" : "application/json"
-
-    },
-
-    body : JSON.stringify({
-
-        userEmail : data.user.email
-
-    })
-
-}
-
-);
+      
         alert(data.message);
 
         window.location.href = "Dashboard.html";

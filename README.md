@@ -271,6 +271,20 @@ admins
 ---
 
 
+<<<<<<< HEAD
 ![Registration](registration.png)
 
 ---
+=======
+![Registration](RegisterPage.jpg)
+![Login](LoginPage.jpg)
+![Dashboard](Dasboard.jpg)
+![AddTask](AddTask.jpg)
+![TimeTrack](TimeTrack.jpg)
+![AddedTask](DashBoard.jpg)
+![AdminLogin](Admin.jpg)
+![AdminDashbaord](AdminDashboard.jpg)
+
+
+--
+>>>>>>> db5a509 (Updated README and added project screenshots)
