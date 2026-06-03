@@ -268,24 +268,7 @@ admins
 | POST   | /admin-login | Admin Login/Register |
 | GET    | /admin-data  | Get All Users Data   |
 
-<<<<<<< HEAD
 
----
-
-![Registration](RegisterPage.jpg)
-![Login](LoginPage.jpg)
-![Dashboard](Dasboard.jpg)
-![AddTask](AddTask.jpg)
-![TimeTrack](TimeTrack.jpg)
-![AddedTask](DashBoard.jpg)
-![AdminLogin](Admin.jpg)
-![AdminDashbaord](AdminDashboard.jpg)
-=======
----
-
-
-
-![Registration](registration.png)
 
 ---
 
@@ -297,7 +280,7 @@ admins
 ![AddedTask](screenshort/DashBoard.jpg)
 ![AdminLogin](screenshort/Admin.jpg)
 ![AdminDashbaord](screenshort/AdminDashboard.jpg)
->>>>>>> 2ee48e2 ( updated)
+
 
 
 --
