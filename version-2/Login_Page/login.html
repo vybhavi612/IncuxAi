@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Attendance Tracker</title>
+    <link rel="stylesheet" href="./src/styles/login.css">
+</head>
+<body>
+    <div id="root">
+        <main class="login-fallback">
+            <h1>Loading login...</h1>
+            <p>If this stays here, run the project with <strong>npm run dev</strong> and open the local server URL.</p>
+        </main>
+    </div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="./src/config/firebase.js"></script>
+    <script src="./src/services/dataService.js"></script>
+    <script src="./src/services/authService.js"></script>
+    <script>
+        if (window.React && window.ReactDOM) {
+            document.write('<script src="./src/components/CameraCapture.js"><\\/script>');
+            document.write('<script src="./src/components/LoginForm.js"><\\/script>');
+            document.write('<script src="./src/App.js"><\\/script>');
+        } else {
+            document.write('<script src="./src/FallbackLoginApp.js"><\\/script>');
+        }
+    </script>
+</body>
+</html>

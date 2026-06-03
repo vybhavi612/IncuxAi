@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Attendance Tracker</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">AT</a>
+        <div class="links">
+            <a href="../Login_Page/login.html" class="link">Login</a>
+            <a href="../Login_Page/signup.html" class="link">Signup</a>
+        </div>
+    </nav>
+    
+    <div class="hero-container">
+        <div class="top-section">
+            <h1>Welcome to Attendance Tracker</h1>
+            <p>Track your attendance easily and efficiently.</p>
+            <div class="cta-buttons">
+                <a href="../Login_Page/login.html" class="btn">Login</a>
+                <a href="../Login_Page/signup.html" class="btn">Sign Up</a>
+            </div>
+        </div>
+        <aside class="hero-panel" aria-label="Today summary">
+            <div class="summary-row">
+              <span>Expected login</span>
+              <strong>10:00 AM</strong>
+            </div>
+            <div class="summary-row warning">
+              <span>Current login</span>
+              <strong id="summary-login-time">--:--</strong>
+            </div>
+            <div class="summary-row danger">
+              <span>Delay shown</span>
+              <strong id="summary-delay">--</strong>
+            </div>
+            <div class="summary-row success">
+              <span>Working duration</span>
+              <strong id="summary-working-time">00:00:00</strong>
+            </div>
+        </aside>
+    </div>
+</body>
+</html>
