@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Dashboard</title>
+</head>
+<body>
+
+<h2>Student Dashboard</h2>
+
+<p>Name : Student</p>
+<p>Roll Number : 12345</p>
+
+<img src="https://via.placeholder.com/150" width="150">
+
+<br><br>
+
+<button onclick="loginTime()">Login Attendance</button>
+
+<button onclick="logoutTime()">Logout Attendance</button>
+
+<p id="result"></p>
+
+<script>
+function loginTime() {
+    let time = new Date().toLocaleTimeString();
+    document.getElementById("result").innerHTML =
+    "Login Time: " + time;
+}
+
+function logoutTime() {
+    let time = new Date().toLocaleTimeString();
+    document.getElementById("result").innerHTML +=
+    "<br>Logout Time: " + time;
+}
+</script>
+
+</body>
+</html>
