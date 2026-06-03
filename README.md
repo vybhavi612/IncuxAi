@@ -268,11 +268,6 @@ admins
 | POST   | /admin-login | Admin Login/Register |
 | GET    | /admin-data  | Get All Users Data   |
 
----
-
-
-
-![Registration](registration.png)
 
 ---
 
