@@ -271,11 +271,11 @@ admins
 ---
 
 
-<<<<<<< HEAD
+
 ![Registration](registration.png)
 
 ---
-=======
+
 ![Registration](RegisterPage.jpg)
 ![Login](LoginPage.jpg)
 ![Dashboard](Dasboard.jpg)
@@ -287,4 +287,4 @@ admins
 
 
 --
->>>>>>> db5a509 (Updated README and added project screenshots)
+
