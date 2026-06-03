@@ -269,3 +269,8 @@ admins
 | GET    | /admin-data  | Get All Users Data   |
 
 ---
+
+
+![Registration](registration.png)
+
+---
