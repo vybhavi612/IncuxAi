@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>My Study Tracker</h2>
+<p id="demo"></p>
+
+<script>
+let studentName = "Jaswanth";
+let subject = "JavaScript";
+let completedTopics = 5;
+let totalTopics = 20;
+
+let remainingTopics = totalTopics - completedTopics;
+
+document.getElementById("demo").innerHTML =
+"Student: " + studentName + "<br>" +
+"Subject: " + subject + "<br>" +
+"Completed Topics: " + completedTopics + "<br>" +
+"Remaining Topics: " + remainingTopics;
+
+console.log(studentName + " is learning " + subject);
+console.log("Topics left:", remainingTopics);
+</script>
+
+</body>
+</html>
