@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Color Changer</title>
+</head>
+<body>
+
+    <h2>Color Changer</h2>
+
+    <button onclick="changeColor()">Change Color</button>
+
+    <script>
+        function changeColor() {
+            let colors = ["red","blue","green","yellow","orange","purple","pink"];
+            let randomIndex = Math.floor(Math.random() * colors.length);
+            document.body.style.backgroundColor = colors[randomIndex];
+        }
+    </script>
+
+</body>
+</html>
