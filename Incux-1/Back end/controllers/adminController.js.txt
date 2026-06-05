@@ -1,0 +1,70 @@
+const User =
+  require('../models/User');
+
+const Attendance =
+  require('../models/Attendance');
+
+const Task =
+  require('../models/Task');
+
+const getAdminDashboard =
+  async (req, res) => {
+
+  try {
+
+    const interns =
+      await User.find({
+        role: 'intern'
+      });
+
+    const roster =
+      await Promise.all(
+
+        interns.map(async (intern) => {
+
+          const attendance =
+            await Attendance.find({
+              userId: intern._id
+            });
+
+          const tasks =
+            await Task.find({
+              userId: intern._id
+            });
+
+          return {
+
+            id: intern._id,
+
+            name: intern.name,
+
+            email: intern.email,
+
+            phone: intern.phone,
+
+            attendance,
+
+            tasks
+
+          };
+
+        })
+
+      );
+
+    res.json({
+      roster
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
+
+  }
+};
+
+module.exports = {
+  getAdminDashboard
+};

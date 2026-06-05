@@ -1,0 +1,83 @@
+export default function AttendanceTable({
+  attendance
+}) {
+
+  return (
+
+    <div className="bg-white p-4 rounded shadow">
+
+      <h2 className="font-bold mb-4">
+        Attendance
+      </h2>
+
+      <table className="w-full border">
+
+        <thead>
+
+          <tr className="bg-gray-100">
+
+            <th className="p-2 border">
+              Date
+            </th>
+
+            <th className="p-2 border">
+              Login
+            </th>
+
+            <th className="p-2 border">
+              Logout
+            </th>
+
+            <th className="p-2 border">
+              Status
+            </th>
+
+          </tr>
+
+        </thead>
+
+        <tbody>
+
+          {attendance.map((item) => (
+
+            <tr key={item._id}>
+
+              <td className="p-2 border">
+                {item.date}
+              </td>
+
+              <td className="p-2 border">
+                {
+                  new Date(
+                    item.loginTime
+                  ).toLocaleTimeString()
+                }
+              </td>
+
+              <td className="p-2 border">
+
+                {item.logoutTime
+
+                  ? new Date(
+                      item.logoutTime
+                    ).toLocaleTimeString()
+
+                  : 'Active'}
+
+              </td>
+
+              <td className="p-2 border">
+                {item.status}
+              </td>
+
+            </tr>
+
+          ))}
+
+        </tbody>
+
+      </table>
+
+    </div>
+  );
+}

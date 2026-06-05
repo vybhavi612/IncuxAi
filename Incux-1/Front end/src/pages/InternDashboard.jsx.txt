@@ -1,0 +1,106 @@
+import {
+  useEffect,
+  useState
+} from 'react';
+
+import API from '../api/axios';
+
+import Navbar from '../components/Navbar';
+
+import AttendanceTable
+  from '../components/AttendanceTable';
+
+import TaskList
+  from '../components/TaskList';
+
+export default function InternDashboard() {
+
+  const [attendance, setAttendance] =
+    useState([]);
+
+  const [tasks, setTasks] =
+    useState([]);
+
+  useEffect(() => {
+
+    fetchDashboard();
+
+  }, []);
+
+  const fetchDashboard =
+    async () => {
+
+    try {
+
+      const res =
+        await API.get(
+          '/intern/dashboard'
+        );
+
+      setAttendance(
+        res.data.attendance
+      );
+
+      setTasks(
+        res.data.tasks
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+  };
+
+  const handleLogout =
+    async () => {
+
+    try {
+
+      await API.post(
+        '/intern/logout-session'
+      );
+
+      fetchDashboard();
+
+      alert('Clocked Out');
+
+    } catch (error) {
+
+      alert(
+        error.response?.data?.error
+      );
+
+    }
+  };
+
+  return (
+
+    <div>
+
+      <Navbar />
+
+      <div className="p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <div className="lg:col-span-2">
+
+          <AttendanceTable
+            attendance={attendance}
+          />
+
+          <button
+            onClick={handleLogout}
+            className="mt-4 bg-red-500 text-white px-4 py-2 rounded"
+          >
+            Clock Out
+          </button>
+
+        </div>
+
+        <TaskList tasks={tasks} />
+
+      </div>
+
+    </div>
+  );
+}

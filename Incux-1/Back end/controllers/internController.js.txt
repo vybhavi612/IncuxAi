@@ -1,0 +1,86 @@
+const Attendance =
+  require('../models/Attendance');
+
+const Task =
+  require('../models/Task');
+
+const getDashboard =
+  async (req, res) => {
+
+  try {
+
+    const attendance =
+      await Attendance.find({
+        userId: req.user.id
+      }).sort({
+        createdAt: -1
+      });
+
+    const tasks =
+      await Task.find({
+        userId: req.user.id
+      });
+
+    res.json({
+      attendance,
+      tasks
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
+
+  }
+};
+
+const logoutSession =
+  async (req, res) => {
+
+  try {
+
+    const today =
+      new Date()
+      .toLocaleDateString('en-CA');
+
+    const record =
+      await Attendance.findOne({
+
+        userId: req.user.id,
+
+        date: today,
+
+        logoutTime: null
+
+      });
+
+    if (!record) {
+
+      return res.status(400).json({
+        error: 'No active session'
+      });
+
+    }
+
+    record.logoutTime = new Date();
+
+    await record.save();
+
+    res.json({
+      message: 'Clock out successful'
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      error: error.message
+    });
+
+  }
+};
+
+module.exports = {
+  getDashboard,
+  logoutSession
+};

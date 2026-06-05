@@ -1,0 +1,57 @@
+import {
+  Routes,
+  Route
+} from 'react-router-dom';
+
+import Login
+  from './pages/Login';
+
+import Register
+  from './pages/Register';
+
+import InternDashboard
+  from './pages/InternDashboard';
+
+import AdminDashboard
+  from './pages/AdminDashboard';
+
+import ProtectedRoute
+  from './components/ProtectedRoute';
+
+export default function App() {
+
+  return (
+
+    <Routes>
+
+      <Route
+        path="/"
+        element={<Login />}
+      />
+
+      <Route
+        path="/register"
+        element={<Register />}
+      />
+
+      <Route
+        path="/intern"
+        element={
+          <ProtectedRoute>
+            <InternDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/admin"
+        element={
+          <ProtectedRoute>
+            <AdminDashboard />
+          </ProtectedRoute>
+        }
+      />
+
+    </Routes>
+  );
+}

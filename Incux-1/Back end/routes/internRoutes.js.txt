@@ -1,0 +1,25 @@
+const express = require('express');
+
+const authMiddleware =
+  require('../middleware/authMiddleware');
+
+const {
+  getDashboard,
+  logoutSession
+} = require('../controllers/internController');
+
+const router = express.Router();
+
+router.get(
+  '/dashboard',
+  authMiddleware,
+  getDashboard
+);
+
+router.post(
+  '/logout-session',
+  authMiddleware,
+  logoutSession
+);
+
+module.exports = router;

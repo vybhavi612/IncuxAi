@@ -1,0 +1,100 @@
+import {
+  useEffect,
+  useState
+} from 'react';
+
+import API from '../api/axios';
+
+import Navbar from '../components/Navbar';
+
+export default function AdminDashboard() {
+
+  const [roster, setRoster] =
+    useState([]);
+
+  useEffect(() => {
+
+    fetchRoster();
+
+  }, []);
+
+  const fetchRoster =
+    async () => {
+
+    try {
+
+      const res =
+        await API.get(
+          '/admin/dashboard'
+        );
+
+      setRoster(
+        res.data.roster
+      );
+
+    } catch (error) {
+
+      console.log(error);
+
+    }
+  };
+
+  return (
+
+    <div>
+
+      <Navbar />
+
+      <div className="p-6 space-y-6">
+
+        {roster.map((intern) => (
+
+          <div
+            key={intern.id}
+            className="bg-white p-6 rounded shadow"
+          >
+
+            <h2 className="font-bold text-lg">
+              {intern.name}
+            </h2>
+
+            <p>
+              {intern.email}
+            </p>
+
+            <p>
+              {intern.phone}
+            </p>
+
+            <div className="mt-4">
+
+              <h3 className="font-bold mb-2">
+                Attendance
+              </h3>
+
+              {intern.attendance.map((a) => (
+
+                <div
+                  key={a._id}
+                  className="border p-2 mb-2"
+                >
+
+                  {a.date}
+                  {' - '}
+                  {a.status}
+
+                </div>
+
+              ))}
+
+            </div>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    </div>
+  );
+}
