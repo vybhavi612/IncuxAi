@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../api/axios';
 
 function UserDashboard() {
   const navigate = useNavigate();
   const [seconds, setSeconds] = useState(0);
   const [loginTime] = useState(new Date());
-  const [commitCount] = useState(0); // will come from backend later
+  const [commitCount, setCommitCount] = useState(0);
+  const username = localStorage.getItem('username');
 
   useEffect(() => {
+    // Record login time in database
+    API.post('/attendance/login').catch(err => console.log(err));
+
+    // Fetch commit count
+    API.get('/git/commits')
+      .then(res => setCommitCount(res.data.commits))
+      .catch(err => console.log(err));
+
+    // Start timer
     const timer = setInterval(() => {
       setSeconds(prev => prev + 1);
     }, 1000);
+
     return () => clearInterval(timer);
   }, []);
 
@@ -21,7 +33,13 @@ function UserDashboard() {
     return `${hrs}:${mins}:${secs}`;
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    try {
+      await API.post('/attendance/logout');
+    } catch (err) {
+      console.log(err);
+    }
+    localStorage.clear();
     navigate('/');
   };
 
@@ -37,7 +55,6 @@ function UserDashboard() {
       overflow: 'hidden',
     }}>
 
-      {/* Background glow effects */}
       <div style={{
         position: 'absolute',
         width: '400px',
@@ -57,7 +74,6 @@ function UserDashboard() {
         borderRadius: '50%',
       }} />
 
-      {/* Main Card */}
       <div style={{
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid rgba(255,255,255,0.08)',
@@ -99,7 +115,7 @@ function UserDashboard() {
                 fontWeight: '400',
                 letterSpacing: '0.05em',
                 margin: 0,
-              }}>Welcome back</h1>
+              }}>Welcome, {username}</h1>
               <p style={{
                 color: 'rgba(255,255,255,0.35)',
                 fontSize: '12px',
@@ -110,7 +126,6 @@ function UserDashboard() {
             </div>
           </div>
 
-          {/* Logout button */}
           <button
             onClick={handleLogout}
             style={{
@@ -131,7 +146,7 @@ function UserDashboard() {
           </button>
         </div>
 
-        {/* Two columns — Timer + Commits */}
+        {/* Two columns */}
         <div style={{
           display: 'grid',
           gridTemplateColumns: '1fr 1fr',
@@ -210,7 +225,6 @@ function UserDashboard() {
               Repo assigned by admin
             </p>
           </div>
-
         </div>
       </div>
     </div>

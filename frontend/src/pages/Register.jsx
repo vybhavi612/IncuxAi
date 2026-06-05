@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../api/axios';
 
 function Register() {
   const navigate = useNavigate();
@@ -17,12 +18,24 @@ function Register() {
     }
   };
 
-  const handleSubmit = () => {
-  if (form.username && form.password && form.photo) {
-    navigate('/');
-  } else {
-    alert('Please fill all fields and upload a photo!');
-  }
+  const handleSubmit = async () => {
+    if (!form.username || !form.password || !form.photo) {
+      alert('Please fill all fields and upload a photo!');
+      return;
+    }
+
+    try {
+      await API.post('/auth/register', {
+        username: form.username,
+        password: form.password,
+        photo_url: form.photo.name,
+      });
+
+      alert('Registered successfully!');
+      navigate('/');
+    } catch (err) {
+      alert(err.response?.data?.message || 'Registration failed');
+    }
   };
 
   return (

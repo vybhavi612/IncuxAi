@@ -1,20 +1,39 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../api/axios';
 
 function Login() {
   const navigate = useNavigate();
-  const [view, setView] = useState('landing'); // 'landing', 'user', 'admin'
+  const [view, setView] = useState('landing');
   const [form, setForm] = useState({ username: '', password: '' });
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = () => {
-    if (view === 'user') {
-      navigate('/dashboard');
-    } else if (view === 'admin') {
-      navigate('/admin');
+  const handleSubmit = async () => {
+    if (!form.username || !form.password) {
+      alert('Please fill all fields!');
+      return;
+    }
+
+    try {
+      const res = await API.post('/auth/login', {
+        username: form.username,
+        password: form.password,
+      });
+
+      localStorage.setItem('token', res.data.token);
+      localStorage.setItem('username', res.data.username);
+      localStorage.setItem('role', res.data.role);
+
+      if (res.data.role === 'admin') {
+        navigate('/admin');
+      } else {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      alert(err.response?.data?.message || 'Login failed');
     }
   };
 
@@ -61,7 +80,6 @@ function Login() {
       overflow: 'hidden',
     }}>
 
-      {/* Background glow effects */}
       <div style={{
         position: 'absolute',
         width: '400px',
@@ -81,7 +99,6 @@ function Login() {
         borderRadius: '50%',
       }} />
 
-      {/* Card */}
       <div style={{
         background: 'rgba(255,255,255,0.03)',
         border: '1px solid rgba(255,255,255,0.08)',
@@ -255,7 +272,6 @@ function Login() {
             </div>
           </>
         )}
-
       </div>
     </div>
   );

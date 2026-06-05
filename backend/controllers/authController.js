@@ -7,7 +7,6 @@ const register = async (req, res) => {
   const { username, password, photo_url } = req.body;
 
   try {
-    // Check if username already exists
     const existing = await pool.query(
       'SELECT * FROM users WHERE username = $1',
       [username]
@@ -17,10 +16,8 @@ const register = async (req, res) => {
       return res.status(400).json({ message: 'Username already exists' });
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save user to database
     const result = await pool.query(
       'INSERT INTO users (username, password, photo_url) VALUES ($1, $2, $3) RETURNING id, username, role',
       [username, hashedPassword, photo_url]
@@ -37,7 +34,6 @@ const login = async (req, res) => {
   const { username, password } = req.body;
 
   try {
-    // Find user
     const result = await pool.query(
       'SELECT * FROM users WHERE username = $1',
       [username]
@@ -49,13 +45,11 @@ const login = async (req, res) => {
 
     const user = result.rows[0];
 
-    // Check password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Invalid username or password' });
     }
 
-    // Create JWT token
     const token = jwt.sign(
       { id: user.id, username: user.username, role: user.role },
       process.env.JWT_SECRET,

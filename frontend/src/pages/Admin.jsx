@@ -1,53 +1,41 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import API from '../api/axios';
 
 function Admin() {
   const navigate = useNavigate();
   const [repo, setRepo] = useState('');
   const [assignedRepo, setAssignedRepo] = useState('');
   const [selectedUser, setSelectedUser] = useState(null);
+  const [users, setUsers] = useState([]);
 
-  const users = [
-    {
-      name: 'swarag',
-      loginTime: '09:00 AM',
-      logoutTime: '06:00 PM',
-      hours: '9hrs',
-      commits: 12,
-      attendance: {
-        startDate: '2025-05-01',
-        present: ['2025-05-01','2025-05-02','2025-05-05','2025-05-06','2025-05-07','2025-05-08','2025-05-09','2025-05-12','2025-05-13','2025-05-14','2025-05-15','2025-05-16','2025-05-19','2025-05-20','2025-05-21','2025-05-22','2025-05-23','2025-05-26','2025-04-01','2025-04-02','2025-04-03','2025-04-07','2025-04-08'],
-      },
-    },
-    {
-      name: 'vybhavi',
-      loginTime: '09:30 AM',
-      logoutTime: '06:00 PM',
-      hours: '8.5hrs',
-      commits: 8,
-      attendance: {
-        startDate: '2025-05-01',
-        present: ['2025-05-01','2025-05-02','2025-05-05','2025-05-06','2025-05-07','2025-05-08','2025-05-12','2025-05-13','2025-05-14','2025-05-19','2025-05-20','2025-05-21','2025-04-01','2025-04-03','2025-04-07'],
-      },
-    },
-    {
-      name: 'ravi',
-      loginTime: '10:00 AM',
-      logoutTime: '06:30 PM',
-      hours: '8.5hrs',
-      commits: 5,
-      attendance: {
-        startDate: '2025-05-01',
-        present: ['2025-05-01','2025-05-05','2025-05-06','2025-05-07','2025-05-08','2025-05-09','2025-05-12','2025-05-13','2025-04-02','2025-04-04','2025-04-08'],
-      },
-    },
-  ];
+  useEffect(() => {
+    API.get('/admin/users')
+      .then(res => setUsers(res.data.users))
+      .catch(err => console.log(err));
 
-  const handleAssign = () => {
+    API.get('/admin/repo')
+      .then(res => {
+        if (res.data.repo_name) setAssignedRepo(res.data.repo_name);
+      })
+      .catch(err => console.log(err));
+  }, []);
+
+  const handleAssign = async () => {
     if (repo.trim()) {
-      setAssignedRepo(repo.trim());
-      setRepo('');
+      try {
+        await API.post('/admin/repo', { repo_name: repo.trim() });
+        setAssignedRepo(repo.trim());
+        setRepo('');
+      } catch (err) {
+        alert(err.response?.data?.message || 'Failed to assign repo');
+      }
     }
+  };
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate('/');
   };
 
   const months = [
@@ -66,17 +54,14 @@ function Admin() {
     const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
     const firstDay = new Date(calYear, calMonth, 1).getDay();
 
-    const presentDays = user.attendance.present
+    const presentDays = (user.attendance || [])
       .filter(d => {
         const date = new Date(d);
         return date.getMonth() === calMonth && date.getFullYear() === calYear;
       })
       .map(d => new Date(d).getDate());
 
-    const totalPresent = user.attendance.present.filter(d => {
-      const date = new Date(d);
-      return date.getMonth() === calMonth && date.getFullYear() === calYear;
-    }).length;
+    const totalPresent = presentDays.length;
 
     const selectStyle = {
       background: 'rgba(255,255,255,0.05)',
@@ -110,7 +95,6 @@ function Admin() {
           boxShadow: '0 25px 50px rgba(0,0,0,0.5)',
         }}>
 
-          {/* Modal Header */}
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -123,7 +107,7 @@ function Admin() {
                 fontSize: '18px',
                 fontWeight: '400',
                 margin: '0 0 4px',
-              }}>{user.name}'s Attendance</h2>
+              }}>{user.username}'s Attendance</h2>
               <p style={{
                 color: 'rgba(255,255,255,0.35)',
                 fontSize: '12px',
@@ -151,12 +135,7 @@ function Admin() {
             </button>
           </div>
 
-          {/* Month + Year Dropdowns */}
-          <div style={{
-            display: 'flex',
-            gap: '12px',
-            marginBottom: '24px',
-          }}>
+          <div style={{ display: 'flex', gap: '12px', marginBottom: '24px' }}>
             <select
               value={calMonth}
               onChange={e => setCalMonth(Number(e.target.value))}
@@ -178,7 +157,6 @@ function Admin() {
             </select>
           </div>
 
-          {/* Day labels */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(7, 1fr)',
@@ -196,7 +174,6 @@ function Admin() {
             ))}
           </div>
 
-          {/* Calendar Grid */}
           <div style={{
             display: 'grid',
             gridTemplateColumns: 'repeat(7, 1fr)',
@@ -234,12 +211,7 @@ function Admin() {
             })}
           </div>
 
-          {/* Legend */}
-          <div style={{
-            display: 'flex',
-            gap: '20px',
-            marginTop: '20px',
-          }}>
+          <div style={{ display: 'flex', gap: '20px', marginTop: '20px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <div style={{
                 width: '12px', height: '12px', borderRadius: '3px',
@@ -335,7 +307,7 @@ function Admin() {
           </div>
 
           <button
-            onClick={() => navigate('/')}
+            onClick={handleLogout}
             style={{
               background: 'transparent',
               color: 'rgba(255,255,255,0.5)',
@@ -436,12 +408,12 @@ function Admin() {
 
           <div style={{
             display: 'grid',
-            gridTemplateColumns: '2fr 1.5fr 1.5fr 1fr 1fr 1.5fr',
+            gridTemplateColumns: '2fr 1.5fr 1.5fr 1fr 1.5fr',
             gap: '12px',
             marginBottom: '12px',
             padding: '0 16px',
           }}>
-            {['Name', 'Login Time', 'Logout Time', 'Hours', 'Commits', 'Attendance'].map(col => (
+            {['Name', 'Login Time', 'Logout Time', 'Working Time', 'Attendance'].map(col => (
               <p key={col} style={{
                 color: 'rgba(255,255,255,0.25)',
                 fontSize: '11px',
@@ -458,10 +430,16 @@ function Admin() {
             marginBottom: '12px',
           }} />
 
+          {users.length === 0 && (
+            <p style={{ color: 'rgba(255,255,255,0.25)', fontSize: '14px', textAlign: 'center', padding: '20px 0' }}>
+              No users found
+            </p>
+          )}
+
           {users.map((user, index) => (
             <div key={index} style={{
               display: 'grid',
-              gridTemplateColumns: '2fr 1.5fr 1.5fr 1fr 1fr 1.5fr',
+              gridTemplateColumns: '2fr 1.5fr 1.5fr 1fr 1.5fr',
               gap: '12px',
               padding: '16px',
               borderRadius: '10px',
@@ -469,18 +447,16 @@ function Admin() {
               background: index % 2 === 0 ? 'rgba(255,255,255,0.02)' : 'transparent',
               alignItems: 'center',
             }}>
-              <p style={{ color: '#fff', fontSize: '14px', margin: 0 }}>{user.name}</p>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', margin: 0 }}>{user.loginTime}</p>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', margin: 0 }}>{user.logoutTime}</p>
-              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', margin: 0 }}>{user.hours}</p>
-              <p style={{
-                fontSize: '14px',
-                margin: 0,
-                background: 'linear-gradient(135deg, #a855f7, #7c3aed)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
-                fontWeight: '600',
-              }}>{user.commits}</p>
+              <p style={{ color: '#fff', fontSize: '14px', margin: 0 }}>{user.username}</p>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', margin: 0 }}>
+                {user.login_time ? new Date(user.login_time).toLocaleTimeString() : '-'}
+              </p>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', margin: 0 }}>
+                {user.logout_time ? new Date(user.logout_time).toLocaleTimeString() : '-'}
+              </p>
+              <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '14px', margin: 0 }}>
+                {user.working_time ? `${Math.floor(user.working_time / 3600)} hrs ${Math.floor((user.working_time % 3600) / 60)} mins` : '-'}
+              </p>
               <button
                 onClick={() => setSelectedUser(user)}
                 style={{
