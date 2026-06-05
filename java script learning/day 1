@@ -1,1 +1,44 @@
+let name = "Nick";
+const college = "B.Tech";
+let age = 18;
+
+console.log("Name:", name);
+console.log("Course:", college);
+console.log("Age:", age);
+
+// Arithmetic Operators
+let a = 10;
+let b = 5;
+
+console.log("Addition:", a + b);
+console.log("Subtraction:", a - b);
+console.log("Multiplication:", a * b);
+console.log("Division:", a / b);
+console.log("Modulus:", a % b);
+
+// Conditional Statements
+if (age >= 18) {
+    console.log("You are eligible to vote.");
+} else {
+    console.log("You are not eligible to vote.");
+}
+
+// For Loop
+console.log("\nNumbers from 1 to 5:");
+for (let i = 1; i <= 5; i++) {
+    console.log(i);
+}
+
+// While Loop
+let count = 1;
+console.log("\nWhile Loop:");
+while (count <= 3) {
+    console.log(count);
+    count++;
+}
+
+// Function
+function greet(person) {
+    return "Hello, " + person + "!";
+}
 
