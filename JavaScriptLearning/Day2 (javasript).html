@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<title>Monthly Savings Tracker Dashboard</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+}
+
+h1{
+    text-align: center;
+    background-color: black;
+    color: white;
+    padding: 20px;
+    margin: 0;
+}
+
+.container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.card{
+    width: 250px;
+    padding: 20px;
+    background-color: #4de2ff;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    box-shadow: 2px 2px 8px gray;
+}
+
+#summary{
+    width: 350px;
+    margin: 30px auto;
+    padding: 20px;
+    background-color: lightgreen;
+    text-align: center;
+    border-radius: 10px;
+    font-size: 20px;
+    font-weight: bold;
+    box-shadow: 2px 2px 8px gray;
+}
+
+</style>
+</head>
+
+<body>
+
+<h1>Monthly Savings Tracker Dashboard</h1>
+
+<div class="container">
+    <div class="card" id="Tmoney"></div>
+    <div class="card" id="money_groceries"></div>
+    <div class="card" id="money_food"></div>
+    <div class="card" id="money_dressing"></div>
+</div>
+
+<div id="summary"></div>
+
+<script>
+
+let Total_money_saved = 20000;
+let spent_on_groceries = 3990;
+let spent_on_food = 478;
+let spent_on_dressing = 5600;
+
+let total_spent =
+spent_on_groceries +
+spent_on_food +
+spent_on_dressing;
+
+let total_left =
+Total_money_saved - total_spent;
+
+document.getElementById("Tmoney").innerHTML =
+"Total Savings <br> ₹" + Total_money_saved;
+
+document.getElementById("money_groceries").innerHTML =
+"Groceries <br> ₹" + spent_on_groceries;
+
+document.getElementById("money_food").innerHTML =
+"Food <br> ₹" + spent_on_food;
+
+document.getElementById("money_dressing").innerHTML =
+"Dressing <br> ₹" + spent_on_dressing;
+
+document.getElementById("summary").innerHTML =
+"Money Left: ₹" + total_left;
+
+console.log("Total Spent:", total_spent);
+console.log("Money Left:", total_left);
+
+</script>
+
+</body>
+</html>
