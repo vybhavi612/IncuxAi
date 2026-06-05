@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>JavaScript Practice</title>
+</head>
+<body>
+
+    <h2>Example 1: Greeting</h2>
+
+    <input type="text" id="nameInput" placeholder="Enter your name">
+    <button onclick="greetUser()">Submit</button>
+
+    <p id="result"></p>
+
+    <hr>
+
+    <h2>Example 2: Change Color</h2>
+
+    <p id="colorText">My favorite color is Blue.</p>
+
+    <button onclick="changeText()">
+        Change Color
+    </button>
+
+    <script>
+        function greetUser() {
+            let userName = document.getElementById("nameInput").value;
+            document.getElementById("result").innerHTML =
+                "Hello " + userName + "!";
+        }
+
+        function changeText() {
+            document.getElementById("colorText").innerHTML =
+                "My favorite color is Green.";
+        }
+    </script>
+
+</body>
+</html>
