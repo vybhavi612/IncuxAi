@@ -1,0 +1,30 @@
+<!-- 
+Online HTML, CSS and JavaScript editor to run code online.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Browser</title>
+</head>
+
+<body>
+<form>
+  <input id="mytext"/>
+  <button id="mysubmit">submit</button>
+  </form>
+  <p>iewie</p>
+  <script>
+  let user_name;
+//   user_name=Window.prompt("Enter username"); 
+// this is the first apprach to acccept user input
+    document.getElementById("mysubmit").onclick=function(){
+    user_name=document.getElementById("mytext").value;
+    document.body.innerText=user_name;
+}</script>
+</body>
+
+</html>
