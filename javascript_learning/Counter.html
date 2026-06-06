@@ -1,0 +1,80 @@
+<!-- 
+Online HTML, CSS and JavaScript editor to run code online.
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="style.css" />
+  <title>Browser</title>
+  <style>
+    #val{
+        display: flex;
+        font-size:100px;
+        align-items: center;
+        justify-content: center;
+    }
+   #fo{
+    display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 30px;
+    }
+    button{
+        border-radius: 10%;
+        border: 1px rgb(101, 94, 89);
+        color: rgb(154, 93, 17);
+        height: 50px;
+        font-size: medium;
+    }
+    button:hover{
+        background-color: brown;
+        color: aliceblue;
+    }
+  </style>
+</head>
+
+<body>
+<form>
+    <h1 id="val">0</h1>
+    <div id="fo">
+    <button id="decreasebtn">decrease</button>
+    <button id="restbtn">reset</button>
+    <button id="increasebtn">increase</button>
+    </div>
+</form>
+  <script>
+//   let user_name;
+//   user_name=Window.prompt("Enter username"); 
+// this is the first apprach to acccept user input
+    // document.getElementById("mysubmit").onclick=function(){
+    // user_name=document.getElementById("mytext").value;
+    // document.body.innerText=user_name;
+    let count=0;
+    let decreasebtn=document.getElementById("decreasebtn");
+    let restbtn=document.getElementById("restbtn");
+    let increasebtn=document.getElementById("increasebtn");
+    let countlable=document.getElementById("val");
+    decreasebtn.onclick=function(){
+        count--;
+        countlable.innerText=count;
+        event.preventDefault();
+    }
+    document.getElementById("restbtn").onclick=function(){
+        count=0;
+        countlable.innerText=count;
+        event.preventDefault();
+
+    }
+   increasebtn.onclick=function(){
+        count++;
+        countlable.innerText=count;
+        event.preventDefault();
+
+    }
+</script>
+</body>
+
+</html>
