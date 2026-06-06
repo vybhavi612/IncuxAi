@@ -1,0 +1,17 @@
+<!DOCTYPE html><html><body>
+<h2>Resume Builder</h2>
+Name:<br><input type="text" id="name"><br><br>
+Education:<br><input type="text" id="edu"><br><br>
+Skills:<br><input type="text" id="skill"><br><br>
+<button onclick="createResume()">Create Resume</button>
+<h3>Your Resume</h3><p id="result"></p>
+<script>
+function createResume(){
+let name=document.getElementById('name').value;
+let edu=document.getElementById('edu').value;
+let skill=document.getElementById('skill').value;
+document.getElementById('result').innerHTML=
+'<b>Name:</b> '+name+'<br><b>Education:</b> '+edu+'<br><b>Skills:</b> '+skill;
+}
+</script>
+</body></html>

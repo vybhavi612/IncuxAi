@@ -1,0 +1,17 @@
+<!DOCTYPE html><html><body>
+<h2>Hospital Appointment Booking</h2>
+Patient Name:<br><input type="text" id="name"><br><br>
+Doctor Name:<br><input type="text" id="doctor"><br><br>
+Date:<br><input type="date" id="date"><br><br>
+<button onclick="book()">Book Appointment</button>
+<h3 id="message"></h3>
+<script>
+function book(){
+let name=document.getElementById('name').value;
+let doctor=document.getElementById('doctor').value;
+let date=document.getElementById('date').value;
+document.getElementById('message').innerHTML=
+'Appointment Booked!<br>Patient: '+name+'<br>Doctor: '+doctor+'<br>Date: '+date;
+}
+</script>
+</body></html>
