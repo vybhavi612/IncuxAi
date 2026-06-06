@@ -1,0 +1,6 @@
+let count = 1;
+console.log("\nWhile Loop:");
+while (count <= 3) {
+    console.log(count);
+    count++;
+}
