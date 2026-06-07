@@ -39,3 +39,26 @@ function greet(userName) {
 }
 
 console.log(greet("Prashanth"));
+
+day-3
+
+let name = "Prashanth";
+console.log(name.toUpperCase());
+console.log(name.toLowerCase());
+console.log(name.length);
+
+let role = "Student";
+console.log(`My name is ${name} and I am a ${role}`);
+let skills = ["HTML", "CSS", "JavaScript"];
+
+console.log(skills);
+console.log(skills[0]);
+
+skills.push("React");
+console.log(skills);
+
+skills.pop();
+console.log(skills);
+skills.forEach(skill => {
+    console.log(skill);
+});
