@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>SmartWork Flow</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="shell">
+      <section class="page landing" id="landingPage">
+        <section class="start-only">
+          <p class="eyebrow">SmartWork Flow</p>
+          <h1>SmartWork Flow</h1>
+          <button id="startBottomButton" type="button">Get Started</button>
+        </section>
+      </section>
+
+      <section class="page hidden" id="functionsPage">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">SmartWork Flow</p>
+            <h2>Website Functions</h2>
+          </div>
+          <div class="topbar-actions">
+            <button class="secondary" id="functionsBackButton" type="button">Back Home</button>
+          </div>
+        </header>
+
+        <section class="function-strip">
+          <article>
+            <h2>Attendance Login</h2>
+            <p>Records employee or admin login time and calculates delay against the expected 10:00 AM start time.</p>
+          </article>
+          <article>
+            <h2>Profile Verification</h2>
+            <p>Collects name, email, contact, department details, and profile photo by upload or camera capture.</p>
+          </article>
+          <article>
+            <h2>Employee Dashboard</h2>
+            <p>Shows personal profile, login time, delay duration, and live working time for the current session.</p>
+          </article>
+          <article>
+            <h2>Admin Dashboard</h2>
+            <p>Displays all attendance records, employee photos, late count, on-time count, and active work duration.</p>
+          </article>
+          <article>
+            <h2>Workflow Direction</h2>
+            <p>Frames attendance as the first step toward task lifecycle management and smart work allocation.</p>
+          </article>
+          <article>
+            <h2>Future AI Support</h2>
+            <p>Supports the MVP idea of AI-assisted decisions, priority-based allocation, and performance evaluation.</p>
+          </article>
+        </section>
+      </section>
+
+      <section class="page hidden" id="registerPage">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">SmartWork Flow</p>
+            <h2>New User Registration</h2>
+          </div>
+          <button class="secondary" id="registerBackButton" type="button">Back Home</button>
+        </header>
+
+        <form class="form" id="registerForm">
+          <div class="form-heading">
+            <p class="eyebrow">Create Account</p>
+            <h2>Register before entering the workspace</h2>
+          </div>
+
+          <label>
+            <span>Full Name</span>
+            <input id="registerName" name="registerName" autocomplete="name" required placeholder="Enter your full name" />
+          </label>
+
+          <label>
+            <span>Email ID</span>
+            <input id="registerEmail" name="registerEmail" type="email" autocomplete="email" required placeholder="name@example.com" />
+          </label>
+
+          <label>
+            <span>Contact Number</span>
+            <input id="registerContact" name="registerContact" autocomplete="tel" required placeholder="+91 98765 43210" />
+          </label>
+
+          <label>
+            <span>Department / College Details</span>
+            <input id="registerDepartment" name="registerDepartment" required placeholder="Department, college, or team" />
+          </label>
+
+          <label>
+            <span>Create Password</span>
+            <input id="registerPassword" name="registerPassword" type="password" required minlength="6" placeholder="Minimum 6 characters" />
+          </label>
+
+          <p class="form-error" id="registerError" role="alert"></p>
+          <div class="form-actions">
+            <button class="secondary" id="alreadyRegisteredButton" type="button">Already Registered</button>
+            <button type="submit">Register & Continue</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="page hidden" id="rolePage">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">SmartWork Flow</p>
+            <h2>Select Your Role</h2>
+          </div>
+          <button class="secondary" id="backHomeButton" type="button">Back Home</button>
+        </header>
+
+        <div class="role-grid">
+          <button class="role-card" data-role="employee" type="button">
+            <span>Employee</span>
+            <strong>Mark attendance and view your personal work dashboard.</strong>
+          </button>
+          <button class="role-card" data-role="admin" type="button">
+            <span>Admin</span>
+            <strong>Access all employees, attendance delay, and team reports.</strong>
+          </button>
+        </div>
+
+        <form class="form hidden" id="loginForm">
+          <div class="form-heading">
+            <p class="eyebrow" id="selectedRoleLabel">Employee Login</p>
+            <h2>Enter Your Details</h2>
+          </div>
+
+          <label>
+            <span>Name</span>
+            <input id="name" name="name" autocomplete="name" required placeholder="Employee name" />
+          </label>
+
+          <label>
+            <span>Email ID</span>
+            <input id="email" name="email" type="email" autocomplete="email" required placeholder="name@example.com" />
+          </label>
+
+          <label>
+            <span>Password</span>
+            <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Enter registered password" />
+          </label>
+
+          <label>
+            <span>Contact Number</span>
+            <input id="contact" name="contact" autocomplete="tel" required placeholder="+91 98765 43210" />
+          </label>
+
+          <label>
+            <span>Department / College Details</span>
+            <input id="department" name="department" placeholder="Department, college, or team" />
+          </label>
+
+          <div class="photo-panel">
+            <div>
+              <span class="label-title">Profile Picture</span>
+              <p>Upload an image or capture one directly with your camera.</p>
+            </div>
+            <input id="photo" name="photo" type="file" accept="image/*" />
+            <div class="camera-actions">
+              <button class="secondary" id="startCameraButton" type="button">Open Camera</button>
+              <button class="secondary hidden" id="captureButton" type="button">Capture Photo</button>
+              <button class="secondary hidden" id="stopCameraButton" type="button">Stop Camera</button>
+            </div>
+            <video class="hidden" id="cameraPreview" autoplay muted playsinline></video>
+            <canvas class="hidden" id="cameraCanvas"></canvas>
+            <img class="photo-preview hidden" id="photoPreview" alt="Selected profile preview" />
+          </div>
+
+          <label id="adminKeyWrap" class="hidden">
+            <span>Admin Access Key</span>
+            <input id="adminKey" name="adminKey" type="password" placeholder="Enter admin key" />
+          </label>
+
+          <p class="form-error" id="formError" role="alert"></p>
+          <div class="form-actions">
+            <button class="secondary" id="changeRoleButton" type="button">Change Role</button>
+            <button type="submit">Login & Mark Attendance</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="page dashboard hidden" id="employeeDashboard">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Employee Dashboard</p>
+            <h2 id="employeeWelcome">Welcome</h2>
+          </div>
+          <button class="secondary logout-button" type="button">Logout</button>
+        </header>
+
+        <section class="summary-grid employee-grid">
+          <article class="profile-card">
+            <img id="employeePhoto" alt="Employee profile photo" />
+            <div>
+              <h3 id="employeeName"></h3>
+              <p id="employeeEmail"></p>
+              <p id="employeeContact"></p>
+              <p id="employeeDepartment"></p>
+            </div>
+          </article>
+          <article class="metric">
+            <span>Login Time</span>
+            <strong id="employeeLoginTime"></strong>
+          </article>
+          <article class="metric">
+            <span>Delay</span>
+            <strong id="employeeDelay"></strong>
+          </article>
+          <article class="metric">
+            <span>Working Time</span>
+            <strong id="employeeWorkingTime"></strong>
+          </article>
+        </section>
+      </section>
+
+      <section class="page dashboard hidden" id="adminDashboard">
+        <header class="topbar">
+          <div>
+            <p class="eyebrow">Admin Dashboard</p>
+            <h2 id="adminWelcome">Team Attendance</h2>
+          </div>
+          <div class="topbar-actions">
+            <button class="secondary" id="clearButton" type="button">Clear Demo Data</button>
+            <button class="secondary logout-button" type="button">Logout</button>
+          </div>
+        </header>
+
+        <section class="summary-grid admin-grid">
+          <article class="metric">
+            <span>Total Records</span>
+            <strong id="totalRecords">0</strong>
+          </article>
+          <article class="metric">
+            <span>Late Employees</span>
+            <strong id="lateRecords">0</strong>
+          </article>
+          <article class="metric">
+            <span>On Time</span>
+            <strong id="onTimeRecords">0</strong>
+          </article>
+          <article class="metric">
+            <span>Admin Login</span>
+            <strong id="adminLoginTime"></strong>
+          </article>
+        </section>
+
+        <section class="report">
+          <div class="section-heading">
+            <div>
+              <p class="eyebrow">Full Report</p>
+              <h2>Today&apos;s Attendance Records</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Photo</th>
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th>Contact</th>
+                  <th>Department</th>
+                  <th>Login</th>
+                  <th>Delay</th>
+                  <th>Worked</th>
+                </tr>
+              </thead>
+              <tbody id="reportRows"></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
