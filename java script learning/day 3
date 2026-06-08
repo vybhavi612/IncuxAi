@@ -1,0 +1,61 @@
+
+let studentName = "Karthik";
+let rollNo = 101;
+
+let maths = 88;
+let physics = 91;
+let chemistry = 79;
+let english = 85;
+let computerScience = 95;
+let total = maths + physics + chemistry + english + computerScience;
+let percentage = total / 5;
+
+let grade;
+
+if (percentage >= 90) {
+    grade = "A+";
+} else if (percentage >= 80) {
+    grade = "A";
+} else if (percentage >= 70) {
+    grade = "B";
+} else if (percentage >= 60) {
+    grade = "C";
+} else if (percentage >= 50) {
+    grade = "D";
+} else {
+    grade = "Fail";
+}
+
+// Display Result
+console.log("==================================");
+console.log("       STUDENT MARKSHEET");
+console.log("==================================");
+console.log("Student Name : " + studentName);
+console.log("Roll Number  : " + rollNo);
+console.log("----------------------------------");
+console.log("Mathematics      : " + maths);
+console.log("Physics          : " + physics);
+console.log("Chemistry        : " + chemistry);
+console.log("English          : " + english);
+console.log("Computer Science : " + computerScience);
+console.log("----------------------------------");
+console.log("Total Marks : " + total + " / 500");
+console.log("Percentage  : " + percentage.toFixed(2) + "%");
+console.log("Grade       : " + grade);
+console.log("==================================");
+
+let subjects = [maths, physics, chemistry, english, computerScience];
+let passed = true;
+
+for (let i = 0; i < subjects.length; i++) {
+    if (subjects[i] < 35) {
+        passed = false;
+        break;
+    }
+}
+
+if (passed) {
+    console.log("Result : PASS ");
+} else {
+    console.log("Result : FAIL ");
+}
