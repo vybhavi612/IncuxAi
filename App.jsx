@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from "react";
-import Webcam from "react-webcam";
+import { useState, useEffect } from "react";
 
 function App() {
   const [page, setPage] = useState("home");
@@ -26,8 +25,6 @@ function App() {
   });
   const [workLog, setWorkLog] = useState("");
   const [section, setSection] = useState("profile");
-  const [capturePreview, setCapturePreview] = useState(null);
-  const webcamRef = useRef(null);
 
   useEffect(() => {
     localStorage.setItem("emsUsers", JSON.stringify(users));
@@ -40,8 +37,7 @@ function App() {
       if (storedUser) {
         setCurrentUser(storedUser);
         setRole("Employee");
-        setCapturePreview(storedUser.photo);
-        setPage(storedUser.photo ? "employeeDashboard" : "camera");
+        setPage("employeeDashboard");
       }
     }
     if (session?.role === "Admin") {
@@ -65,7 +61,6 @@ function App() {
   const clearSession = () => {
     localStorage.removeItem("emsSession");
     setCurrentUser(null);
-    setCapturePreview(null);
     setSection("profile");
   };
 
@@ -77,6 +72,7 @@ function App() {
     setLoginEmail("");
     setLoginPassword("");
     resetForm();
+    window.scrollTo(0, 0);
   };
 
   const selectRole = (selectedRole) => {
@@ -153,8 +149,7 @@ function App() {
       setUsers(updatedUsers);
       setCurrentUser({ ...user, lastLogin: now });
       localStorage.setItem("emsSession", JSON.stringify({ role: "Employee", email: user.email }));
-      setPage(user.photo ? "employeeDashboard" : "camera");
-      setCapturePreview(user.photo);
+      setPage("employeeDashboard");
       return;
     }
     if (role === "Admin") {
@@ -167,25 +162,17 @@ function App() {
     }
   };
 
-  const capture = () => {
-    const selfie = webcamRef.current.getScreenshot();
-    if (!selfie) {
-      setMessage("Unable to capture selfie.");
-      return;
-    }
-    setCapturePreview(selfie);
+  const handleLogout = () => {
     if (currentUser) {
+      const now = new Date().toISOString();
       const updatedUsers = users.map((item) =>
-        item.email === currentUser.email ? { ...item, photo: selfie } : item
+        item.email === currentUser.email ? { ...item, lastLogout: now } : item
       );
-      const updatedUser = { ...currentUser, photo: selfie };
       setUsers(updatedUsers);
-      setCurrentUser(updatedUser);
-      setPage("employeeDashboard");
-      return;
     }
-    setPage(role === "Admin" ? "adminDashboard" : "employeeDashboard");
+    goHome();
   };
+
 
   const handleAttendance = () => {
     if (!currentUser) {
@@ -305,13 +292,13 @@ function App() {
 
   if (page === "home") {
     return (
-      <div style={{ minHeight: "100vh", background: "radial-gradient(circle at top, #2b6cb0, #0f172a)", color: "white", padding: "40px" }}>
+      <div style={{ minHeight: "100vh", width: "100%", boxSizing: "border-box", overflowY: "auto", overflowX: "hidden", background: "radial-gradient(circle at top, #2b6cb0, #0f172a)", color: "white", padding: "40px 20px 80px" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "20px" }}>
             <div>
               <h1 style={{ fontSize: "3rem", margin: 0 }}>Employee Monitoring Portal</h1>
               <p style={{ opacity: 0.8, marginTop: "10px", maxWidth: "620px" }}>
-                Secure employee registration, admin approval, webcam verification, attendance tracking and activity analytics in a modern dashboard.
+                Secure employee registration, admin approval, attendance tracking and activity analytics in a modern dashboard.
               </p>
             </div>
             <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
@@ -412,7 +399,7 @@ function App() {
   if (page === "employeeLogin" || page === "adminLogin") {
     const title = page === "employeeLogin" ? "Employee Login" : "Admin Login";
     return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(135deg,#0f172a,#1e293b)", display: "flex", justifyContent: "center", alignItems: "center", color: "white", padding: "20px" }}>
+      <div style={{ minHeight: "100vh", width: "100%", boxSizing: "border-box", background: "linear-gradient(135deg,#0f172a,#1e293b)", display: "flex", justifyContent: "center", alignItems: "flex-start", color: "white", padding: "40px 20px", overflowY: "auto" }}>
         <div style={{ width: "100%", maxWidth: "420px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "28px", padding: "36px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "24px" }}>
             <div>
@@ -432,40 +419,16 @@ function App() {
     );
   }
 
-  if (page === "camera") {
-    return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(135deg,#0b1120,#1f2937)", display: "flex", alignItems: "center", justifyContent: "center", padding: "20px", color: "white" }}>
-        <div style={{ width: "100%", maxWidth: "520px", background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.14)", borderRadius: "32px", padding: "30px", textAlign: "center" }}>
-          <h2>Webcam Verification</h2>
-          <p style={{ opacity: 0.8 }}>Capture a selfie to use as your profile photo and confirm your identity.</p>
-          {capturePreview ? (
-            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "18px", marginTop: "20px" }}>
-              <img src={capturePreview} alt="profile" style={{ width: "280px", borderRadius: "24px", border: "2px solid rgba(255,255,255,0.18)" }} />
-              <button onClick={() => setCapturePreview(null)} style={{ padding: "14px 22px", borderRadius: "999px", border: "none", background: "#2563eb", color: "white" }}>Retake Selfie</button>
-              <button onClick={() => setPage(role === "Admin" ? "adminDashboard" : "employeeDashboard")} style={{ padding: "14px 22px", borderRadius: "999px", border: "none", background: "#10b981", color: "white" }}>Continue</button>
-            </div>
-          ) : (
-            <div style={{ display: "grid", gap: "18px", marginTop: "24px" }}>
-              <Webcam audio={false} ref={webcamRef} screenshotFormat="image/jpeg" style={{ width: "100%", borderRadius: "20px" }} />
-              <button onClick={capture} style={{ padding: "16px", borderRadius: "18px", border: "none", background: "#14b8a6", color: "white", fontWeight: "700" }}>Capture Selfie</button>
-              <button onClick={goHome} style={{ padding: "14px", borderRadius: "18px", border: "1px solid rgba(255,255,255,0.18)", background: "transparent", color: "white" }}>Cancel</button>
-            </div>
-          )}
-          {message && <div style={{ color: "#f6e05e", marginTop: "18px" }}>{message}</div>}
-        </div>
-      </div>
-    );
-  }
 
   if (page === "employeeDashboard" && currentUser) {
     const presentToday = currentUser.attendance?.[todayKey] === "Present";
     return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(180deg,#020617,#111827)", color: "white", padding: "20px" }}>
+      <div style={{ minHeight: "100vh", width: "100%", boxSizing: "border-box", background: "linear-gradient(180deg,#020617,#111827)", color: "white", padding: "40px 20px", overflowY: "auto" }}>
         <div style={{ maxWidth: "1320px", margin: "0 auto", display: "grid", gridTemplateColumns: "280px 1fr", gap: "24px" }}>
           <aside style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.12)", borderRadius: "32px", padding: "24px" }}>
             <div style={{ textAlign: "center", marginBottom: "28px" }}>
               <div style={{ width: "140px", height: "140px", margin: "0 auto", borderRadius: "50%", overflow: "hidden", border: "2px solid #38b2ac" }}>
-                <img src={capturePreview || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80"} alt="profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+                <img src={currentUser.photo || "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=400&q=80"} alt="profile" style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
               <h2 style={{ margin: "18px 0 4px" }}>{currentUser.name}</h2>
               <p style={{ opacity: 0.7 }}>{currentUser.department}</p>
@@ -563,14 +526,14 @@ function App() {
 
   if (page === "adminDashboard") {
     return (
-      <div style={{ minHeight: "100vh", background: "linear-gradient(180deg,#020617,#111827)", color: "white", padding: "20px" }}>
+      <div style={{ minHeight: "100vh", width: "100%", boxSizing: "border-box", background: "linear-gradient(180deg,#020617,#111827)", color: "white", padding: "40px 20px", overflowY: "auto" }}>
         <div style={{ maxWidth: "1320px", margin: "0 auto", display: "grid", gridTemplateColumns: "1fr", gap: "24px" }}>
           <header style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "20px" }}>
             <div>
               <h1>Admin Dashboard</h1>
               <p style={{ opacity: 0.8 }}>Approve employees, review attendance, and monitor team performance.</p>
             </div>
-            <button onClick={goHome} style={{ padding: "12px 20px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.18)", background: "transparent", color: "white" }}>Logout</button>
+            <button onClick={handleLogout} style={{ padding: "12px 20px", borderRadius: "999px", border: "1px solid rgba(255,255,255,0.18)", background: "transparent", color: "white" }}>Logout</button>
           </header>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit,minmax(220px,1fr))", gap: "20px" }}>
             {[ ["Total Employees", totalEmployees, "#38bdf8"], ["Present Today", presentEmployees, "#34d399"], ["Pending Approvals", pendingApprovals, "#fbbf24"], ["Absent Today", totalEmployees - presentEmployees, "#f87171"] ].map(([label, value, color]) => (
