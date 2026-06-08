@@ -1,0 +1,7 @@
+// Function to greet a user
+function greet(name) {
+    return "Hello, " + name + "!";
+}
+
+// Call the function
+console.log(greet("Nageswara Rao"));
