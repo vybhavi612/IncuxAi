@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ATM System</title>
+</head>
+<body>
+
+    <h1>ATM Withdrawal</h1>
+
+    <input type="number" id="balance" placeholder="Current Balance">
+    <br><br>
+
+    <input type="number" id="amount" placeholder="Withdrawal Amount">
+    <br><br>
+
+    <button onclick="withdrawMoney()">Withdraw</button>
+
+    <h2 id="output"></h2>
+
+    <script>
+
+        function withdraw(balance, amount) {
+
+            if (amount <= balance) {
+                balance = balance - amount;
+                return "Withdrawal Successful<br>Remaining Balance: ₹" + balance;
+            }
+            else {
+                return "Insufficient Balance";
+            }
+        }
+
+        function withdrawMoney() {
+
+            let balance =
+                Number(document.getElementById("balance").value);
+
+            let amount =
+                Number(document.getElementById("amount").value);
+
+            let result = withdraw(balance, amount);
+
+            document.getElementById("output").innerHTML = result;
+        }
+
+    </script>
+
+</body>
+</html>
