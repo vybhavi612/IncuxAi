@@ -62,3 +62,23 @@ console.log(skills);
 skills.forEach(skill => {
     console.log(skill);
 });
+
+DAY-3
+function greet() {
+    console.log("Hello JavaScript!");
+}
+
+greet();
+
+function add(a, b) {
+    console.log("Sum =", a + b);
+}
+
+add(10, 20);
+
+function multiply(a, b) {
+    return a * b;
+}
+
+let result = multiply(5, 4);
+console.log(result);
