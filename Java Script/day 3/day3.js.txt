@@ -1,0 +1,29 @@
+// Day 3 
+//  Counter Program, Math Object, Random Numbers
+
+let score = 0;
+
+console.log("Initial Score:", score);
+
+score++;
+
+console.log("After First Point:", score);
+
+score++;
+
+console.log("After Second Point:", score);
+
+score--;
+
+console.log("After Penalty:", score);
+
+let randomBonus = Math.floor(Math.random() * 10) + 1;
+
+console.log("Random Bonus:", randomBonus);
+
+score += randomBonus;
+
+console.log("Final Score:", score);
+
+console.log("Square Root of 81:", Math.sqrt(81));
+console.log("Rounded Value of 4.8:", Math.round(4.8));

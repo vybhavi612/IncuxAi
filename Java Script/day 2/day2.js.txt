@@ -1,0 +1,15 @@
+// Day 2 
+//  User Input, Type Conversion, Constants
+
+const PI = 3.14159;
+
+let radius = window.prompt("Enter radius of circle:");
+
+radius = Number(radius);
+
+let area = PI * radius * radius;
+let circumference = 2 * PI * radius;
+
+console.log("Radius:", radius);
+console.log("Area:", area);
+console.log("Circumference:", circumference);

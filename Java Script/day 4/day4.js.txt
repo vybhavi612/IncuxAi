@@ -1,0 +1,22 @@
+// Day 4 
+//  If Statements, Checked Property, Ternary Operator
+
+let marks = Number(window.prompt("Enter your marks:"));
+
+if (marks >= 35) {
+    console.log("You Passed");
+} else {
+    console.log("You Failed");
+}
+
+let result = marks >= 35 ? "Pass" : "Fail";
+
+console.log("Result:", result);
+
+let subscribed = true;
+
+if (subscribed) {
+    console.log("Premium Content Unlocked");
+} else {
+    console.log("Subscribe to Continue");
+}

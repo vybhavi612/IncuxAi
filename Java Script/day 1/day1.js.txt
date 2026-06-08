@@ -1,0 +1,24 @@
+// Day 1 
+//  Variables & Arithmetic Operators
+
+let studentName = "raju";
+let mathMarks = 85;
+let englishMarks = 90;
+let chemistryMarks = 80;
+
+let totalMarks = mathMarks + englishMarks + chemistryMarks;
+let averageMarks = totalMarks / 3;
+
+console.log("Student Name:", studentName);
+console.log("Math Marks:", mathMarks);
+console.log("English Marks:", englishMarks);
+console.log("Chemistry Marks:", chemistryMarks);
+
+console.log("Total Marks:", totalMarks);
+console.log("Average Marks:", averageMarks);
+
+let bonusMarks = 5;
+
+totalMarks += bonusMarks;
+
+console.log("Updated Total Marks:", totalMarks);
