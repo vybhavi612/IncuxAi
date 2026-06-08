@@ -270,6 +270,9 @@ admins
 
 
 
+
+
+
 ---
 
 ![Registration](screenshort/RegisterPage.jpg)
@@ -282,6 +285,5 @@ admins
 ![AdminDashbaord](screenshort/AdminDashboard.jpg)
 
 
-
---
+---
 
