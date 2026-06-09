@@ -1,0 +1,43 @@
+// Day 5 
+//  Switch Statements, String Methods, String Slicing
+
+let dayNumber = 3;
+
+switch(dayNumber){
+    case 1:
+        console.log("Monday");
+        break;
+
+    case 2:
+        console.log("Tuesday");
+        break;
+
+    case 3:
+        console.log("Wednesday");
+        break;
+
+    case 4:
+        console.log("Thursday");
+        break;
+
+    case 5:
+        console.log("Friday");
+        break;
+
+    default:
+        console.log("Invalid Day");
+}
+
+// String Methods
+
+let studentName = "ravi";
+
+console.log(studentName.length);
+console.log(studentName.toUpperCase());
+console.log(studentName.toLowerCase());
+
+// String Slicing
+
+let firstName = studentName.slice(0, 3);
+
+console.log("First Part:", firstName);
