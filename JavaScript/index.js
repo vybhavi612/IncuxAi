@@ -82,3 +82,26 @@ function multiply(a, b) {
 
 let result = multiply(5, 4);
 console.log(result);
+
+day-4
+
+let fruits = ["Apple", "Mango", "Banana"];
+console.log(fruits[0]); 
+fruits.push("Orange"); 
+fruits.pop();           
+for(let i = 0; i < fruits.length; i++) {
+    console.log(fruits[i]);
+}
+let student = {
+    name: "Prashanth",
+    age: 21,
+    course: "CSE"
+};
+console.log(student.name);
+console.log(student.age);
+student.city = "Hyderabad";
+console.log(student);
+
+for(let key in student){
+    console.log(key + ": " + student[key]);
+}
