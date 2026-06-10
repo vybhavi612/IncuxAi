@@ -1,0 +1,186 @@
+// 1. Check Positive or Negative
+let num1 = -5;
+if (num1 >= 0) {
+    console.log("Positive Number");
+} else {
+    console.log("Negative Number");
+}
+
+// 2. Check Even or Odd
+let num2 = 8;
+if (num2 % 2 === 0) {
+    console.log("Even Number");
+} else {
+    console.log("Odd Number");
+}
+
+// 3. Voting Eligibility
+let age1 = 20;
+if (age1 >= 18) {
+    console.log("Eligible to Vote");
+} else {
+    console.log("Not Eligible to Vote");
+}
+
+// 4. Largest of Two Numbers
+let a1 = 15, b1 = 20;
+if (a1 > b1) {
+    console.log(a1 + " is larger");
+} else {
+    console.log(b1 + " is larger");
+}
+
+// 5. Pass or Fail
+let marks1 = 40;
+if (marks1 >= 35) {
+    console.log("Pass");
+} else {
+    console.log("Fail");
+}
+
+// 6. Grade Calculation
+let marks2 = 85;
+if (marks2 >= 90) {
+    console.log("Grade A");
+} else if (marks2 >= 75) {
+    console.log("Grade B");
+} else if (marks2 >= 60) {
+    console.log("Grade C");
+} else {
+    console.log("Grade D");
+}
+
+// 7. Largest of Three Numbers
+let a2 = 10, b2 = 25, c2 = 15;
+if (a2 > b2 && a2 > c2) {
+    console.log(a2 + " is largest");
+} else if (b2 > c2) {
+    console.log(b2 + " is largest");
+} else {
+    console.log(c2 + " is largest");
+}
+
+// 8. Leap Year Check
+let year = 2024;
+if (year % 400 === 0) {
+    console.log("Leap Year");
+} else if (year % 100 === 0) {
+    console.log("Not Leap Year");
+} else if (year % 4 === 0) {
+    console.log("Leap Year");
+} else {
+    console.log("Not Leap Year");
+}
+
+// 9. Divisible by 5
+let num3 = 25;
+if (num3 % 5 === 0) {
+    console.log("Divisible by 5");
+} else {
+    console.log("Not Divisible by 5");
+}
+
+// 10. Character Case
+let ch = 'A';
+if (ch >= 'A' && ch <= 'Z') {
+    console.log("Uppercase");
+} else {
+    console.log("Lowercase");
+}
+
+// 11. Student Result
+let marks3 = 72;
+if (marks3 >= 75) {
+    console.log("Distinction");
+} else if (marks3 >= 60) {
+    console.log("First Class");
+} else if (marks3 >= 50) {
+    console.log("Second Class");
+} else {
+    console.log("Fail");
+}
+
+// 12. Positive, Negative, or Zero
+let num4 = 0;
+if (num4 > 0) {
+    console.log("Positive");
+} else if (num4 < 0) {
+    console.log("Negative");
+} else {
+    console.log("Zero");
+}
+
+// 13. Login Validation
+let username = "admin";
+let password = "1234";
+if (username === "admin" && password === "1234") {
+    console.log("Login Successful");
+} else {
+    console.log("Login Failed");
+}
+
+// 14. Adult, Teen, or Child
+let age2 = 16;
+if (age2 >= 18) {
+    console.log("Adult");
+} else if (age2 >= 13) {
+    console.log("Teenager");
+} else {
+    console.log("Child");
+}
+
+// 15. Smallest of Three Numbers
+let a3 = 8, b3 = 3, c3 = 12;
+if (a3 < b3 && a3 < c3) {
+    console.log(a3 + " is smallest");
+} else if (b3 < c3) {
+    console.log(b3 + " is smallest");
+} else {
+    console.log(c3 + " is smallest");
+}
+
+// 16. Check Vowel
+let letter = 'e';
+if (letter === 'a' || letter === 'e' || letter === 'i' || letter === 'o' || letter === 'u') {
+    console.log("Vowel");
+} else {
+    console.log("Consonant");
+}
+
+// 17. Check Divisible by 3 and 7
+let num5 = 21;
+if (num5 % 3 === 0 && num5 % 7 === 0) {
+    console.log("Divisible by both 3 and 7");
+} else {
+    console.log("Not divisible by both");
+}
+
+// 18. Check Salary Bonus
+let salary = 30000;
+if (salary >= 50000) {
+    console.log("Bonus = 10000");
+} else if (salary >= 30000) {
+    console.log("Bonus = 5000");
+} else {
+    console.log("Bonus = 2000");
+}
+
+// 19. Check Number is Multiple of 10
+let num6 = 50;
+if (num6 % 10 === 0) {
+    console.log("Multiple of 10");
+} else {
+    console.log("Not a Multiple of 10");
+}
+
+// 20. Check Temperature
+let temp = 35;
+if (temp > 40) {
+    console.log("Very Hot");
+} else if (temp >= 30) {
+    console.log("Hot");
+} else if (temp >= 20) {
+    console.log("Warm");
+} else {
+    console.log("Cold");
+}
