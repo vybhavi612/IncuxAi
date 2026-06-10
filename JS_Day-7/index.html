@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Land Management Hub</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="portal-wrapper">
+        <header>
+            <h1>Land Information Portal</h1>
+            <p>System Registry: 24EU08079</p>
+        </header>
+        <div class="control-panel">
+            <button id="toggleSystemBtn" class="action-btn">Power Off Registry</button>
+        </div>
+        <main id="registryContainer" class="registry-grid">
+            <div id="residentialCard" class="parcel-card">
+                <h2>Parcel #RL-402</h2>
+                <span class="type-tag residential">Residential Zone</span>
+                <div class="stats-box">
+                    <p class="data-row">Owner: <span class="val">Sai Naga Registry</span></p>
+                    <p class="data-row">Tax Rate: <span class="val">5%</span></p>
+                    <p class="data-row">Raw Value: <span class="val">$180,000</span></p>
+                </div>
+                <button class="calc-btn">Compute Evaluation</button>
+                <p class="result-box"></p>
+            </div>
+            <div id="commercialCard" class="parcel-card">
+                <h2>Parcel #CL-709</h2>
+                <span class="type-tag commercial">Commercial Zone</span>
+                <div class="stats-box">
+                    <p class="data-row">Owner: <span class="val">Piyush Holdings</span></p>
+                    <p class="data-row">Tax Rate: <span class="val">10%</span></p>
+                    <p class="data-row">Raw Value: <span class="val">$450,000</span></p>
+                </div>
+                <button class="calc-btn">Compute Evaluation</button>
+                <p class="result-box"></p>
+            </div>
+        </main>
+    </div>
+    <script src="index.js"></script>
+</body>
+</html>
