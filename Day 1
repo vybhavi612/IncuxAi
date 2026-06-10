@@ -1,0 +1,124 @@
+// =======================
+// JAVASCRIPT FUNDAMENTALS
+// (WITHOUT LOOPS)
+// =======================
+
+// 1. VARIABLES
+let name = "Vineela";
+const age = 21;
+var city = "Vijayawada";
+
+console.log("Name:", name);
+console.log("Age:", age);
+console.log("City:", city);
+
+// 2. DATA TYPES
+let text = "JavaScript";
+let number = 100;
+let isPresent = true;
+let empty = null;
+let notAssigned = undefined;
+
+console.log(typeof text);
+console.log(typeof number);
+console.log(typeof isPresent);
+console.log(typeof empty);
+console.log(typeof notAssigned);
+
+// 3. ARITHMETIC OPERATORS
+let a = 20;
+let b = 10;
+
+console.log("Addition =", a + b);
+console.log("Subtraction =", a - b);
+console.log("Multiplication =", a * b);
+console.log("Division =", a / b);
+console.log("Modulus =", a % b);
+
+// 4. COMPARISON OPERATORS
+console.log(a > b);
+console.log(a < b);
+console.log(a == b);
+console.log(a != b);
+console.log(a >= b);
+console.log(a <= b);
+
+// 5. LOGICAL OPERATORS
+console.log(true && true);
+console.log(true && false);
+console.log(true || false);
+console.log(!true);
+
+// 6. TYPE CONVERSION
+let strNum = "50";
+
+console.log(Number(strNum));
+console.log(String(100));
+console.log(Boolean(1));
+console.log(Boolean(0));
+
+// 7. TEMPLATE LITERALS
+let studentName = "Vineela";
+let studentAge = 21;
+
+console.log(`My name is ${studentName} and I am ${studentAge} years old.`);
+
+// 8. CONDITIONAL STATEMENTS
+let marks = 85;
+
+if (marks >= 90) {
+    console.log("Grade A");
+} else if (marks >= 75) {
+    console.log("Grade B");
+} else {
+    console.log("Grade C");
+}
+
+// 9. SWITCH STATEMENT
+let day = 2;
+
+switch (day) {
+    case 1:
+        console.log("Monday");
+        break;
+
+    case 2:
+        console.log("Tuesday");
+        break;
+
+    case 3:
+        console.log("Wednesday");
+        break;
+
+    default:
+        console.log("Invalid Day");
+}
+
+// 10. FUNCTIONS
+function greet(name) {
+    return "Hello " + name;
+}
+
+console.log(greet("Vineela"));
+
+// 11. ARROW FUNCTION
+const add = (x, y) => x + y;
+
+console.log(add(10, 20));
+
+// 12. ARRAYS
+let fruits = ["Apple", "Banana", "Mango"];
+
+console.log(fruits);
+console.log(fruits[0]);
+
+// 13. OBJECTS
+let person = {
+    name: "Vineela",
+    age: 21,
+    city: "Vijayawada"
+};
+
+console.log(person);
+console.log(person.name);
+console.log(person.age);
