@@ -1,0 +1,10 @@
+let str = "javascript";
+let count = 0;
+
+for (let char of str) {
+    if ("aeiouAEIOU".includes(char)) {
+        count++;
+    }
+}
+
+console.log("Vowels:", count);
