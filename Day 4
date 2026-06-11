@@ -1,0 +1,135 @@
+// 1. Simple Function
+function hello() {
+    console.log("Hello World");
+}
+hello();
+
+// 2. Function with Name
+function greet(name) {
+    console.log("Hello " + name);
+}
+greet("Vineela");
+
+// 3. Addition
+function add(a, b) {
+    console.log(a + b);
+}
+add(10, 20);
+
+// 4. Subtraction
+function subtract(a, b) {
+    console.log(a - b);
+}
+subtract(20, 10);
+
+// 5. Multiplication
+function multiply(a, b) {
+    console.log(a * b);
+}
+multiply(5, 4);
+
+// 6. Division
+function divide(a, b) {
+    console.log(a / b);
+}
+divide(20, 5);
+
+// 7. Square
+function square(num) {
+    console.log(num * num);
+}
+square(5);
+
+// 8. Cube
+function cube(num) {
+    console.log(num * num * num);
+}
+cube(3);
+
+// 9. Print Age
+function age(years) {
+    console.log("Age is " + years);
+}
+age(21);
+
+// 10. Print City
+function city(name) {
+    console.log("City: " + name);
+}
+city("Vijayawada");
+
+// 11. Find Larger Number
+function larger(a, b) {
+    if (a > b) {
+        console.log(a);
+    } else {
+        console.log(b);
+    }
+}
+larger(15, 25);
+
+// 12. Find Smaller Number
+function smaller(a, b) {
+    if (a < b) {
+        console.log(a);
+    } else {
+        console.log(b);
+    }
+}
+smaller(15, 25);
+
+// 13. Check Even
+function even(num) {
+    if (num % 2 == 0) {
+        console.log("Even");
+    } else {
+        console.log("Odd");
+    }
+}
+even(8);
+
+// 14. Check Positive
+function positive(num) {
+    if (num > 0) {
+        console.log("Positive");
+    } else {
+        console.log("Negative");
+    }
+}
+positive(10);
+
+// 15. Rectangle Area
+function area(length, width) {
+    console.log(length * width);
+}
+area(10, 5);
+
+// 16. Rectangle Perimeter
+function perimeter(length, width) {
+    console.log(2 * (length + width));
+}
+perimeter(10, 5);
+
+// 17. Print Subject
+function subject(name) {
+    console.log("Subject: " + name);
+}
+subject("JavaScript");
+
+// 18. Welcome Message
+function welcome() {
+    console.log("Welcome to JavaScript");
+}
+welcome();
+
+// 19. Print College Name
+function college(name) {
+    console.log(name);
+}
+college("ABC College");
+
+// 20. Display Number
+function number(num) {
+    console.log(num);
+}
+number(100);
