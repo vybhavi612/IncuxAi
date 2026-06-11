@@ -1,0 +1,5 @@
+let sentence = "JavaScript is fun to learn";
+
+let words = sentence.split(" ");
+
+console.log(words.length);
