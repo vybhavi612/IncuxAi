@@ -1,0 +1,101 @@
+// Student Management System
+
+let students = [];
+function addStudent(id, name, marks) {
+    let student = {
+        id: id,
+        name: name,
+        marks: marks
+    };
+
+    students.push(student);
+    console.log(`${name} added successfully.`);
+}
+function displayStudents() {
+    console.log("\n===== Student Records =====");
+
+    if (students.length === 0) {
+        console.log("No students found.");
+        return;
+    }
+
+    students.forEach(student => {
+        console.log(
+            `ID: ${student.id}, Name: ${student.name}, Marks: ${student.marks}`
+        );
+    });
+}
+
+// Calculate Grade
+function calculateGrade(marks) {
+    if (marks >= 90) return "A";
+    else if (marks >= 80) return "B";
+    else if (marks >= 70) return "C";
+    else if (marks >= 60) return "D";
+    else return "F";
+      }
+function showResults() {
+    console.log("\n===== Results =====");
+
+    students.forEach(student => {
+        console.log(
+            `${student.name} | Marks: ${student.marks} | Grade: ${calculateGrade(student.marks)}`
+        );
+    });
+}
+function findTopper() {
+    if (students.length === 0) {
+        console.log("No student data available.");
+        return;
+    }
+
+    let topper = students[0];
+
+    for (let i = 1; i < students.length; i++) {
+        if (students[i].marks > topper.marks) {
+            topper = students[i];
+        }
+    }
+
+    console.log("\n===== Topper =====");
+    console.log(
+        `${topper.name} scored the highest marks: ${topper.marks}`
+    );
+}
+function searchStudent(id) {
+    let student = students.find(s => s.id === id);
+
+    if (student) {
+        console.log("\nStudent Found:");
+        console.log(student);
+    } else {
+        console.log("Student not found.");
+    }
+}
+
+// Statistics
+function generateStatistics() {
+    let total = 0;
+
+    for (let student of students) {
+        total += student.marks;
+    }
+
+    let average = total / students.length;
+
+    console.log("\n===== Statistics =====");
+    console.log("Total Students:", students.length);
+    console.log("Average Marks:", average.toFixed(2));
+}
+
+addStudent(101, "Nick", 88);
+addStudent(102, "Rahul", 95);
+addStudent(103, "Priya", 76);
+addStudent(104, "Anjali", 91);
+addStudent(105, "Kiran", 67);
+
+displayStudents();
+showResults();
+findTopper();
+searchStudent(103);
+generateStatistics();
