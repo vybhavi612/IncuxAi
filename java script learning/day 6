@@ -1,0 +1,55 @@
+// Bank Management System
+
+class BankAccount {
+    constructor(accountNumber, holderName, balance) {
+        this.accountNumber = accountNumber;
+        this.holderName = holderName;
+        this.balance = balance;
+    }
+
+    deposit(amount) {
+        if (amount > 0) {
+            this.balance += amount;
+            console.log(`₹${amount} deposited successfully.`);
+        } else {
+            console.log("Invalid deposit amount.");
+        }
+    }
+
+    withdraw(amount) {
+        if (amount <= 0) {
+            console.log("Invalid withdrawal amount.");
+        } else if (amount > this.balance) {
+            console.log("Insufficient balance.");
+        } else {
+            this.balance -= amount;
+            console.log(`₹${amount} withdrawn successfully.`);
+        }
+    }
+
+    checkBalance() {
+        console.log(`Current Balance: ₹${this.balance}`);
+    }
+
+    accountDetails() {
+        console.log("\n===== Account Details =====");
+        console.log(`Account Number: ${this.accountNumber}`);
+        console.log(`Holder Name: ${this.holderName}`);
+        console.log(`Balance: ₹${this.balance}`);
+    }
+}
+let account1 = new BankAccount(1001, "Nick", 5000);
+let account2 = new BankAccount(1002, "Rahul", 8000);
+account1.accountDetails();
+
+account1.deposit(2000);
+account1.checkBalance();
+
+account1.withdraw(1500);
+account1.checkBalance();
+
+account2.accountDetails();
+
+account2.withdraw(10000);
+account2.deposit(5000);
+account2.checkBalance();
