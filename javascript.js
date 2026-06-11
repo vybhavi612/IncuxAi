@@ -166,6 +166,31 @@ class TaskSandboxInterpreter {
                     variables[target] = Math.floor(Math.random() * (max - min + 1)) + min;
                     break;
                 }
+                case 'FAIL': {
+                    const msg = parts.slice(1).join(' ') || 'Manual execution break';
+                    throw new Error(this.resolveValue(msg, variables));
+                }
+                case 'IF_EQUAL': {
+                    const val1 = String(this.resolveValue(parts[1], variables));
+                    const val2 = String(this.resolveValue(parts[2], variables));
+                    if (val1 === val2) {
+                        const subCommand = parts[3].toUpperCase();
+                        if (subCommand === 'FAIL') {
+                            const msg = parts.slice(4).join(' ') || 'Conditional failure triggered';
+                            throw new Error(this.resolveValue(msg, variables));
+                        } else if (subCommand === 'SET') {
+                            const target = parts[4];
+                            const value = parts.slice(5).join(' ');
+                            variables[target] = this.resolveValue(value, variables);
+                        } else if (subCommand === 'RANDOM') {
+                            const target = parts[4];
+                            const min = parseInt(parts[5], 10);
+                            const max = parseInt(parts[6], 10);
+                            variables[target] = Math.floor(Math.random() * (max - min + 1)) + min;
+                        }
+                    }
+                    break;
+                }
                 default:
                     throw new Error(`Unknown Sandbox Instruction: ${command}`);
             }
@@ -650,49 +675,210 @@ class WebDashboardServer {
             <meta name="viewport" content="width=device-width, initial-scale=1.0">
             <title>🌌 AetherFlow Engine Workspace</title>
             <style>
-                body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #f8fafc; margin: 0; padding: 20px; }
-                header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #334155; padding-bottom: 15px; }
-                h1 { color: #38bdf8; margin: 0; font-size: 24px; }
-                .btn { background: #0284c7; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.2s; }
-                .btn:hover { background: #0369a1; }
-                .grid { display: grid; grid-template-columns: 1fr 3fr; gap: 20px; margin-top: 20px; }
-                .card { background: #1e293b; border-radius: 8px; padding: 18px; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
-                .card h2 { margin-top: 0; font-size: 18px; border-bottom: 1px solid #334155; padding-bottom: 8px; color: #94a3b8; }
-                .metric { display: flex; justify-content: space-between; margin: 12px 0; font-size: 14px; }
-                .metric span.val { font-weight: bold; color: #f1f5f9; }
-                .execution-block { background: #0f172a; border-radius: 6px; padding: 12px; margin-bottom: 15px; border-left: 4px solid #64748b; }
-                .execution-block.RUNNING { border-left-color: #38bdf8; }
-                .execution-block.SUCCESS { border-left-color: #4ade80; }
-                .execution-block.FAILED { border-left-color: #f87171; }
-                .task-badge { display: inline-block; padding: 4px 8px; font-size: 11px; font-family: monospace; border-radius: 4px; margin: 4px; background: #334155; }
-                .task-badge.PENDING { color: #94a3b8; }
-                .task-badge.QUEUED { color: #f59e0b; background: #78350f; }
-                .task-badge.RUNNING { color: #38bdf8; background: #0c4a6e; animation: pulse 1.5s infinite; }
-                .task-badge.COMPLETED { color: #4ade80; background: #064e3b; }
-                .task-badge.FAILED { color: #f87171; background: #7f1d1d; }
-                .task-badge.SKIPPED { color: #cbd5e1; background: #475569; }
-                .worker-dot { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; }
-                .worker-item { display: flex; align-items: center; margin: 10px 0; font-size: 13px; }
-                @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+                body {
+                    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+                    background: radial-gradient(circle at top, #1e1b4b, #09090b);
+                    color: #fafafa;
+                    margin: 0;
+                    padding: 24px;
+                    min-height: 100vh;
+                }
+                header {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+                    padding-bottom: 20px;
+                    margin-bottom: 24px;
+                }
+                .logo-section h1 {
+                    background: linear-gradient(135deg, #60a5fa, #a78bfa);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                    margin: 0;
+                    font-size: 28px;
+                    font-weight: 800;
+                    letter-spacing: -0.025em;
+                }
+                .control-panel {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    background: rgba(255, 255, 255, 0.03);
+                    padding: 8px 16px;
+                    border-radius: 12px;
+                    border: 1px solid rgba(255, 255, 255, 0.08);
+                    backdrop-filter: blur(8px);
+                }
+                .input-group {
+                    display: flex;
+                    flex-direction: column;
+                    gap: 4px;
+                }
+                .input-group label {
+                    font-size: 10px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.05em;
+                    color: #a1a1aa;
+                }
+                .control-panel input, .control-panel select {
+                    background: #18181b;
+                    color: #fafafa;
+                    border: 1px solid rgba(255, 255, 255, 0.15);
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    font-size: 13px;
+                    outline: none;
+                    transition: border-color 0.2s;
+                }
+                .control-panel input:focus, .control-panel select:focus {
+                    border-color: #818cf8;
+                }
+                .btn {
+                    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+                    color: white;
+                    border: none;
+                    padding: 10px 20px;
+                    border-radius: 8px;
+                    cursor: pointer;
+                    font-weight: 600;
+                    transition: all 0.2s;
+                    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+                }
+                .btn:hover {
+                    transform: translateY(-1px);
+                    box-shadow: 0 6px 16px rgba(99, 102, 241, 0.4);
+                }
+                .btn:active {
+                    transform: translateY(0);
+                }
+                .grid {
+                    display: grid;
+                    grid-template-columns: 320px 1fr;
+                    gap: 24px;
+                }
+                .card {
+                    background: rgba(30, 41, 59, 0.4);
+                    border-radius: 16px;
+                    padding: 20px;
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    backdrop-filter: blur(12px);
+                    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+                    transition: transform 0.2s;
+                }
+                .card h2 {
+                    margin-top: 0;
+                    font-size: 18px;
+                    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+                    padding-bottom: 12px;
+                    color: #e4e4e7;
+                    font-weight: 600;
+                }
+                .metric {
+                    display: flex;
+                    justify-content: space-between;
+                    margin: 14px 0;
+                    font-size: 14px;
+                    border-bottom: 1px dashed rgba(255, 255, 255, 0.03);
+                    padding-bottom: 8px;
+                }
+                .metric span.val {
+                    font-weight: 700;
+                    color: #ffffff;
+                }
+                .execution-block {
+                    background: rgba(15, 23, 42, 0.6);
+                    border-radius: 12px;
+                    padding: 16px;
+                    margin-bottom: 16px;
+                    border-left: 5px solid #64748b;
+                    transition: all 0.3s;
+                }
+                .execution-block:hover {
+                    transform: translateX(4px);
+                }
+                .execution-block.RUNNING { border-left-color: #3b82f6; box-shadow: 0 0 12px rgba(59, 130, 246, 0.15); }
+                .execution-block.SUCCESS { border-left-color: #10b981; box-shadow: 0 0 12px rgba(16, 185, 129, 0.15); }
+                .execution-block.FAILED { border-left-color: #ef4444; box-shadow: 0 0 12px rgba(239, 68, 68, 0.15); }
+                
+                .task-badge {
+                    display: inline-block;
+                    padding: 6px 10px;
+                    font-size: 12px;
+                    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+                    border-radius: 6px;
+                    margin: 4px;
+                    background: rgba(255, 255, 255, 0.05);
+                    border: 1px solid rgba(255, 255, 255, 0.05);
+                    cursor: help;
+                    transition: all 0.2s;
+                }
+                .task-badge:hover {
+                    background: rgba(255, 255, 255, 0.1);
+                    transform: scale(1.05);
+                }
+                .task-badge.PENDING { color: #a1a1aa; }
+                .task-badge.QUEUED { color: #f59e0b; background: rgba(245, 158, 11, 0.1); border-color: rgba(245, 158, 11, 0.2); }
+                .task-badge.RUNNING { color: #3b82f6; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3); animation: pulse 1.5s infinite; }
+                .task-badge.COMPLETED { color: #10b981; background: rgba(16, 185, 129, 0.1); border-color: rgba(16, 185, 129, 0.3); }
+                .task-badge.FAILED { color: #ef4444; background: rgba(239, 68, 68, 0.1); border-color: rgba(239, 68, 68, 0.3); }
+                .task-badge.SKIPPED { color: #71717a; background: rgba(113, 113, 122, 0.1); }
+                
+                .worker-dot {
+                    display: inline-block;
+                    width: 10px;
+                    height: 10px;
+                    border-radius: 50%;
+                    margin-right: 8px;
+                    box-shadow: 0 0 8px currentColor;
+                }
+                .worker-item {
+                    display: flex;
+                    align-items: center;
+                    margin: 12px 0;
+                    font-size: 13px;
+                    background: rgba(0, 0, 0, 0.2);
+                    padding: 8px 12px;
+                    border-radius: 8px;
+                    border: 1px solid rgba(255, 255, 255, 0.02);
+                }
+                @keyframes pulse {
+                    0%, 100% { opacity: 1; }
+                    50% { opacity: 0.6; }
+                }
             </style>
         </head>
         <body>
             <header>
-                <div>
+                <div class="logo-section">
                     <h1>🌌 AetherFlow Orchestration Engine</h1>
-                    <p style="margin: 4px 0 0 0; color: #64748b; font-size: 13px;">Realtime Micro-Kernel Architecture Analytics State Visualizer</p>
+                    <p style="margin: 4px 0 0 0; color: #a1a1aa; font-size: 13px;">Realtime Micro-Kernel Architecture Analytics State Visualizer</p>
                 </div>
-                <button class="btn" onclick="triggerWorkflow()">⚡ Trigger Demo Pipeline</button>
+                <div class="control-panel">
+                    <div class="input-group">
+                        <label for="param-scale">Scale Factor</label>
+                        <input type="number" id="param-scale" value="4" min="1" max="50" style="width: 60px;">
+                    </div>
+                    <div class="input-group">
+                        <label for="param-stability">Network Resilience Mode</label>
+                        <select id="param-stability">
+                            <option value="stable">Stable Network (No Failures)</option>
+                            <option value="unstable">Unstable Network (Random Retries)</option>
+                            <option value="critical">Critical Failure (Break Pipeline)</option>
+                        </select>
+                    </div>
+                    <button class="btn" onclick="triggerWorkflow()">⚡ Trigger Pipeline</button>
+                </div>
             </header>
 
             <div class="grid">
                 <div>
-                    <div class="card" style="margin-bottom: 20px;">
+                    <div class="card" style="margin-bottom: 24px;">
                         <h2>Telemetry Records</h2>
                         <div class="metric"><span>Total Workflows:</span><span class="val" id="m-wf">0</span></div>
                         <div class="metric"><span>Tasks Processed:</span><span class="val" id="m-tasks">0</span></div>
-                        <div class="metric"><span>Successful Steps:</span><span class="val" id="m-success" style="color:#4ade80;">0</span></div>
-                        <div class="metric"><span>Failures Caught:</span><span class="val" id="m-fail" style="color:#f87171;">0</span></div>
+                        <div class="metric"><span>Successful Steps:</span><span class="val" id="m-success" style="color:#10b981;">0</span></div>
+                        <div class="metric"><span>Failures Caught:</span><span class="val" id="m-fail" style="color:#ef4444;">0</span></div>
                         <div class="metric"><span>Avg Task Time:</span><span class="val" id="m-time">0ms</span></div>
                     </div>
                     
@@ -705,7 +891,7 @@ class WebDashboardServer {
                 <div class="card">
                     <h2>Live Active DAG Structural Executions Track Instantiations</h2>
                     <div id="executions-container">
-                        <p style="color: #64748b; text-align: center; margin-top: 40px;">No workflows registered or currently moving. Use trigger button to initialize load engine framework.</p>
+                        <p style="color: #a1a1aa; text-align: center; margin-top: 40px;">No workflows registered or currently moving. Use trigger button to initialize load engine framework.</p>
                     </div>
                 </div>
             </div>
@@ -728,9 +914,9 @@ class WebDashboardServer {
                         dataWorkers.forEach(w => {
                             const div = document.createElement('div');
                             div.className = 'worker-item';
-                            const color = w.isBusy ? '#eab308' : '#22c55e';
+                            const color = w.isBusy ? '#eab308' : '#10b981';
                             const stateText = w.isBusy ? 'Processing Task: ' + w.taskId : 'Idling (Awaiting Load)';
-                            div.innerHTML = \`<span class="worker-dot" style="background:\${color}"></span> <b>Thread #\${w.id + 1}:</b> &nbsp; \${stateText}\`;
+                            div.innerHTML = \`<span class="worker-dot" style="background:\${color}; color:\${color}"></span> <b>Thread #\${w.id + 1}:</b> &nbsp; \&nbsp;\${stateText}\`;
                             wContainer.appendChild(div);
                         });
 
@@ -752,8 +938,8 @@ class WebDashboardServer {
 
                             block.innerHTML = \`
                                 <div style="display:flex; justify-content:space-between; margin-bottom:8px;">
-                                    <span style="font-weight:bold; color:#f1f5f9;">\${ex.name} <span style="font-size:11px; font-weight:normal; color:#64748b;">[\${ex.id}]</span></span>
-                                    <span style="font-size:12px; font-weight:bold; color:\${ex.status==='SUCCESS'?'#4ade80':ex.status==='FAILED'?'#f87171':'#38bdf8'}">\${ex.status}</span>
+                                    <span style="font-weight:bold; color:#f4f4f5;">\${ex.name} <span style="font-size:11px; font-weight:normal; color:#71717a;">[\${ex.id}]</span></span>
+                                    <span style="font-size:12px; font-weight:bold; color:\${ex.status==='SUCCESS'?'#10b981':ex.status==='FAILED'?'#ef4444':'#3b82f6'}">\${ex.status}</span>
                                 </div>
                                 <div style="margin-top:6px;">\${taskBadgesHtml}</div>
                             \`;
@@ -765,7 +951,18 @@ class WebDashboardServer {
                 }
 
                 function triggerWorkflow() {
-                    fetch('/api/trigger', { method: 'POST', body: JSON.stringify({ workflowId: 'demo-pipeline', inputs: { scaleFactor: Math.floor(Math.random() * 10) + 1 } }) });
+                    const scaleFactor = parseInt(document.getElementById('param-scale').value, 10) || 4;
+                    const stabilityMode = document.getElementById('param-stability').value;
+                    fetch('/api/trigger', {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            workflowId: 'demo-pipeline',
+                            inputs: {
+                                scaleFactor: scaleFactor,
+                                stabilityMode: stabilityMode
+                            }
+                        })
+                    });
                 }
 
                 setInterval(updateDashboard, 800);
@@ -827,11 +1024,13 @@ function createDemoPipelineStructure() {
     pipeline.addTask({
         id: 'Faulty_Resilience_Check',
         script: `
-            RANDOM riskFactor 1 10
             # Emulate an unpredictable network break that triggers the retry engine dynamically
-            ADD circuitCheck $riskFactor 2
+            IF_EQUAL $stabilityMode critical FAIL Critical_Network_Resilience_Failure
+            IF_EQUAL $stabilityMode unstable RANDOM risk 1 4
+            IF_EQUAL $risk 1 SET failChance "yes"
+            IF_EQUAL $risk 2 SET failChance "yes"
+            IF_EQUAL $failChance "yes" FAIL Simulated_Unstable_Network_Timeout
             SLEEP 300
-            DIV breakingOperation 1000 $upstream_Faulty_Resilience_Check_invalidVariableSpec
         `,
         retries: 3,
         backoffMs: 200 // Faster backoff for rapid UX tracking demonstration

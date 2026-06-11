@@ -51,3 +51,79 @@
 [2026-06-06T09:30:27.346Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
 [2026-06-06T09:30:29.362Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
 [2026-06-06T09:30:30.701Z] [WARN] [SystemCore] OS Termination Event Received via [SIGINT]. Sweeping engine allocations cleanly.
+[2026-06-11T09:50:38.385Z] [INFO] [SystemCore] === STARTING AETHERFLOW TASK ORCHESTRATION ENGINE ENGINE SYSTEM INTERNALS ===
+[2026-06-11T09:50:38.396Z] [INFO] [WorkerPool] Initializing worker thread pool with size: 4
+[2026-06-11T09:50:38.402Z] [INFO] [Orchestrator] Registered workflow schema: "Enterprise Ingestion & Analytics Pipeline Blueprint" [demo-pipeline]
+[2026-06-11T09:50:38.409Z] [INFO] [HTTPServer] AetherFlow Realtime Control Dashboard initialized at: http://localhost:8080
+[2026-06-11T09:50:39.411Z] [INFO] [Orchestrator] Executing workflow execution tracking instantiation: [014f3940-1f01-4be5-a3e2-6ea0dad17919]
+[2026-06-11T09:50:39.414Z] [DEBUG] [WorkerThread] Executing sub-task payload [Ingest_Data_Source]
+[2026-06-11T09:50:40.216Z] [INFO] [Orchestrator] Task Execution Match Success: [Ingest_Data_Source] in Workflow [014f3940-1f01-4be5-a3e2-6ea0dad17919]
+[2026-06-11T09:50:40.217Z] [DEBUG] [WorkerThread] Executing sub-task payload [Sanitize_Inputs]
+[2026-06-11T09:50:40.411Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:40.618Z] [INFO] [Orchestrator] Task Execution Match Success: [Sanitize_Inputs] in Workflow [014f3940-1f01-4be5-a3e2-6ea0dad17919]
+[2026-06-11T09:50:40.620Z] [DEBUG] [WorkerThread] Executing sub-task payload [AI_Feature_Extraction]
+[2026-06-11T09:50:40.620Z] [DEBUG] [WorkerThread] Executing sub-task payload [SQL_Transactional_Write]
+[2026-06-11T09:50:41.221Z] [INFO] [Orchestrator] Task Execution Match Success: [SQL_Transactional_Write] in Workflow [014f3940-1f01-4be5-a3e2-6ea0dad17919]
+[2026-06-11T09:50:41.222Z] [DEBUG] [WorkerThread] Executing sub-task payload [Faulty_Resilience_Check]
+[2026-06-11T09:50:41.522Z] [INFO] [Orchestrator] Task Execution Match Success: [Faulty_Resilience_Check] in Workflow [014f3940-1f01-4be5-a3e2-6ea0dad17919]
+[2026-06-11T09:50:42.120Z] [INFO] [Orchestrator] Task Execution Match Success: [AI_Feature_Extraction] in Workflow [014f3940-1f01-4be5-a3e2-6ea0dad17919]
+[2026-06-11T09:50:42.123Z] [DEBUG] [WorkerThread] Executing sub-task payload [Generate_Report_Artifact]
+[2026-06-11T09:50:42.125Z] [INFO] [Orchestrator] Task Execution Match Success: [Generate_Report_Artifact] in Workflow [014f3940-1f01-4be5-a3e2-6ea0dad17919]
+[2026-06-11T09:50:42.126Z] [INFO] [Orchestrator] Workflow [014f3940-1f01-4be5-a3e2-6ea0dad17919] finished with status code: SUCCESS
+[2026-06-11T09:50:42.412Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:44.416Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:46.418Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:48.426Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:50.432Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:52.435Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:54.437Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:56.443Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:50:58.447Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:51:00.448Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:51:02.461Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:51:03.819Z] [WARN] [SystemCore] OS Termination Event Received via [SIGINT]. Sweeping engine allocations cleanly.
+[2026-06-11T09:54:49.172Z] [INFO] [SystemCore] === STARTING AETHERFLOW TASK ORCHESTRATION ENGINE ENGINE SYSTEM INTERNALS ===
+[2026-06-11T09:54:49.174Z] [INFO] [WorkerPool] Initializing worker thread pool with size: 4
+[2026-06-11T09:54:49.179Z] [INFO] [Orchestrator] Registered workflow schema: "Enterprise Ingestion & Analytics Pipeline Blueprint" [demo-pipeline]
+[2026-06-11T09:54:49.187Z] [INFO] [HTTPServer] AetherFlow Realtime Control Dashboard initialized at: http://localhost:8080
+[2026-06-11T09:54:50.200Z] [INFO] [Orchestrator] Executing workflow execution tracking instantiation: [9172e9d5-fd33-4b1e-b40e-ef5b62175880]
+[2026-06-11T09:54:50.202Z] [DEBUG] [WorkerThread] Executing sub-task payload [Ingest_Data_Source]
+[2026-06-11T09:54:51.007Z] [INFO] [Orchestrator] Task Execution Match Success: [Ingest_Data_Source] in Workflow [9172e9d5-fd33-4b1e-b40e-ef5b62175880]
+[2026-06-11T09:54:51.008Z] [DEBUG] [WorkerThread] Executing sub-task payload [Sanitize_Inputs]
+[2026-06-11T09:54:51.185Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:54:51.409Z] [INFO] [Orchestrator] Task Execution Match Success: [Sanitize_Inputs] in Workflow [9172e9d5-fd33-4b1e-b40e-ef5b62175880]
+[2026-06-11T09:54:51.409Z] [DEBUG] [WorkerThread] Executing sub-task payload [AI_Feature_Extraction]
+[2026-06-11T09:54:51.410Z] [DEBUG] [WorkerThread] Executing sub-task payload [SQL_Transactional_Write]
+[2026-06-11T09:54:52.011Z] [INFO] [Orchestrator] Task Execution Match Success: [SQL_Transactional_Write] in Workflow [9172e9d5-fd33-4b1e-b40e-ef5b62175880]
+[2026-06-11T09:54:52.011Z] [DEBUG] [WorkerThread] Executing sub-task payload [Faulty_Resilience_Check]
+[2026-06-11T09:54:52.312Z] [INFO] [Orchestrator] Task Execution Match Success: [Faulty_Resilience_Check] in Workflow [9172e9d5-fd33-4b1e-b40e-ef5b62175880]
+[2026-06-11T09:54:52.910Z] [INFO] [Orchestrator] Task Execution Match Success: [AI_Feature_Extraction] in Workflow [9172e9d5-fd33-4b1e-b40e-ef5b62175880]
+[2026-06-11T09:54:52.910Z] [DEBUG] [WorkerThread] Executing sub-task payload [Generate_Report_Artifact]
+[2026-06-11T09:54:52.911Z] [INFO] [Orchestrator] Task Execution Match Success: [Generate_Report_Artifact] in Workflow [9172e9d5-fd33-4b1e-b40e-ef5b62175880]
+[2026-06-11T09:54:52.912Z] [INFO] [Orchestrator] Workflow [9172e9d5-fd33-4b1e-b40e-ef5b62175880] finished with status code: SUCCESS
+[2026-06-11T09:54:53.196Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:54:55.204Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:54:57.218Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:55:37.535Z] [INFO] [SystemCore] === STARTING AETHERFLOW TASK ORCHESTRATION ENGINE ENGINE SYSTEM INTERNALS ===
+[2026-06-11T09:55:37.540Z] [INFO] [WorkerPool] Initializing worker thread pool with size: 4
+[2026-06-11T09:55:37.547Z] [INFO] [Orchestrator] Registered workflow schema: "Enterprise Ingestion & Analytics Pipeline Blueprint" [demo-pipeline]
+[2026-06-11T09:55:37.555Z] [INFO] [HTTPServer] AetherFlow Realtime Control Dashboard initialized at: http://localhost:8080
+[2026-06-11T09:55:38.555Z] [INFO] [Orchestrator] Executing workflow execution tracking instantiation: [3c260e7c-8eaf-4431-8854-40f728f3c538]
+[2026-06-11T09:55:38.558Z] [DEBUG] [WorkerThread] Executing sub-task payload [Ingest_Data_Source]
+[2026-06-11T09:55:39.362Z] [INFO] [Orchestrator] Task Execution Match Success: [Ingest_Data_Source] in Workflow [3c260e7c-8eaf-4431-8854-40f728f3c538]
+[2026-06-11T09:55:39.363Z] [DEBUG] [WorkerThread] Executing sub-task payload [Sanitize_Inputs]
+[2026-06-11T09:55:39.559Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:55:39.763Z] [INFO] [Orchestrator] Task Execution Match Success: [Sanitize_Inputs] in Workflow [3c260e7c-8eaf-4431-8854-40f728f3c538]
+[2026-06-11T09:55:39.764Z] [DEBUG] [WorkerThread] Executing sub-task payload [AI_Feature_Extraction]
+[2026-06-11T09:55:39.764Z] [DEBUG] [WorkerThread] Executing sub-task payload [SQL_Transactional_Write]
+[2026-06-11T09:55:40.365Z] [INFO] [Orchestrator] Task Execution Match Success: [SQL_Transactional_Write] in Workflow [3c260e7c-8eaf-4431-8854-40f728f3c538]
+[2026-06-11T09:55:40.367Z] [DEBUG] [WorkerThread] Executing sub-task payload [Faulty_Resilience_Check]
+[2026-06-11T09:55:40.670Z] [INFO] [Orchestrator] Task Execution Match Success: [Faulty_Resilience_Check] in Workflow [3c260e7c-8eaf-4431-8854-40f728f3c538]
+[2026-06-11T09:55:41.264Z] [INFO] [Orchestrator] Task Execution Match Success: [AI_Feature_Extraction] in Workflow [3c260e7c-8eaf-4431-8854-40f728f3c538]
+[2026-06-11T09:55:41.267Z] [DEBUG] [WorkerThread] Executing sub-task payload [Generate_Report_Artifact]
+[2026-06-11T09:55:41.270Z] [INFO] [Orchestrator] Task Execution Match Success: [Generate_Report_Artifact] in Workflow [3c260e7c-8eaf-4431-8854-40f728f3c538]
+[2026-06-11T09:55:41.272Z] [INFO] [Orchestrator] Workflow [3c260e7c-8eaf-4431-8854-40f728f3c538] finished with status code: SUCCESS
+[2026-06-11T09:55:41.575Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:55:43.577Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:55:45.585Z] [DEBUG] [SystemClock] Orchestration structural heartbeat execution check active.
+[2026-06-11T09:55:46.474Z] [WARN] [SystemCore] OS Termination Event Received via [SIGINT]. Sweeping engine allocations cleanly.
