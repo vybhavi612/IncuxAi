@@ -11,10 +11,14 @@ function add(r,s)
 }
 add(r,s);
 //alert("Welocme ");
+let y=confirm("Are sure to come inside ?");
+if(y==true)
+{
+    let a=prompt("Your name please ");
+    console.log(`welcome ${a}`);
+}
 
 
-let a=prompt("Your name please ");
-console.log(`welcome ${a}`);
 
 // Function: Independent block of code.
 // Method: Function that belongs to a class/object.
