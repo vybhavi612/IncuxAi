@@ -105,3 +105,22 @@ console.log(student);
 for(let key in student){
     console.log(key + ": " + student[key]);
 }
+ day 5
+
+function greet() {
+    console.log("Hello JavaScript!");
+}
+greet();
+function add(a, b) {
+    console.log("Sum =", a + b);
+}
+add(10, 20);
+function multiply(a, b) {
+    return a * b;
+}
+let result = multiply(5, 4);
+console.log("Multiplication =", result);
+const square = (num) => {
+    return num * num;
+};
+console.log("Square =", square(6));
