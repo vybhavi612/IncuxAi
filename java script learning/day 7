@@ -1,0 +1,77 @@
+class Book {
+    constructor(id, title, author) {
+        this.id = id;
+        this.title = title;
+        this.author = author;
+        this.isIssued = false;
+    }
+}
+
+class Library {
+    constructor() {
+        this.books = [];
+    }
+
+    addBook(id, title, author) {
+        const book = new Book(id, title, author);
+        this.books.push(book);
+        console.log(`Book "${title}" added successfully.`);
+    }
+
+    displayBooks() {
+        console.log("\n===== Library Books =====");
+
+        this.books.forEach(book => {
+            console.log(
+                `ID: ${book.id} | Title: ${book.title} | Author: ${book.author} | Status: ${book.isIssued ? "Issued" : "Available"}`
+            );
+        });
+    }
+
+    issueBook(id) {
+        const book = this.books.find(book => book.id === id);
+
+        if (!book) {
+            console.log("Book not found.");
+            return;
+        }
+
+        if (book.isIssued) {
+            console.log("Book is already issued.");
+        } else {
+            book.isIssued = true;
+            console.log(`"${book.title}" issued successfully.`);
+        }
+    }
+
+    returnBook(id) {
+        const book = this.books.find(book => book.id === id);
+
+        if (!book) {
+            console.log("Book not found.");
+            return;
+        }
+
+        if (!book.isIssued) {
+            console.log("Book was not issued.");
+        } else {
+            book.isIssued = false;
+            console.log(`"${book.title}" returned successfully.`);
+        }
+    }
+    }
+const library = new Library();
+library.addBook(1, "JavaScript Basics", "John Smith");
+library.addBook(2, "Python Programming", "David Lee");
+library.addBook(3, "Data Structures", "Robert Brown");
+library.addBook(4, "Web Development", "James Wilson");
+
+library.displayBooks();
+
+library.issueBook(2);
+library.issueBook(3);
+
+library.displayBooks();
+
+library.returnBook(2);
+library.displayBooks();
