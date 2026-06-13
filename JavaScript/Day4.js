@@ -10,7 +10,7 @@ function checkEvenOdd(number) {
 
 const testNumber1 = 7;
 const testNumber2 = 14;
-console.log("=== EVEN OR ODD CHECKER ===");
+console.log("EVEN OR ODD CHECKER ");
 let result1 = checkEvenOdd(testNumber1);
 console.log(`The number ${testNumber1} is: ${result1}`);
 let result2 = checkEvenOdd(testNumber2);
