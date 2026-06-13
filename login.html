@@ -1,23 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Student Login</title>
+    <title>To-Do List</title>
 </head>
 <body>
 
-<h2>Student Login</h2>
+    <h2>My To-Do List</h2>
 
-<form action="dashboard.html">
-    <input type="text" placeholder="Roll Number" required><br><br>
+    <input type="text" id="task" placeholder="Enter a task">
+    <button onclick="addTask()">Add</button>
 
-    <input type="password" placeholder="Password" required><br><br>
+    <ul id="taskList"></ul>
 
-    <button type="submit">Login</button>
-</form>
+    <script>
+        function addTask() {
+            let taskInput = document.getElementById("task");
+            let taskText = taskInput.value;
 
-<br>
+            if (taskText === "") {
+                alert("Please enter a task");
+                return;
+            }
 
-<a href="admin-login.html">Admin Login</a>
+            let li = document.createElement("li");
+            li.innerHTML = taskText;
+
+            let deleteBtn = document.createElement("button");
+            deleteBtn.innerHTML = "Delete";
+
+            deleteBtn.onclick = function() {
+                li.remove();
+            };
+
+            li.appendChild(deleteBtn);
+            document.getElementById("taskList").appendChild(li);
+
+            taskInput.value = "";
+        }
+    </script>
 
 </body>
 </html>
