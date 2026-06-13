@@ -1,0 +1,17 @@
+<!DOCTYPE html><html><body>
+<h2>Number Table Generator</h2>
+Enter Number:
+<input type="number" id="num">
+<button onclick="showTable()">Generate</button>
+<p id="result"></p>
+<script>
+function showTable(){
+let n=document.getElementById("num").value;
+let text="";
+for(let i=1;i<=10;i++){
+text+=n+" x "+i+" = "+(n*i)+"<br>";
+}
+document.getElementById("result").innerHTML=text;
+}
+</script>
+</body></html>
