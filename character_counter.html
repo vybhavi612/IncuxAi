@@ -1,0 +1,12 @@
+<!DOCTYPE html><html><body>
+<h2>Character Counter</h2>
+<textarea id="txt" rows="5" cols="30"></textarea><br><br>
+<button onclick="countChars()">Count Characters</button>
+<p id="result"></p>
+<script>
+function countChars(){
+let t=document.getElementById('txt').value;
+document.getElementById('result').innerHTML='Characters: '+t.length;
+}
+</script>
+</body></html>

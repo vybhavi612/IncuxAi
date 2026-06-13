@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>Notes App</title></head>
+<body>
+<h2>Notes App</h2>
+<input type="text" id="note" placeholder="Enter note">
+<button onclick="addNote()">Add</button>
+<ul id="notes"></ul>
+
+<script>
+function addNote() {
+    let note = document.getElementById("note").value;
+    let li = document.createElement("li");
+    li.innerHTML = note;
+    document.getElementById("notes").appendChild(li);
+    document.getElementById("note").value = "";
+}
+</script>
+</body>
+</html>

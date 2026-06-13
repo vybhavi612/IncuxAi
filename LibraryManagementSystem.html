@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head><title>Library Management System</title></head>
+<body>
+<h2>Library Management System</h2>
+<input type="text" id="book" placeholder="Book Name">
+<button onclick="addBook()">Add Book</button>
+<ul id="bookList"></ul>
+
+<script>
+function addBook() {
+    let book = document.getElementById("book").value;
+    let li = document.createElement("li");
+    li.innerHTML = book;
+    document.getElementById("bookList").appendChild(li);
+    document.getElementById("book").value = "";
+}
+</script>
+</body>
+</html>

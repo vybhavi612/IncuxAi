@@ -1,0 +1,13 @@
+<!DOCTYPE html><html><body>
+<h2>Palindrome Checker</h2>
+<input type="text" id="text" placeholder="Enter text">
+<button onclick="checkPal()">Check</button>
+<p id="result"></p>
+<script>
+function checkPal(){
+let s=document.getElementById('text').value;
+let rev=s.split('').reverse().join('');
+document.getElementById('result').innerHTML=(s===rev)?'Palindrome':'Not a Palindrome';
+}
+</script>
+</body></html>
