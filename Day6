@@ -1,0 +1,140 @@
+// 1. Find Maximum of Three Numbers
+function maxThree(a, b, c) {
+    console.log(Math.max(a, b, c));
+}
+maxThree(10, 20, 30);
+
+// 2. Find Minimum of Three Numbers
+function minThree(a, b, c) {
+    console.log(Math.min(a, b, c));
+}
+minThree(10, 20, 30);
+
+// 3. Check Voting Eligibility
+function voting(age) {
+    if (age >= 18)
+        console.log("Eligible");
+    else
+        console.log("Not Eligible");
+}
+voting(21);
+
+// 4. Check Leap Year
+function leapYear(year) {
+    if (year % 4 == 0)
+        console.log("Leap Year");
+    else
+        console.log("Not Leap Year");
+}
+leapYear(2024);
+
+// 5. Calculate Percentage
+function percentage(total, obtained) {
+    console.log((obtained / total) * 100);
+}
+percentage(600, 480);
+
+// 6. Convert Minutes to Seconds
+function seconds(minutes) {
+    console.log(minutes * 60);
+}
+seconds(5);
+
+// 7. Convert Hours to Minutes
+function minutes(hours) {
+    console.log(hours * 60);
+}
+minutes(2);
+
+// 8. Find Average of Three Numbers
+function average(a, b, c) {
+    console.log((a + b + c) / 3);
+}
+average(10, 20, 30);
+
+// 9. Check Divisible by 5
+function divisibleBy5(num) {
+    if (num % 5 == 0)
+        console.log("Divisible");
+    else
+        console.log("Not Divisible");
+}
+divisibleBy5(25);
+
+// 10. Check Divisible by 10
+function divisibleBy10(num) {
+    if (num % 10 == 0)
+        console.log("Divisible");
+    else
+        console.log("Not Divisible");
+}
+divisibleBy10(50);
+
+// 11. Find Rectangle Diagonal
+function diagonal(length, width) {
+    console.log(Math.sqrt(length * length + width * width));
+}
+diagonal(3, 4);
+
+// 12. Calculate Discount Price
+function discount(price, discountPercent) {
+    console.log(price - (price * discountPercent / 100));
+}
+discount(1000, 10);
+
+// 13. Check Pass or Fail
+function result(marks) {
+    if (marks >= 35)
+        console.log("Pass");
+    else
+        console.log("Fail");
+}
+result(40);
+
+// 14. Convert Kilometers to Meters
+function kmToMeters(km) {
+    console.log(km * 1000);
+}
+kmToMeters(5);
+
+// 15. Convert Meters to Centimeters
+function metersToCm(m) {
+    console.log(m * 100);
+}
+metersToCm(2);
+
+// 16. Find Remainder
+function remainder(a, b) {
+    console.log(a % b);
+}
+remainder(17, 5);
+
+// 17. Swap Two Numbers
+function swap(a, b) {
+    let temp = a;
+    a = b;
+    b = temp;
+    console.log(a, b);
+}
+swap(10, 20);
+
+// 18. Check Character is Vowel
+function vowel(ch) {
+    if (ch == 'a' || ch == 'e' || ch == 'i' || ch == 'o' || ch == 'u')
+        console.log("Vowel");
+    else
+        console.log("Consonant");
+}
+vowel('a');
+
+// 19. Calculate Electricity Bill
+function bill(units) {
+    console.log(units * 5);
+}
+bill(100);
+
+// 20. Find Simple Tax
+function tax(amount) {
+    console.log(amount * 0.1);
+}
+tax(50000);
