@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🐉 Ethereal Dragon (Redesigned)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            background: #020205;
+            overflow: hidden;
+            cursor: none;
+        }
+        canvas { display: block; }
+        #hud {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 16px;
+            align-items: center;
+            background: rgba(12, 10, 8, 0.85);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 100, 20, 0.3);
+            border-radius: 14px;
+            padding: 10px 24px;
+            color: #dcd0c0;
+            font: 13px/1 'Segoe UI', system-ui, sans-serif;
+            user-select: none;
+            animation: hudIn 1.5s 0.5s both;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        #hud kbd {
+            background: rgba(255, 80, 0, 0.2);
+            border: 1px solid rgba(255, 100, 20, 0.4);
+            border-radius: 5px;
+            padding: 2px 7px;
+            color: #ffaa55;
+            font-weight: 700;
+        }
+        #hud .sep { color: rgba(255,255,255,0.15); }
+        @keyframes hudIn { from { opacity:0; transform:translateX(-50%) translateY(20px); } to { opacity:1; transform:translateX(-50%) translateY(0); } }
+    </style>
+</head>
+<body>
+<canvas id="c"></canvas>
+<div id="hud">
+    <span>Move to guide</span>
+    <span class="sep">│</span>
+    <span><kbd>Click</kbd> Fire Breath</span>
+    <span class="sep">│</span>
+    <span><kbd>Space</kbd> Flap / Fold Wings</span>
+</div>
+<script>
+(() => {
+"use strict";
+
+// ═══════════════════════════════════════════════════════════════════
+// CANVAS & MATH
+// ═══════════════════════════════════════════════════════════════════
+const cv = document.getElementById('c');
+const cx = cv.getContext('2d', { alpha: false });
+let W, H;
+function resize() { W = cv.width = innerWidth; H = cv.height = innerHeight; }
+addEventListener('resize', resize);
+resize();
+
+const PI  = Math.PI, TAU = PI * 2;
+const sin = Math.sin, cos = Math.cos;
+const min = Math.min, max = Math.max, abs = Math.abs;
+const atan2 = Math.atan2, hypot = Math.hypot;
+const random = Math.random, floor = Math.floor;
+
+const lerp  = (a, b, t) => a + (b - a) * t;
+const rand  = (lo, hi) => lo + random() * (hi - lo);
+const hsla  = (h, s, l, a) => `hsla(${h|0},${s|0}%,${l|0}%,${a})`;
+
+// ═══════════════════════════════════════════════════════════════════
+// INPUT
+// ═══════════════════════════════════════════════════════════════════
+const input = { mx: W/2, my: H/2, tx: W/2, ty: H/2, fire: false, wingsOpen: true };
+addEventListener('mousemove', e => { input.tx = e.clientX; input.ty = e.clientY; });
+addEventListener('mousedown', () => input.fire = true);
+addEventListener('mouseup',   () => input.fire = false);
+addEventListener('touchstart', e => { input.tx = e.touches[0].clientX; input.ty = e.touches[0].clientY; input.fire = true; }, {passive:true});
+addEventListener('touchmove',  e => { e.preventDefault(); input.tx = e.touches[0].clientX; input.ty = e.touches[0].clientY; }, {passive:false});
+addEventListener('touchend',   () => input.fire = false);
+addEventListener('keydown', e => { if (e.code === 'Space') { e.preventDefault(); input.wingsOpen = !input.wingsOpen; }});
+
+// ═══════════════════════════════════════════════════════════════════
+// DRAGON SKELETON (Inverse Kinematics)
+// ═══════════════════════════════════════════════════════════════════
+const NUM_SEG = 95;      // Fewer segments, thicker body -> distinctly non-bug
+const SEG_LEN = 8;       // Spaced out for majestic scale
+const HEAD_R  = 30;
+const SPEED   = 0.12;
+
+const segX = new Float32Array(NUM_SEG);
+const segY = new Float32Array(NUM_SEG);
+const segA = new Float32Array(NUM_SEG);
+
+for (let i = 0; i < NUM_SEG; i++) {
+    segX[i] = W / 2;
+    segY[i] = H / 2 + i * SEG_LEN;
+    segA[i] = PI / 2;
+}
+
+// Gives the dragon a muscular, distinct anatomy (Chest, Hips, Tail)
+function getGirth(t) {
+    if (t < 0.04) return lerp(16, 26, t/0.04);           // Head/Neck base
+    if (t < 0.12) return lerp(26, 18, (t-0.04)/0.08);    // Neck
+    if (t < 0.28) return lerp(18, 48, (t-0.12)/0.16);    // Massive Chest (Wings/Arms)
+    if (t < 0.55) return lerp(48, 28, (t-0.28)/0.27);    // Abdomen
+    if (t < 0.75) return lerp(28, 34, (t-0.55)/0.20);    // Hips (Legs)
+    return lerp(34, 2, (t-0.75)/0.25);                   // Long tapering tail
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PARTICLES (Fire, Smoke, Sparks)
+// ═══════════════════════════════════════════════════════════════════
+const MAX_P = 1000;
+let pCount = 0;
+const pX = new Float32Array(MAX_P), pY = new Float32Array(MAX_P);
+const pVX = new Float32Array(MAX_P), pVY = new Float32Array(MAX_P);
+const pLife = new Float32Array(MAX_P), pMax = new Float32Array(MAX_P);
+const pSize = new Float32Array(MAX_P), pHue = new Float32Array(MAX_P);
+const pType = new Uint8Array(MAX_P); // 0:Fire, 1:Ember, 2:Smoke, 3:Magic
+
+function spawnP(x, y, vx, vy, life, size, hue, type) {
+    if (pCount >= MAX_P) return;
+    const i = pCount++;
+    pX[i] = x; pY[i] = y; pVX[i] = vx; pVY[i] = vy;
+    pLife[i] = pMax[i] = life; pSize[i] = size; pHue[i] = hue; pType[i] = type;
+}
+
+function breathFire(x, y, angle, power) {
+    const n = floor(power * 8);
+    for (let i=0; i<n; i++) {
+        const a = angle + rand(-0.4, 0.4);
+        const sp = rand(4, 14);
+        spawnP(x+rand(-5,5), y+rand(-5,5), cos(a)*sp, sin(a)*sp, rand(20,50), rand(3,9), rand(10,50), 0);
+    }
+    for (let i=0; i<n*0.3; i++) { // Embers
+        const a = angle + rand(-0.8, 0.8);
+        const sp = rand(2, 6);
+        spawnP(x, y, cos(a)*sp, sin(a)*sp, rand(30,80), rand(1,3), rand(20,60), 1);
+    }
+    for (let i=0; i<n*0.2; i++) { // Smoke
+        const a = angle + rand(-0.2, 0.2);
+        const sp = rand(1, 3);
+        spawnP(x, y, cos(a)*sp, sin(a)*sp, rand(40,90), rand(8,20), 0, 2);
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// PHYSICS / KINEMATICS
+// ═══════════════════════════════════════════════════════════════════
+function physics(time) {
+    // Smooth cursor follow
+    input.mx = lerp(input.mx, input.tx, SPEED);
+    input.my = lerp(input.my, input.ty, SPEED);
+
+    // Head targets cursor
+    segX[0] = lerp(segX[0], input.mx, SPEED * 1.5);
+    segY[0] = lerp(segY[0], input.my, SPEED * 1.5);
+
+    // Kinematics for the body
+    for (let i = 1; i < NUM_SEG; i++) {
+        const dx = segX[i] - segX[i-1];
+        const dy = segY[i] - segY[i-1];
+        let a = atan2(dy, dx);
+        
+        // Very subtle wobble (mostly on tail) so it flies straight rather than slithering
+        const wobble = sin(time * 0.002 + i * 0.08) * lerp(0, 0.08, i/NUM_SEG);
+        a += wobble;
+
+        segX[i] = segX[i-1] + cos(a) * SEG_LEN;
+        segY[i] = segY[i-1] + sin(a) * SEG_LEN;
+        segA[i] = a;
+    }
+    segA[0] = atan2(segY[1] - segY[0], segX[1] - segX[0]);
+
+    // Update Particles
+    for (let i = pCount - 1; i >= 0; i--) {
+        pX[i] += pVX[i]; pY[i] += pVY[i]; pLife[i]--;
+        const t = pType[i];
+        
+        if (t === 0) { pVY[i] -= 0.05; pVX[i] *= 0.96; pVY[i] *= 0.96; pSize[i] *= 0.96; }
+        else if (t === 1) { pVY[i] -= 0.02; pVX[i] += rand(-0.2,0.2); pVY[i] += rand(-0.2,0.2); }
+        else if (t === 2) { pVY[i] -= 0.03; pVX[i] *= 0.98; pSize[i] *= 1.02; }
+        else { pVY[i] -= 0.01; pVX[i] *= 0.98; }
+
+        if (pLife[i] <= 0 || pSize[i] < 0.2) {
+            pCount--;
+            pX[i]=pX[pCount]; pY[i]=pY[pCount]; pVX[i]=pVX[pCount]; pVY[i]=pVY[pCount];
+            pLife[i]=pLife[pCount]; pMax[i]=pMax[pCount]; pSize[i]=pSize[pCount];
+            pHue[i]=pHue[pCount]; pType[i]=pType[pCount];
+        }
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// RENDERING
+// ═══════════════════════════════════════════════════════════════════
+let wingPhase = 0;
+let wingFold = 0;
+
+function drawLimb(idx, side, time, isFront) {
+    const sx = segX[idx], sy = segY[idx], sa = segA[idx];
+    const w = getGirth(idx/NUM_SEG) * 0.7;
+    const perp = sa + side * PI/2;
+    
+    // Shoulder/Hip joint origin
+    const jointX = sx + cos(perp) * w;
+    const jointY = sy + sin(perp) * w;
+
+    // Swimming/Flying cycle motion
+    const cycle = time * 0.003 + (isFront ? 0 : PI/1.5);
+    const move = sin(cycle);
+
+    const upLen = isFront ? 50 : 65;
+    const lowLen = isFront ? 45 : 60;
+
+    // Angles swept backward
+    const sweepA = sa + side*(PI/2) + side*(isFront ? PI/3.5 : PI/4) - move * 0.15 * side;
+    const elbowX = jointX + cos(sweepA) * upLen;
+    const elbowY = jointY + sin(sweepA) * upLen;
+
+    const lowerA = sweepA + side*(isFront ? PI/2.5 : PI/3) + move * 0.1 * side;
+    const wristX = elbowX + cos(lowerA) * lowLen;
+    const wristY = elbowY + sin(lowerA) * lowLen;
+
+    cx.lineCap = 'round';
+    cx.lineJoin = 'round';
+
+    // Upper Limb
+    cx.beginPath();
+    cx.moveTo(jointX, jointY);
+    cx.lineTo(elbowX, elbowY);
+    cx.strokeStyle = '#15100c'; // Obsidian/Charcoal
+    cx.lineWidth = isFront ? 22 : 28;
+    cx.stroke();
+
+    // Lower Limb
+    cx.beginPath();
+    cx.moveTo(elbowX, elbowY);
+    cx.lineTo(wristX, wristY);
+    cx.lineWidth = isFront ? 14 : 18;
+    cx.stroke();
+
+    // Claws / Talons
+    cx.fillStyle = '#111';
+    for(let c=-1; c<=1; c++) {
+        const ca = lowerA + c*0.35 + (isFront ? 0 : side*0.2);
+        cx.beginPath();
+        cx.moveTo(wristX, wristY);
+        cx.lineTo(wristX + cos(ca)*22, wristY + sin(ca)*22);
+        cx.lineTo(wristX + cos(ca+0.1)*10, wristY + sin(ca+0.1)*10);
+        cx.fill();
+    }
+}
+
+function drawWings(time) {
+    const idx = 18; // Attached directly to the chest
+    const sx = segX[idx], sy = segY[idx], sa = segA[idx];
+
+    wingFold = lerp(wingFold, input.wingsOpen ? 0 : 1, 0.06);
+    wingPhase += lerp(0.06, 0.01, wingFold);
+
+    const flap = sin(wingPhase) * lerp(0.6, 0.05, wingFold);
+    const span = lerp(320, 80, wingFold); // Massive bat wings
+
+    for (let side=-1; side<=1; side+=2) {
+        cx.save();
+        cx.translate(sx, sy);
+        cx.rotate(sa);
+
+        // Main wing arm (sweeps out and back)
+        const baseA = side * (PI/2 - 0.15 + flap);
+        const elbowX = cos(baseA) * (span * 0.45);
+        const elbowY = sin(baseA) * (span * 0.45);
+
+        // Wing fingers spreading out
+        const fCount = 5;
+        const fPts = [];
+        for(let f=0; f<fCount; f++) {
+            const t = f / (fCount - 1);
+            const fAngle = baseA + side * lerp(-0.4, 2.2, t) * lerp(1, 0.25, wingFold);
+            const fLen = span * lerp(0.6, 1.1, sin(t*PI));
+            fPts.push({ x: elbowX + cos(fAngle)*fLen, y: elbowY + sin(fAngle)*fLen });
+        }
+
+        // Draw Wing Membrane
+        cx.beginPath();
+        cx.moveTo(0, 0); // Attach to spine
+        cx.lineTo(elbowX, elbowY); // Leading edge to elbow
+        cx.lineTo(fPts[0].x, fPts[0].y); // Leading edge to thumb tip
+
+        for(let f=0; f<fCount-1; f++) {
+            const p1 = fPts[f], p2 = fPts[f+1];
+            // Scalloped bat-wing curve between fingers
+            const cpx = (p1.x + p2.x)/2 - 30;
+            const cpy = (p1.y + p2.y)/2 * 0.8;
+            cx.quadraticCurveTo(cpx, cpy, p2.x, p2.y);
+        }
+
+        // Connect trailing edge back to the dragon's lower back (index 45)
+        const tailAttachX = -((45 - 18) * SEG_LEN); // Relative backwards X coordinate
+        cx.quadraticCurveTo(tailAttachX + 80, side * 80, tailAttachX, 0);
+        cx.closePath();
+
+        // Leather/Magma gradient for the membrane
+        const grad = cx.createRadialGradient(elbowX, elbowY, 20, elbowX, elbowY, span);
+        grad.addColorStop(0, hsla(15, 80, 25, 0.95));
+        grad.addColorStop(0.5, hsla(10, 85, 15, 0.85));
+        grad.addColorStop(1, hsla(0, 60, 8, 0.5));
+        cx.fillStyle = grad;
+        cx.fill();
+
+        // Draw Bone structure
+        cx.beginPath();
+        cx.moveTo(0, 0); cx.lineTo(elbowX, elbowY);
+        for(let f=0; f<fCount; f++) {
+            cx.moveTo(elbowX, elbowY); cx.lineTo(fPts[f].x, fPts[f].y);
+        }
+        cx.strokeStyle = '#18120e';
+        cx.lineWidth = 4;
+        cx.stroke();
+
+        // Thumb Claw at elbow
+        cx.beginPath();
+        cx.moveTo(elbowX, elbowY);
+        cx.lineTo(elbowX + cos(baseA - side*0.6)*25, elbowY + sin(baseA - side*0.6)*25);
+        cx.lineTo(elbowX + cos(baseA - side*0.3)*12, elbowY + sin(baseA - side*0.3)*12);
+        cx.fillStyle = '#0a0a0a';
+        cx.fill();
+
+        cx.restore();
+    }
+}
+
+function drawBody(time) {
+    // Smooth outline using Bezier curves along the segments
+    const lx = new Float32Array(NUM_SEG), ly = new Float32Array(NUM_SEG);
+    const rx = new Float32Array(NUM_SEG), ry = new Float32Array(NUM_SEG);
+
+    for (let i = 0; i < NUM_SEG; i++) {
+        const w = getGirth(i/NUM_SEG);
+        const perp = segA[i] + PI/2;
+        lx[i] = segX[i] + cos(perp)*w; ly[i] = segY[i] + sin(perp)*w;
+        rx[i] = segX[i] - cos(perp)*w; ry[i] = segY[i] - sin(perp)*w;
+    }
+
+    cx.beginPath();
+    cx.moveTo(lx[0], ly[0]);
+    for(let i=0; i<NUM_SEG-2; i+=2) cx.quadraticCurveTo(lx[i+1], ly[i+1], lx[min(i+2,NUM_SEG-1)], ly[min(i+2,NUM_SEG-1)]);
+    cx.lineTo(segX[NUM_SEG-1], segY[NUM_SEG-1]); // Tail
+    for(let i=NUM_SEG-1; i>=2; i-=2) cx.quadraticCurveTo(rx[i-1], ry[i-1], rx[max(i-2,0)], ry[max(i-2,0)]);
+    cx.closePath();
+
+    // Body Fill - Glowing Magma Core under Obsidian
+    const bg = cx.createLinearGradient(segX[0], segY[0], segX[NUM_SEG-1], segY[NUM_SEG-1]);
+    bg.addColorStop(0, hsla(25, 80, 35, 1)); // Hot neck
+    bg.addColorStop(0.3, hsla(15, 70, 20, 1)); // Dark chest
+    bg.addColorStop(0.7, hsla(5, 80, 12, 1));  // Darker tail
+    bg.addColorStop(1, hsla(0, 50, 8, 1));
+    cx.fillStyle = bg;
+    cx.fill();
+
+    // Draw Heavy Armored Plates (This strictly breaks the centipede look)
+    for (let i = NUM_SEG-6; i >= 3; i -= 2) {
+        const w = getGirth(i/NUM_SEG);
+        cx.save();
+        cx.translate(segX[i], segY[i]);
+        cx.rotate(segA[i]);
+
+        // Diamond/Chevron Armor Plate
+        cx.beginPath();
+        cx.moveTo(w*0.9, 0);     // Pointing forward toward head
+        cx.lineTo(w*0.2, w*0.7); // Right side
+        cx.lineTo(-w*0.5, 0);    // Pointing back
+        cx.lineTo(w*0.2, -w*0.7);// Left side
+        cx.closePath();
+
+        cx.fillStyle = hsla(20, 15, 12, 0.95); // Obsidian plate
+        cx.fill();
+        // Golden / fiery rim lighting
+        cx.strokeStyle = hsla(35, 60, 45, 0.5); 
+        cx.lineWidth = 1.5;
+        cx.stroke();
+
+        // Center glowing spine spike
+        cx.beginPath();
+        cx.moveTo(w*0.5, 0);
+        cx.lineTo(-w*0.8, 0);
+        cx.strokeStyle = hsla(20, 90, 55, 0.8);
+        cx.lineWidth = 3;
+        cx.stroke();
+
+        cx.restore();
+    }
+}
+
+function drawHead(time) {
+    const hx = segX[0], hy = segY[0], ha = segA[0] + PI; // Faces cursor
+    cx.save();
+    cx.translate(hx, hy);
+    cx.rotate(ha);
+
+    // Main Skull
+    cx.beginPath();
+    cx.moveTo(HEAD_R, 0);                  // Snout
+    cx.lineTo(HEAD_R*0.55, HEAD_R*0.6);    // Cheek
+    cx.lineTo(-HEAD_R*0.3, HEAD_R*0.8);    // Jaw back
+    cx.lineTo(-HEAD_R*0.7, 0);             // Skull back
+    cx.lineTo(-HEAD_R*0.3, -HEAD_R*0.8);
+    cx.lineTo(HEAD_R*0.55, -HEAD_R*0.6);
+    cx.closePath();
+    
+    const hg = cx.createRadialGradient(0,0,0, 0,0,HEAD_R);
+    hg.addColorStop(0, hsla(20, 40, 20, 1));
+    hg.addColorStop(1, hsla(10, 50, 10, 1));
+    cx.fillStyle = hg;
+    cx.fill();
+    cx.strokeStyle = hsla(25, 70, 40, 0.5);
+    cx.lineWidth = 2;
+    cx.stroke();
+
+    // Giant Sweeping Horns
+    for (let s=-1; s<=1; s+=2) {
+        cx.beginPath();
+        cx.moveTo(-HEAD_R*0.4, s*HEAD_R*0.5); // Base of horn
+        // Sweep massively backward and outward
+        cx.quadraticCurveTo(-HEAD_R*1.8, s*HEAD_R*1.5, -HEAD_R*2.8, s*HEAD_R*0.6);
+        cx.quadraticCurveTo(-HEAD_R*1.6, s*HEAD_R*0.8, -HEAD_R*0.6, s*HEAD_R*0.3); // Inner curve
+        cx.fillStyle = '#d4bc96'; // Bone color
+        cx.fill();
+        cx.strokeStyle = '#5a4634';
+        cx.lineWidth = 1;
+        cx.stroke();
+    }
+
+    // Glowing Eyes
+    for (let s=-1; s<=1; s+=2) {
+        const ex = HEAD_R * 0.1, ey = s * HEAD_R * 0.45;
+        // Glow
+        cx.beginPath(); cx.arc(ex, ey, 10, 0, TAU);
+        cx.fillStyle = hsla(45, 100, 60, 0.15 + 0.05*sin(time*0.005));
+        cx.fill();
+        // Eyeball
+        cx.beginPath(); cx.ellipse(ex, ey, 6, 4, 0, 0, TAU);
+        cx.fillStyle = hsla(45, 100, 70, 1);
+        cx.fill();
+        // Slit pupil
+        cx.beginPath(); cx.ellipse(ex+1, ey, 1.5, 3.5, 0, 0, TAU);
+        cx.fillStyle = '#000';
+        cx.fill();
+    }
+
+    // Snout and Nostrils
+    for (let s=-1; s<=1; s+=2) {
+        cx.beginPath(); cx.ellipse(HEAD_R*0.75, s*HEAD_R*0.15, 4, 2, 0, 0, TAU);
+        cx.fillStyle = '#000'; cx.fill();
+        if (input.fire) {
+            cx.beginPath(); cx.arc(HEAD_R*0.85, s*HEAD_R*0.15, 4+sin(time*0.02)*2, 0, TAU);
+            cx.fillStyle = hsla(30, 100, 60, 0.5); cx.fill();
+        }
+    }
+
+    // Teeth if breathing fire
+    if (input.fire) {
+        for(let i=0; i<4; i++) {
+            const tx = HEAD_R*(0.4 + i*0.12);
+            for(let s=-1; s<=1; s+=2) {
+                cx.beginPath(); cx.moveTo(tx, s*HEAD_R*0.1);
+                cx.lineTo(tx+3, s*HEAD_R*(0.25 + i*0.02)); cx.lineTo(tx+6, s*HEAD_R*0.1);
+                cx.fillStyle = '#e8e0d5'; cx.fill();
+            }
+        }
+    }
+    cx.restore();
+
+    // Fire breath emission
+    if (input.fire) {
+        const fa = ha;
+        const fx = hx + cos(fa) * HEAD_R * 1.1;
+        const fy = hy + sin(fa) * HEAD_R * 1.1;
+        breathFire(fx, fy, fa, 1.5);
+
+        const mg = cx.createRadialGradient(fx, fy, 0, fx, fy, 50);
+        mg.addColorStop(0, hsla(40, 100, 65, 0.6));
+        mg.addColorStop(1, hsla(20, 100, 50, 0));
+        cx.beginPath(); cx.arc(fx, fy, 50, 0, TAU);
+        cx.fillStyle = mg; cx.fill();
+    }
+}
+
+// ═══════════════════════════════════════════════════════════════════
+// MAIN RENDER LOOP
+// ═══════════════════════════════════════════════════════════════════
+function frame(ts) {
+    physics(ts || 0);
+
+    // Background
+    const bgGrad = cx.createRadialGradient(W/2, H/2, 0, W/2, H/2, max(W,H)*0.8);
+    bgGrad.addColorStop(0, '#100a08');
+    bgGrad.addColorStop(0.5, '#050404');
+    bgGrad.addColorStop(1, '#000000');
+    cx.fillStyle = bgGrad;
+    cx.fillRect(0, 0, W, H);
+
+    // Draw Particles (behind dragon)
+    cx.globalCompositeOperation = 'lighter';
+    for(let i=0; i<pCount; i++) {
+        const a = 1 - pLife[i]/pMax[i];
+        cx.beginPath(); cx.arc(pX[i], pY[i], pSize[i], 0, TAU);
+        if(pType[i]===0) cx.fillStyle = hsla(lerp(55,0,a), 100, lerp(70,30,a), (1-a)*0.8);
+        else if(pType[i]===1) cx.fillStyle = hsla(pHue[i], 100, 60, (1-a)*0.9);
+        else if(pType[i]===2) { cx.globalCompositeOperation='source-over'; cx.fillStyle = `rgba(30,20,15,${(1-a)*0.1})`; }
+        cx.fill();
+    }
+    cx.globalCompositeOperation = 'source-over';
+
+    // ── DRAGON LAYERS ──
+    // 1. Limbs (under body)
+    drawLimb(18, -1, ts, true); // Front Left
+    drawLimb(18,  1, ts, true); // Front Right
+    drawLimb(55, -1, ts, false);// Hind Left
+    drawLimb(55,  1, ts, false);// Hind Right
+
+    // 2. Main Body (thick, tapered, armored)
+    drawBody(ts);
+
+    // 3. Giant Wings (over the back)
+    drawWings(ts);
+
+    // 4. Head
+    drawHead(ts);
+
+    // Fire Bloom (on top)
+    if (input.fire) {
+        cx.globalCompositeOperation = 'lighter';
+        for(let i=0; i<pCount; i++) {
+            if(pType[i]===0) {
+                const a = 1 - pLife[i]/pMax[i];
+                cx.beginPath(); cx.arc(pX[i], pY[i], pSize[i]*2.5, 0, TAU);
+                cx.fillStyle = hsla(lerp(55,0,a), 100, 60, (1-a)*0.2);
+                cx.fill();
+            }
+        }
+        cx.globalCompositeOperation = 'source-over';
+    }
+
+    // Cursor pulse
+    const p = 0.5 + 0.5 * sin(ts*0.005);
+    cx.beginPath(); cx.arc(input.mx, input.my, 4+p*2, 0, TAU);
+    cx.fillStyle = hsla(45, 90, 65, 0.4+p*0.2); cx.fill();
+
+    requestAnimationFrame(frame);
+}
+
+requestAnimationFrame(frame);
+
+})();
+</script>
+</body>
+</html>
