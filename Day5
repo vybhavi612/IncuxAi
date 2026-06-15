@@ -1,0 +1,131 @@
+// 1. Hello World Function
+function hello() {
+    console.log("Hello World");
+}
+hello();
+
+// 2. Welcome Function
+function welcome() {
+    console.log("Welcome to JavaScript");
+}
+welcome();
+
+// 3. Print Name
+function printName(name) {
+    console.log(name);
+}
+printName("Vineela");
+
+// 4. Addition
+function add(a, b) {
+    console.log(a + b);
+}
+add(10, 20);
+
+// 5. Subtraction
+function subtract(a, b) {
+    console.log(a - b);
+}
+subtract(20, 10);
+
+// 6. Multiplication
+function multiply(a, b) {
+    console.log(a * b);
+}
+multiply(5, 4);
+
+// 7. Division
+function divide(a, b) {
+    console.log(a / b);
+}
+divide(20, 5);
+
+// 8. Square
+function square(num) {
+    console.log(num * num);
+}
+square(5);
+
+// 9. Cube
+function cube(num) {
+    console.log(num * num * num);
+}
+cube(3);
+
+// 10. Print Age
+function age(a) {
+    console.log(a);
+}
+age(21);
+
+// 11. Print City
+function city(name) {
+    console.log(name);
+}
+city("Vijayawada");
+
+// 12. Check Even or Odd
+function evenOdd(num) {
+    if (num % 2 == 0)
+        console.log("Even");
+    else
+        console.log("Odd");
+}
+evenOdd(8);
+
+// 13. Check Positive or Negative
+function checkNumber(num) {
+    if (num >= 0)
+        console.log("Positive");
+    else
+        console.log("Negative");
+}
+checkNumber(-5);
+
+// 14. Largest of Two Numbers
+function largest(a, b) {
+    if (a > b)
+        console.log(a);
+    else
+        console.log(b);
+}
+largest(15, 20);
+
+// 15. Smallest of Two Numbers
+function smallest(a, b) {
+    if (a < b)
+        console.log(a);
+    else
+        console.log(b);
+}
+smallest(15, 20);
+
+// 16. Rectangle Area
+function rectangleArea(l, w) {
+    console.log(l * w);
+}
+rectangleArea(10, 5);
+
+// 17. Rectangle Perimeter
+function rectanglePerimeter(l, w) {
+    console.log(2 * (l + w));
+}
+rectanglePerimeter(10, 5);
+
+// 18. Circle Area
+function circleArea(r) {
+    console.log(3.14 * r * r);
+}
+circleArea(7);
+
+// 19. Simple Interest
+function simpleInterest(p, r, t) {
+    console.log((p * r * t) / 100);
+}
+simpleInterest(10000, 5, 2);
+
+// 20. Celsius to Fahrenheit
+function fahrenheit(c) {
+    console.log((c * 9/5) + 32);
+}
+fahrenheit(30);
