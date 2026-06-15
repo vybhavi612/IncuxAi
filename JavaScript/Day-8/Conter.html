@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Counter </title>
+</head>
+<body>
+  <h2>Counter App </h2>
+
+  <button id="inc">Increment</button>
+  <button id="dec">Decrement</button>
+  <button id="reset">Reset</button>
+
+  <p id="value">0</p>
+
+  <script>
+    
+    function createCounter() {
+      let count = 0;
+
+      return {
+        increment: function () {
+          count++;
+          return count;
+        },
+        decrement: function () {
+          count--;
+          return count;
+        },
+        reset: function () {
+          count = 0;
+          return count;
+        }
+      };
+    }
+
+    
+    const counter = createCounter();
+
+    
+    document.getElementById("inc").onclick = function () {
+      document.getElementById("value").innerText = counter.increment();
+    };
+
+    document.getElementById("dec").onclick = function () {
+      document.getElementById("value").innerText = counter.decrement();
+    };
+
+    document.getElementById("reset").onclick = function () {
+      document.getElementById("value").innerText = counter.reset();
+    };
+  </script>
+</body>
+</html>

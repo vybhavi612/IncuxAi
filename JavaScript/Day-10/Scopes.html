@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Scope Example</title>
+</head>
+<body>
+
+    <h2>Visitor Counter</h2>
+
+    <button onclick="visit()">Visit</button>
+
+    <p id="result"></p>
+
+    <script>
+
+        
+        let totalVisitors = 0;
+
+        function visit() {
+
+           
+            let visitorName = "Guest";
+
+            totalVisitors++;
+
+            if (true) {
+
+                
+                let message = "Welcome!";
+                
+                document.getElementById("result").innerHTML =
+                    message + "<br>" +
+                    "Visitor: " + visitorName + "<br>" +
+                    "Total Visitors: " + totalVisitors;
+            }
+
+            
+        }
+
+    </script>
+
+</body>
+</html>

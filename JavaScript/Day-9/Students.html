@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Management System</title>
+</head>
+<body>
+
+    <h2>Student Management System</h2>
+
+    <input type="number" id="id" placeholder="Student ID">
+    <input type="text" id="name" placeholder="Student Name">
+    <input type="number" id="marks" placeholder="Marks">
+
+    <button onclick="addStudent()">Add Student</button>
+    <button onclick="showStudents()">Show Students</button>
+
+    <div id="output"></div>
+
+    <script>
+
+        class Student {
+            constructor(id, name, marks) {
+                this.id = id;
+                this.name = name;
+                this.marks = marks;
+            }
+        }
+
+        let students = [];
+
+        function addStudent() {
+            let id = document.getElementById("id").value;
+            let name = document.getElementById("name").value;
+            let marks = document.getElementById("marks").value;
+
+            let student = new Student(id, name, marks);
+
+            students.push(student);
+
+            alert("Student Added!");
+
+            document.getElementById("id").value = "";
+            document.getElementById("name").value = "";
+            document.getElementById("marks").value = "";
+        }
+
+        function showStudents() {
+
+            let result = "<h3>Student List</h3>";
+
+            students.forEach(student => {
+                result += `
+                    <p>
+                        ID: ${student.id} |
+                        Name: ${student.name} |
+                        Marks: ${student.marks}
+                    </p>
+                `;
+            });
+
+            document.getElementById("output").innerHTML = result;
+        }
+
+    </script>
+
+</body>
+</html>
