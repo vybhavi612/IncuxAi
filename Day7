@@ -1,0 +1,131 @@
+// 1. Find Square Root
+function squareRoot(num) {
+    console.log(Math.sqrt(num));
+}
+squareRoot(49);
+
+// 2. Find Absolute Value
+function absolute(num) {
+    console.log(Math.abs(num));
+}
+absolute(-25);
+
+// 3. Convert Text to Uppercase
+function upperCase(text) {
+    console.log(text.toUpperCase());
+}
+upperCase("hello");
+
+// 4. Convert Text to Lowercase
+function lowerCase(text) {
+    console.log(text.toLowerCase());
+}
+lowerCase("WELCOME");
+
+// 5. Find Length of a String
+function stringLength(text) {
+    console.log(text.length);
+}
+stringLength("Programming");
+
+// 6. Join Two Strings
+function joinStrings(first, second) {
+    console.log(first + second);
+}
+joinStrings("Good ", "Morning");
+
+// 7. Check Whether Two Numbers Are Equal
+function checkEqual(a, b) {
+    if (a == b)
+        console.log("Numbers are Equal");
+    else
+        console.log("Numbers are Not Equal");
+}
+checkEqual(15, 15);
+
+// 8. Check Number Greater Than 100
+function greaterThan100(num) {
+    if (num > 100)
+        console.log("Number is Greater than 100");
+    else
+        console.log("Number is Less than or Equal to 100");
+}
+greaterThan100(120);
+
+// 9. Product of Three Numbers
+function product(a, b, c) {
+    console.log(a * b * c);
+}
+product(3, 4, 5);
+
+// 10. Sum of Three Numbers
+function sumThree(a, b, c) {
+    console.log(a + b + c);
+}
+sumThree(5, 10, 15);
+
+// 11. Calculate BMI
+function bmi(weight, height) {
+    console.log(weight / (height * height));
+}
+bmi(60, 1.6);
+
+// 12. Convert Days to Hours
+function daysToHours(days) {
+    console.log(days * 24);
+}
+daysToHours(7);
+
+// 13. Convert Hours to Seconds
+function hoursToSeconds(hours) {
+    console.log(hours * 3600);
+}
+hoursToSeconds(3);
+
+// 14. Check Adult or Minor
+function adult(age) {
+    if (age >= 18)
+        console.log("Adult");
+    else
+        console.log("Minor");
+}
+adult(17);
+
+// 15. Find Half of a Number
+function half(num) {
+    console.log(num / 2);
+}
+half(50);
+
+// 16. Find Double of a Number
+function double(num) {
+    console.log(num * 2);
+}
+double(25);
+
+// 17. Calculate GST
+function gst(amount) {
+    console.log(amount * 0.18);
+}
+gst(2000);
+
+// 18. Check Whether Number is Zero
+function checkZero(num) {
+    if (num == 0)
+        console.log("Number is Zero");
+    else
+        console.log("Number is Not Zero");
+}
+checkZero(0);
+
+// 19. Find Last Digit
+function lastDigit(num) {
+    console.log(num % 10);
+}
+lastDigit(9876);
+
+// 20. Display Full Name
+function fullName(first, last) {
+    console.log(first + " " + last);
+}
+fullName("John", "David");
