@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Temperature Converter</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h2>Temperature Converter</h2>
+
+        <input type="number" id="tempInput" placeholder="Enter Temperature">
+
+        <select id="conversionType">
+            <option value="CtoF">Celsius to Fahrenheit</option>
+            <option value="FtoC">Fahrenheit to Celsius</option>
+        </select>
+
+        <button onclick="convertTemp()">Convert</button>
+
+        <h3 id="result">Result: --</h3>
+    </div>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
