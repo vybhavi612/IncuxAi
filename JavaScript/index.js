@@ -155,3 +155,67 @@ switch(day) {
     default:
         console.log("Invalid Day");
 }
+day-7
+
+let students = [
+    { name: "Prashanth", marks: 85 },
+    { name: "Rahul", marks: 72 },
+    { name: "Anjali", marks: 91 },
+    { name: "Kiran", marks: 67 },
+    { name: "Sneha", marks: 88 }
+];
+
+function calculateAverage(data) {
+    let total = 0;
+
+    for (let i = 0; i < data.length; i++) {
+        total += data[i].marks;
+    }
+
+    return total / data.length;
+}
+
+function getTopper(data) {
+    let topper = data[0];
+
+    for (let i = 1; i < data.length; i++) {
+        if (data[i].marks > topper.marks) {
+            topper = data[i];
+        }
+    }
+
+    return topper;
+}
+
+function displayResults(data) {
+    for (let i = 0; i < data.length; i++) {
+        let grade;
+
+        if (data[i].marks >= 90) {
+            grade = "A";
+        } else if (data[i].marks >= 75) {
+            grade = "B";
+        } else if (data[i].marks >= 60) {
+            grade = "C";
+        } else {
+            grade = "D";
+        }
+
+        console.log(
+            "Name: " +
+            data[i].name +
+            ", Marks: " +
+            data[i].marks +
+            ", Grade: " +
+            grade
+        );
+    }
+}
+
+displayResults(students);
+
+let average = calculateAverage(students);
+console.log("Average Marks:", average);
+
+let topper = getTopper(students);
+console.log("Topper:", topper.name, "-", topper.marks);
