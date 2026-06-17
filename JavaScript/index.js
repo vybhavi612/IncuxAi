@@ -1,17 +1,7 @@
-//console.log(`Hello`);
-//console.log(`I like pizza!`);
+let fullName = "Varshini";
+let age = 19;
+let isStudent = true;
 
-//window.alert(`This is an alert`);
-//window.alert(`I like pizza!`);
-
-document.getElementById("myH1").textContent = `Hello`;
-document.getElementById("myP").textContent=`I like pizza`;
-
-//This is a comment 
-
-/*
-     This 
-     is 
-     a 
-     comment
-*/
+document.getElementById("p1").textContent = fullName;
+document.getElementById("p2").textContent = age;
+document.getElementById("p3").textContent = isStudent;
