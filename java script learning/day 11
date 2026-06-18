@@ -1,0 +1,17 @@
+
+const secretNumber = 7;
+
+const guesses = [3, 5, 8, 7];
+
+for (let i = 0; i < guesses.length; i++) {
+    console.log(`Attempt ${i + 1}: Guess = ${guesses[i]}`);
+
+    if (guesses[i] === secretNumber) {
+        console.log("Congratulations! You guessed the correct number.");
+        break;
+    } else if (guesses[i] < secretNumber) {
+        console.log("Too Low!");
+    } else {
+        console.log("Too High!");
+    }
+}
