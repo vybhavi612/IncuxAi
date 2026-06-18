@@ -1,0 +1,16 @@
+
+let word = "madam";
+let reversed = "";
+
+for (let i = word.length - 1; i >= 0; i--) {
+    reversed += word[i];
+}
+
+console.log("Original Word:", word);
+console.log("Reversed Word:", reversed);
+
+if (word === reversed) {
+    console.log("It is a Palindrome.");
+} else {
+    console.log("It is Not a Palindrome.");
+}
