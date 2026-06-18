@@ -1,0 +1,16 @@
+//type conversion
+let x = Number("42");   
+let y = parseInt("3.9"); 
+let z = parseFloat("3.9");
+
+// Number → String
+let s = String(99);       
+let s2 = (99).toString(); 
+
+// To Boolean
+console.log(Boolean(0));    
+console.log(Boolean(""));   
+console.log(Boolean("hi"));
+
+// typeof to check
+console.log(typeof x);     
