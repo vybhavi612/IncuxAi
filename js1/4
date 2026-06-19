@@ -1,0 +1,18 @@
+let runs = [4, 1, 6, 0, 2, 1, 4, 6];
+
+let totalRuns = 0;
+
+for (let i = 0; i < runs.length; i++) {
+    totalRuns += runs[i];
+}
+
+console.log("Total Runs:", totalRuns);
+console.log("Overs Played:", runs.length / 6);
+
+
+
+
+
+
+
+
