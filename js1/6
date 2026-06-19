@@ -1,0 +1,18 @@
+let glasses = [2, 1, 3, 2, 1];
+
+let total = 0;
+
+for (let glass of glasses) {
+    total += glass;
+}
+
+console.log("Water Intake Today");
+console.log("Total Glasses:", total);
+
+if (total >= 8) {
+    console.log("Daily Goal Achieved");
+}
+else {
+    console.log("Drink More Water");
+}
+
