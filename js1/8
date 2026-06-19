@@ -1,0 +1,28 @@
+let students = [
+    { name: "Rahul", marks: 85 },
+    { name: "Priya", marks: 92 },
+    { name: "Amit", marks: 67 }
+];
+
+console.log("Student Report");
+
+for (let student of students) {
+
+    let grade;
+
+    if (student.marks >= 90) {
+        grade = "A";
+    } else if (student.marks >= 75) {
+        grade = "B";
+    } else {
+        grade = "C";
+    }
+
+    console.log("Name:", student.name);
+    console.log("Marks:", student.marks);
+    console.log("Grade:", grade);
+    console.log("----------------");
+}
+
+
+
