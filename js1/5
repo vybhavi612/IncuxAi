@@ -1,0 +1,16 @@
+let totalClasses = 100;
+let attendedClasses = 78;
+
+let percentage =
+    (attendedClasses / totalClasses) * 100;
+console.log("Attendance:", percentage + "%");
+
+if (percentage >= 75) {
+
+    console.log("Eligible for Exam");
+
+} else {
+    console.log("Not Eligible for Exam");
+    console.log("Need More Attendance");
+}
+
