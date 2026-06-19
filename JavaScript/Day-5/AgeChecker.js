@@ -20,3 +20,12 @@ else{
     result.innerHTML = `  You are an Older ${name}`;
 }
 }
+
+
+/* git checkout Vaishnavi-Gurramkonda
+ git status
+ git add .
+ git commit -m "Your message"
+ git pull origin Vaishnavi-Gurramkonda --rebase
+ git push origin Vaishnavi-Gurramkonda
+*/

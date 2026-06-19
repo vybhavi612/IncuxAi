@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Arrays</title>
+</head>
+<body>
+
+    <h2>arrays</h2>
+
+    <button onclick="visit()">Visit</button>
+
+    <p id="result"></p>
+
+    <script>
+
+        
+       let arr = [10, 15, 20, 25, 30];
+
+console.log("Original:", arr);
+
+console.log("Map x2:", arr.map(num => num * 2));
+
+console.log("Filter Even:", arr.filter(num => num % 2 === 0));
+
+console.log(
+    "Reduce Sum:",
+    arr.reduce((acc, curr) => acc + curr, 0)
+);
+
+console.log(
+    "Find >20:",
+    arr.find(num => num > 20)
+);
+
+console.log(
+    "FindIndex >20:",
+    arr.findIndex(num => num > 20)
+);
+
+console.log(
+    "Some >25:",
+    arr.some(num => num > 25)
+);
+
+console.log(
+    "Every >5:",
+    arr.every(num => num > 5)
+);
+
+console.log(
+    "Sorted Desc:",
+    [...arr].sort((a, b) => b - a)
+);
+    </script>
+
+</body>
+</html>
