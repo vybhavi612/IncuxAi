@@ -1,0 +1,26 @@
+let city = "Hyderabad";
+let temperature = 34;
+let humidity = 70;
+
+console.log("Weather Report");
+console.log("City:", city);
+console.log("Temperature:", temperature);
+console.log("Humidity:", humidity);
+
+if (temperature > 35) {
+    console.log("Very Hot Day");
+}
+else if (temperature > 25) {
+    console.log("Pleasant Weather");
+}
+else {
+    console.log("Cool Weather");
+}
+
+if (humidity > 60) {
+    console.log("High Humidity");
+}
+
+
+
+
