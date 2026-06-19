@@ -1,0 +1,14 @@
+let secretNumber = 7;
+let userGuess = 5;
+console.log("Guessing Game");
+console.log("Your Guess:", userGuess);
+if (userGuess === secretNumber) {
+    console.log("Correct Guess!");
+} else if (userGuess < secretNumber) {
+    console.log("Too Low");
+} else {
+    console.log("Too High");
+}
+
+console.log("Game Over");
+
