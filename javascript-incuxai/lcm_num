@@ -1,0 +1,10 @@
+let a = 12, b = 18;
+let max = Math.max(a, b);
+
+while (true) {
+    if (max % a === 0 && max % b === 0) {
+        console.log(max);
+        break;
+    }
+    max++;
+}

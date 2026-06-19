@@ -1,0 +1,7 @@
+let arr = [23, 5, 89, 12, 45];
+
+let max = Math.max(...arr);
+let min = Math.min(...arr);
+
+console.log("Max:", max);
+console.log("Min:", min);
