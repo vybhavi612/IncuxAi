@@ -1,0 +1,16 @@
+let totalSeats = 100;
+let bookedSeats = 65;
+console.log("Train Reservation");
+let availableSeats = totalSeats - bookedSeats;
+console.log("Total Seats:", totalSeats);
+console.log("Booked Seats:", bookedSeats);
+console.log("Available Seats:", availableSeats);
+if (availableSeats > 0) {
+    console.log("Tickets Available");
+}
+else {
+    console.log("House Full");
+}
+
+console.log("Reservation Status Updated");
+
