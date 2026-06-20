@@ -1,0 +1,12 @@
+{
+  "name": "global-weather-engine",
+  "version": "1.0.0",
+  "description": "Server-side architecture layer for weather data fetching pipelines",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
