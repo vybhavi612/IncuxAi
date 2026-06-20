@@ -1,0 +1,36 @@
+let cars = [
+    { model: "Swift", available: true },
+    { model: "Creta", available: true },
+    { model: "Thar", available: true }
+];
+
+function rentCar(model) {
+    let car = cars.find(
+        c => c.model === model
+    );
+
+    if (car && car.available) {
+        car.available = false;
+
+        console.log(`${model} rented`);
+    } else {
+        console.log("Car unavailable");
+    }
+}
+
+function returnCar(model) {
+    let car = cars.find(
+        c => c.model === model
+    );
+
+    if (car) {
+        car.available = true;
+
+        console.log(`${model} returned`);
+    }
+}
+
+rentCar("Thar");
+returnCar("Thar");
+
+
