@@ -1,0 +1,8 @@
+function flightFare(baseFare, luggageFee) {
+    return baseFare + luggageFee;
+}
+
+console.log(
+    "Total Fare:",
+    flightFare(5000, 800)
+);
