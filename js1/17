@@ -1,0 +1,40 @@
+let parcels = [];
+
+function addParcel(id, customer) {
+    parcels.push({
+        id,
+        customer,
+        status: "Packed"
+    });
+}
+
+function updateStatus(id, status) {
+    let parcel = parcels.find(
+        p => p.id === id
+    );
+
+    if (parcel) {
+        parcel.status = status;
+    }
+}
+
+function trackParcel(id) {
+    let parcel = parcels.find(
+        p => p.id === id
+    );
+
+    if (parcel) {
+        console.log(
+            `Parcel ${id}: ${parcel.status}`
+        );
+    }
+}
+
+addParcel(101, "Rahul");
+addParcel(102, "Priya");
+
+updateStatus(101, "Shipped");
+updateStatus(101, "Out For Delivery");
+
+trackParcel(101);
+
