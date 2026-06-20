@@ -1,0 +1,47 @@
+class VotingSystem {
+
+    constructor() {
+        this.votes = {};
+    }
+
+    vote(candidate) {
+
+        this.votes[candidate] =
+            (this.votes[candidate] || 0) + 1;
+    }
+
+    winner() {
+
+        let maxVotes = 0;
+        let winner = "";
+
+        for (
+            let candidate in this.votes
+        ) {
+
+            if (
+                this.votes[candidate] >
+                maxVotes
+            ) {
+                maxVotes =
+                    this.votes[candidate];
+
+                winner =
+                    candidate;
+            }
+        }
+
+        return winner;
+    }
+}
+
+const election =
+    new VotingSystem();
+
+election.vote("Alice");
+election.vote("Bob");
+election.vote("Alice");
+
+console.log(
+    election.winner()
+);
