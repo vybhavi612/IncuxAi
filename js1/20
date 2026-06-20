@@ -1,0 +1,39 @@
+let members = [];
+
+function addMember(name, months) {
+    members.push({
+        name,
+        months
+    });
+
+    console.log(`${name} added`);
+}
+
+function renewMembership(name, months) {
+    let member = members.find(
+        m => m.name === name
+    );
+
+    if (member) {
+        member.months += months;
+    }
+}
+
+function showMembers() {
+    console.log("\nMembers");
+
+    members.forEach(member => {
+        console.log(
+            `${member.name} - ${member.months} months`
+        );
+    });
+}
+
+addMember("Rahul", 6);
+addMember("Priya", 12);
+
+renewMembership("Rahul", 3);
+
+showMembers();
+
+
