@@ -1,0 +1,18 @@
+function checkPassword(password) {
+    let hasUpper = /[A-Z]/.test(password);
+    let hasLower = /[a-z]/.test(password);
+    let hasNumber = /[0-9]/.test(password);
+
+    if (
+        password.length >= 8 &&
+        hasUpper &&
+        hasLower &&
+        hasNumber
+    ) {
+        console.log("Strong Password");
+    } else {
+        console.log("Weak Password");
+    }
+}
+
+checkPassword("JavaScript123");
