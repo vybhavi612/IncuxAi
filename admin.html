@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+}
+
+.header {
+  background: #1e293b;
+  padding: 15px;
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.container {
+  padding: 20px;
+}
+
+button {
+  padding: 10px 15px;
+  margin-bottom: 15px;
+  border: none;
+  background: #38bdf8;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #1e293b;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #334155;
+  text-align: center;
+}
+
+th {
+  background: #38bdf8;
+  color: black;
+}
+
+img {
+  width: 70px;
+  border-radius: 10px;
+}
+
+canvas {
+  margin-top: 30px;
+  background: white;
+  border-radius: 10px;
+  padding: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+📊 Admin Attendance Dashboard
+</div>
+
+<div class="container">
+
+<button onclick="loadData()">🔄 Refresh Data</button>
+
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>College</th>
+<th>Login Time</th>
+<th>Logout Time</th>
+<th>Total Time</th>
+<th>Late</th>
+<th>Work</th>
+<th>GitHub</th>
+<th>Photo</th>
+<th>Desk Time</th>
+</tr>
+</thead>
+
+<tbody id="data"></tbody>
+</table>
+
+<canvas id="chart" height="100"></canvas>
+
+</div>
+
+<script>
+
+const API = "http://localhost:5000";
+
+async function loadData() {
+  const res = await fetch(API + "/admin");
+  const users = await res.json();
+
+  let rows = "";
+
+  const names = [];
+  const times = [];
+
+  users.forEach(u => {
+
+    let deskTime = 0;
+    if (u.loginTime && u.logoutTime) {
+      deskTime = Math.floor((new Date(u.logoutTime) - new Date(u.loginTime)) / 60000);
+    }
+
+    names.push(u.name || "Unknown");
+    times.push(u.totalTime || 0);
+
+    rows += `
+    <tr>
+      <td>${u.name || ""}</td>
+      <td>${u.email || ""}</td>
+      <td>${u.phone || ""}</td>
+      <td>${u.college || ""}</td>
+      <td>${u.loginTime ? new Date(u.loginTime).toLocaleString() : ""}</td>
+      <td>${u.logoutTime ? new Date(u.logoutTime).toLocaleString() : ""}</td>
+      <td>${u.totalTime || 0} mins</td>
+      <td>${u.lateBy || 0} mins</td>
+      <td>${u.work || ""}</td>
+      <td>${u.github ? `<a href="${u.github}" target="_blank" style="color:#38bdf8">Open</a>` : ""}</td>
+      <td>${u.image ? `<img src="${u.image}"/>` : "No Image"}</td>
+      <td>${deskTime} mins</td>
+    </tr>`;
+  });
+
+  document.getElementById("data").innerHTML = rows;
+
+  loadChart(names, times);
+}
+
+function loadChart(names, times) {
+
+  const ctx = document.getElementById("chart").getContext("2d");
+
+  if (window.myChart) {
+    window.myChart.destroy();
+  }
+
+  window.myChart = new Chart(ctx, {
+    type: "bar",
+    data: {
+      labels: names,
+      datasets: [{
+        label: "Work Time (mins)",
+        data: times
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: true }
+      }
+    }
+  });
+}
+
+loadData();
+
+</script>
+
+</body>
+</html>

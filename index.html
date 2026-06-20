@@ -1,43 +1,167 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#000000" />
-    <meta
-      name="description"
-      content="Web site created using create-react-app"
-    />
-    <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
-    <!--
-      manifest.json provides metadata used when your web app is installed on a
-      user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/
-    -->
-    <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
-    <!--
-      Notice the use of %PUBLIC_URL% in the tags above.
-      It will be replaced with the URL of the `public` folder during the build.
-      Only files inside the `public` folder can be referenced from the HTML.
+<head>
+<meta charset="UTF-8">
+<title>Attendance System</title>
 
-      Unlike "/favicon.ico" or "favicon.ico", "%PUBLIC_URL%/favicon.ico" will
-      work correctly both with client-side routing and a non-root public URL.
-      Learn how to configure a non-root public URL by running `npm run build`.
-    -->
-    <title>React App</title>
-  </head>
-  <body>
-    <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="root"></div>
-    <!--
-      This HTML file is a template.
-      If you open it directly in the browser, you will see an empty page.
+<style>
+body {
+  font-family: Arial;
+  background: #0f172a;
+  color: white;
+  text-align: center;
+}
 
-      You can add webfonts, meta tags, or analytics to this file.
-      The build step will place the bundled scripts into the <body> tag.
+.container {
+  background: #1e293b;
+  padding: 20px;
+  border-radius: 10px;
+  width: 350px;
+  margin: auto;
+  margin-top: 50px;
+}
 
-      To begin the development, run `npm start` or `yarn start`.
-      To create a production bundle, use `npm run build` or `yarn build`.
-    -->
-  </body>
+input, button, textarea {
+  width: 90%;
+  padding: 10px;
+  margin: 5px;
+  border-radius: 5px;
+  border: none;
+}
+
+button {
+  background: #38bdf8;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+video {
+  width: 200px;
+}
+
+img {
+  width: 200px;
+  margin-top: 10px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>Student Registration</h2>
+<input id="name" placeholder="Name">
+<input id="email" placeholder="Email">
+<input id="phone" placeholder="Phone">
+<input id="college" placeholder="College (optional)">
+<button onclick="register()">Register</button>
+
+<hr>
+
+<h2>Login</h2>
+<input id="userId" placeholder="User ID">
+
+<br>
+<button onclick="login()">Login</button>
+<button onclick="logout()">Logout</button>
+
+<hr>
+
+<h3>Work Update</h3>
+<textarea id="work" placeholder="What work you did"></textarea>
+<input id="github" placeholder="GitHub link">
+<button onclick="updateWork()">Submit Work</button>
+
+<hr>
+
+<h3>Camera</h3>
+<video id="video" autoplay></video>
+<button onclick="capture()">Capture</button>
+<canvas id="canvas" style="display:none;"></canvas>
+<img id="photo">
+
+<h3 id="result"></h3>
+
+</div>
+
+<script>
+const API = "http://localhost:5000";
+
+// 📌 Register
+async function register() {
+  const data = {
+    name: name.value,
+    email: email.value,
+    phone: phone.value,
+    college: college.value
+  };
+
+  const res = await fetch(API + "/register", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(data)
+  });
+
+  result.innerText = await res.text();
+}
+
+// 📌 Login
+async function login() {
+  const res = await fetch(API + "/login", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ userId: userId.value })
+  });
+
+  result.innerText = await res.text();
+}
+
+// 📌 Logout
+async function logout() {
+  const res = await fetch(API + "/logout", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({ userId: userId.value })
+  });
+
+  result.innerText = await res.text();
+}
+
+// 📌 Work Update
+async function updateWork() {
+  const res = await fetch(API + "/work", {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify({
+      userId: userId.value,
+      work: work.value,
+      github: github.value
+    })
+  });
+
+  result.innerText = await res.text();
+}
+
+// 📸 Camera Access
+navigator.mediaDevices.getUserMedia({ video: true })
+.then(stream => video.srcObject = stream);
+
+// 📸 Capture Image
+function capture() {
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  ctx.drawImage(video, 0, 0);
+
+  const image = canvas.toDataURL("image/png");
+  document.getElementById("photo").src = image;
+}
+</script>
+
+</body>
 </html>
