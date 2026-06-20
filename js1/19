@@ -1,0 +1,33 @@
+let investments = [];
+
+function invest(company, amount) {
+    investments.push({
+        company,
+        amount
+    });
+}
+
+function totalInvestment() {
+    let total = investments.reduce(
+        (sum, inv) => sum + inv.amount,
+        0
+    );
+
+    console.log(
+        `Total Invested: ₹${total}`
+    );
+}
+
+function showPortfolio() {
+    investments.forEach(inv => {
+        console.log(
+            `${inv.company}: ₹${inv.amount}`
+        );
+    });
+}
+
+invest("Startup A", 50000);
+invest("Startup B", 30000);
+
+showPortfolio();
+totalInvestment();
