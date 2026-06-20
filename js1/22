@@ -1,0 +1,64 @@
+class ExpenseTracker {
+
+    constructor() {
+        this.expenses = [];
+    }
+
+    addExpense(
+        category,
+        amount
+    ) {
+        this.expenses.push({
+            category,
+            amount
+        });
+    }
+
+    totalExpense() {
+        return this.expenses.reduce(
+            (sum, expense) =>
+                sum + expense.amount,
+            0
+        );
+    }
+
+    categoryWise() {
+
+        const report = {};
+
+        this.expenses.forEach(
+            expense => {
+
+            report[
+                expense.category
+            ] =
+                (report[
+                    expense.category
+                ] || 0) +
+                expense.amount;
+        });
+
+        return report;
+    }
+}
+
+const tracker =
+    new ExpenseTracker();
+
+tracker.addExpense(
+    "Food",
+    500
+);
+
+tracker.addExpense(
+    "Travel",
+    1000
+);
+
+console.log(
+    tracker.totalExpense()
+);
+
+console.log(
+    tracker.categoryWise()
+);
