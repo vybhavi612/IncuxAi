@@ -1,0 +1,20 @@
+let stock = {
+    Pen: 100,
+    Pencil: 50,
+    Notebook: 25
+};
+
+function sellItem(item, quantity) {
+    if (stock[item] >= quantity) {
+        stock[item] -= quantity;
+        console.log(`${quantity} ${item}s sold`);
+    } else {
+        console.log("Insufficient stock");
+    }
+}
+
+sellItem("Pen", 20);
+console.log(stock);
+
+
+
