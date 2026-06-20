@@ -219,3 +219,41 @@ console.log("Average Marks:", average);
 
 let topper = getTopper(students);
 console.log("Topper:", topper.name, "-", topper.marks);
+
+Day 8
+let numbers = [10, 20, 30, 40, 50];
+
+let doubled = numbers.map(num => num * 2);
+console.log("Doubled:", doubled);
+
+let greaterThan25 = numbers.filter(num => num > 25);
+console.log("Greater Than 25:", greaterThan25);
+
+let total = numbers.reduce((sum, num) => sum + num, 0);
+console.log("Total:", total);
+ day-9
+let today = new Date();
+
+console.log("Current Date:", today.toDateString());
+console.log("Current Time:", today.toLocaleTimeString());
+
+console.log("Year:", today.getFullYear());
+console.log("Month:", today.getMonth() + 1);
+console.log("Day:", today.getDate());
+
+let future = new Date();
+future.setDate(future.getDate() + 7);
+
+console.log("After 7 Days:", future.toDateString());
+day-10
+<h1 id="title">JavaScript Practice</h1>
+<button id="btn">Change Text</button>
+
+<script src="script.js"></script>
+let title = document.getElementById("title");
+let button = document.getElementById("btn");
+
+button.addEventListener("click", function () {
+    title.innerHTML = "Text Changed Successfully!";
+    title.style.fontSize = "40px";
+});
