@@ -1,0 +1,18 @@
+let bookedSeats = [];
+
+function bookSeat(seat) {
+    if (!bookedSeats.includes(seat)) {
+        bookedSeats.push(seat);
+        console.log("Seat Booked");
+    } else {
+        console.log("Already Reserved");
+    }
+}
+
+bookSeat("A1");
+bookSeat("A1");
+
+
+
+
+
