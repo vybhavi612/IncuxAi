@@ -1,0 +1,27 @@
+let library = [
+    { id: 1, title: "Harry Potter", available: true },
+    { id: 2, title: "Atomic Habits", available: true }
+];
+
+function borrowBook(id) {
+    let book = library.find(book => book.id === id);
+
+    if (book && book.available) {
+        book.available = false;
+        console.log(`${book.title} borrowed successfully`);
+    } else {
+        console.log("Book unavailable");
+    }
+}
+
+function returnBook(id) {
+    let book = library.find(book => book.id === id);
+
+    if (book) {
+        book.available = true;
+        console.log(`${book.title} returned`);
+    }
+}
+
+borrowBook(1);
+returnBook(1);
