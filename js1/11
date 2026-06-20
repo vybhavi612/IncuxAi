@@ -1,0 +1,13 @@
+function isPalindrome(str) {
+    let cleaned = str.toLowerCase().replace(/[^a-z0-9]/g, "");
+    let reversed = cleaned.split("").reverse().join("");
+
+    if (cleaned === reversed) {
+        console.log("Palindrome");
+    } else {
+        console.log("Not a Palindrome");
+    }
+}
+
+isPalindrome("Madam");
+
