@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Admin Login</title>
+<style>
+body { background:#0f172a; color:white; text-align:center; font-family:Arial; }
+.box { margin-top:100px; }
+input, button { padding:10px; margin:5px; }
+</style>
+</head>
+
+<body>
+
+<div class="box">
+<h2>Admin Login</h2>
+
+<input id="user" placeholder="Username"><br>
+<input id="pass" type="password" placeholder="Password"><br>
+
+<button onclick="login()">Login</button>
+
+<h3 id="msg"></h3>
+</div>
+
+<script>
+function login() {
+  const u = user.value;
+  const p = pass.value;
+
+  if (u === "admin" && p === "1234") {
+    window.location.href = "admin.html";
+  } else {
+    msg.innerText = "Invalid login";
+  }
+}
+</script>
+
+</body>
+</html>
