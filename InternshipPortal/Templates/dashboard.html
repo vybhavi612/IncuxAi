@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+
+{% block title %}
+Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">
+
+Welcome {{ user.name }}
+
+</h2>
+
+<div class="row">
+
+<div class="col-md-3">
+
+<div class="card shadow text-center p-3">
+
+<h5>Total Tasks</h5>
+
+<h2>{{ total_tasks }}</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card shadow text-center p-3">
+
+<h5>Completed</h5>
+
+<h2>{{ completed_tasks }}</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card shadow text-center p-3">
+
+<h5>Attendance</h5>
+
+<h2>{{ attendance }}</h2>
+
+</div>
+
+</div>
+
+<div class="col-md-3">
+
+<div class="card shadow text-center p-3">
+
+<h5>Progress</h5>
+
+<h2>{{ progress }}</h2>
+
+</div>
+
+</div>
+
+</div>
+
+<br>
+
+<div class="card shadow">
+
+<div class="card-body">
+
+<h4>User Information</h4>
+
+<hr>
+
+<p><b>Name :</b> {{ user.name }}</p>
+
+<p><b>Username :</b> {{ user.username }}</p>
+
+<p><b>Email :</b> {{ user.email }}</p>
+
+<p><b>College :</b> {{ user.college }}</p>
+
+<p><b>Department :</b> {{ user.department }}</p>
+
+</div>
+
+</div>
+
+{% endblock %}
