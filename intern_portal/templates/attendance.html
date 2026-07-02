@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-5 mx-auto">
+        <div class="card shadow-sm border-0 mb-4 text-center">
+            <div class="card-body">
+                <h3 class="card-title text-success"><i class="bi bi-calendar2-check"></i> Work Attendance Log</h3>
+                <p class="text-muted">Current Verification Date: <strong>{{ today }}</strong></p>
+                <form method="POST" class="d-flex justify-content-center gap-3 my-4">
+                    <button type="submit" name="status" value="Present" class="btn btn-lg btn-success px-4">
+                        <i class="bi bi-emoji-smile"></i> Present
+                    </button>
+                    <button type="submit" name="status" value="Absent" class="btn btn-lg btn-danger px-4">
+                        <i class="bi bi-emoji-frown"></i> Absent
+                    </button>
+                </form>
+            </div>
+        </div>
+        
+        <h4 class="text-secondary mb-3">Historical Logs</h4>
+        <div class="bg-white p-3 rounded shadow-sm">
+            <ul class="list-group list-group-flush">
+                {% for record in attendance %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <span><i class="bi bi-clock-history"></i> {{ record.date }}</span>
+                    <span class="badge {% if record.status == 'Present' %}bg-light-success text-success{% else %}bg-light-danger text-danger{% endif %} fw-bold p-2">
+                        {{ record.status }}
+                    </span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-body">
+                <h4 class="card-title text-primary"><i class="bi bi-plus-circle"></i> Assign New Task</h4>
+                <form method="POST">
+                    <div class="mb-3">
+                        <label class="form-label">Task Title</label>
+                        <input type="text" name="title" class="form-control" required placeholder="e.g., Code API endpoints">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Description</label>
+                        <textarea name="description" class="form-control" rows="3" placeholder="Provide assignment instructions..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Deadline</label>
+                        <input type="date" name="deadline" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Add Task</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-8">
+        <h3 class="mb-3 text-secondary">Assigned Operations Dashboard</h3>
+        <div class="table-responsive bg-white p-3 rounded shadow-sm">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Task Item</th>
+                        <th>Target Deadline</th>
+                        <th>Status Badge</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <td>
+                            <strong>{{ task.title }}</strong><br>
+                            <small class="text-muted">{{ task.description }}</small>
+                        </td>
+                        <td><span class="badge bg-secondary">{{ task.deadline }}</span></td>
+                        <td>
+                            {% if task.status == 'Completed' %}
+                                <span class="badge bg-success"><i class="bi bi-check-circle"></i> Completed</span>
+                            {% else %}
+                                <span class="badge bg-warning text-dark"><i class="bi bi-clock"></i> Pending</span>
+                            {% endif %}
+                        </td>
+                        <td class="text-end">
+                            {% if task.status == 'Pending' %}
+                            <a href="{{ url_for('update_task_status', task_id=task.id, status='Completed') }}" class="btn btn-sm btn-outline-success">Mark Done</a>
+                            {% else %}
+                            <a href="{{ url_for('update_task_status', task_id=task.id, status='Pending') }}" class="btn btn-sm btn-outline-secondary">Reopen</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
