@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header">
+
+Edit Profile
+
+</div>
+
+<div class="card-body">
+
+<form method="POST">
+
+<input
+class="form-control mb-3"
+name="name"
+value="{{ user.name }}">
+
+<input
+class="form-control mb-3"
+name="email"
+value="{{ user.email }}">
+
+<input
+class="form-control mb-3"
+name="phone"
+value="{{ user.phone }}">
+
+<input
+class="form-control mb-3"
+name="college"
+value="{{ user.college }}">
+
+<input
+class="form-control mb-3"
+name="department"
+value="{{ user.department }}">
+
+<input
+class="form-control mb-3"
+name="year"
+value="{{ user.year }}">
+
+<button class="btn btn-success">
+
+Update Profile
+
+</button>
+
+</form>
+
+</div>
+
+</div>
+
+{% endblock %}
