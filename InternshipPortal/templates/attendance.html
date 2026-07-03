@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="row g-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm p-4 text-center">
+            <h4 class="fw-bold text-dark text-start mb-3"><i class="bi bi-clock-history text-success me-2"></i>Daily Validation</h4>
+            <p class="text-muted text-start small">Timestamp: <strong>{{ today }}</strong></p>
+            <form method="POST" class="mt-4">
+                <div class="d-grid gap-2">
+                    <button type="submit" name="status" value="Present" class="btn btn-success py-3 fw-bold"><i class="bi bi-shield-check me-2"></i>Log: PRESENT</button>
+                    <button type="submit" name="status" value="Absent" class="btn btn-danger py-3 fw-bold"><i class="bi bi-shield-x me-2"></i>Log: ABSENT</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <div class="col-md-8">
+        <div class="card shadow-sm p-4">
+            <h4 class="fw-bold text-dark mb-4"><i class="bi bi-card-list text-success me-2"></i>Historical Log Register</h4>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light sticky-top">
+                        <tr>
+                            <th>Calendar Metric Date</th>
+                            <th>Status State Verification</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for record in attendance %}
+                        <tr>
+                            <td class="fw-medium">{{ record.date }}</td>
+                            <td>
+                                <span class="badge {% if record.status == 'Present' %}bg-success{% else %}bg-danger{% endif %} px-3 py-2">
+                                    {{ record.status }}
+                                </span>
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr><td colspan="2" class="text-center text-muted py-4">No timestamp registries found.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

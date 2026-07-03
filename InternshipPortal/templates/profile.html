@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}
+Profile
+{% endblock %}
+
+{% block content %}
+
+<div class="card shadow">
+
+<div class="card-header">
+
+My Profile
+
+</div>
+
+<div class="card-body">
+
+<p><b>Name :</b> {{ user.name }}</p>
+
+<p><b>Username :</b> {{ user.username }}</p>
+
+<p><b>Email :</b> {{ user.email }}</p>
+
+<p><b>Phone :</b> {{ user.phone }}</p>
+
+<p><b>College :</b> {{ user.college }}</p>
+
+<p><b>Department :</b> {{ user.department }}</p>
+
+<p><b>Year :</b> {{ user.year }}</p>
+
+<p><b>Role :</b> {{ user.role }}</p>
+
+<a
+href="/edit_profile"
+class="btn btn-primary">
+
+Edit Profile
+
+</a>
+
+</div>
+
+</div>
+
+{% endblock %}
