@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+
+{% block title %}
+Attendance
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">My Attendance</h2>
+
+<div class="row mb-4">
+
+<div class="col-md-4">
+<div class="card shadow text-center p-3">
+<h5>Attendance %</h5>
+<h2>{{ attendance_percent }}%</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card shadow text-center p-3">
+<h5>Today</h5>
+{% if already_marked_today %}
+    <p class="text-success mt-2 mb-0">Already marked present today.</p>
+{% else %}
+    <a href="{{ url_for('attendance.mark_attendance') }}" class="btn btn-primary mt-2">Mark Present</a>
+{% endif %}
+</div>
+</div>
+
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<h5>Attendance History</h5>
+<hr>
+
+{% if records|length == 0 %}
+
+    <p>No attendance records yet.</p>
+
+{% else %}
+
+<table class="table table-bordered align-middle">
+
+<thead>
+<tr>
+    <th>Date</th>
+    <th>Status</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for record in records %}
+
+<tr>
+    <td>{{ record.date }}</td>
+    <td>
+        {% if record.status == "Present" %}
+            <span class="badge bg-success">Present</span>
+        {% else %}
+            <span class="badge bg-danger">Absent</span>
+        {% endif %}
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+</div>
+</div>
+
+{% endblock %}

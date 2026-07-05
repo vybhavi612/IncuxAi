@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}
+Progress
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">My Progress</h2>
+
+<div class="row mb-4">
+
+<div class="col-md-4">
+<div class="card shadow text-center p-3">
+<h5>Total Tasks</h5>
+<h2>{{ total_tasks }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card shadow text-center p-3">
+<h5>Completed</h5>
+<h2>{{ completed_tasks }}</h2>
+</div>
+</div>
+
+<div class="col-md-4">
+<div class="card shadow text-center p-3">
+<h5>Pending</h5>
+<h2>{{ pending_tasks }}</h2>
+</div>
+</div>
+
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<h5>Overall Progress</h5>
+<hr>
+
+<div class="progress" style="height: 30px;">
+    <div class="progress-bar bg-success" role="progressbar"
+         style="width: {{ percentage }}%;"
+         aria-valuenow="{{ percentage }}" aria-valuemin="0" aria-valuemax="100">
+        {{ percentage }}%
+    </div>
+</div>
+
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}
+Manage Interns
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Manage Interns</h2>
+
+<div class="card shadow mb-4">
+<div class="card-body">
+
+<h5>Add New Intern</h5>
+<hr>
+
+<form method="POST" action="{{ url_for('admin.manage_interns') }}">
+
+<div class="row">
+
+<div class="col-md-4 mb-3">
+    <label class="form-label">Name</label>
+    <input type="text" name="name" class="form-control" required>
+</div>
+
+<div class="col-md-4 mb-3">
+    <label class="form-label">Username</label>
+    <input type="text" name="username" class="form-control" required>
+</div>
+
+<div class="col-md-4 mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" required>
+</div>
+
+<div class="col-md-4 mb-3">
+    <label class="form-label">Phone</label>
+    <input type="text" name="phone" class="form-control" required>
+</div>
+
+<div class="col-md-4 mb-3">
+    <label class="form-label">College</label>
+    <input type="text" name="college" class="form-control" required>
+</div>
+
+<div class="col-md-4 mb-3">
+    <label class="form-label">Department</label>
+    <input type="text" name="department" class="form-control" required>
+</div>
+
+<div class="col-md-4 mb-3">
+    <label class="form-label">Year</label>
+    <input type="text" name="year" class="form-control" required>
+</div>
+
+<div class="col-md-4 mb-3">
+    <label class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" required>
+</div>
+
+</div>
+
+<button type="submit" class="btn btn-primary">Add Intern</button>
+
+</form>
+
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<h5>All Interns</h5>
+<hr>
+
+{% if interns|length == 0 %}
+
+    <p>No interns yet.</p>
+
+{% else %}
+
+<table class="table table-bordered align-middle">
+
+<thead>
+<tr>
+    <th>Name</th>
+    <th>Username</th>
+    <th>Email</th>
+    <th>Department</th>
+    <th>Year</th>
+    <th>Actions</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for intern in interns %}
+
+<tr>
+    <td>{{ intern.name }}</td>
+    <td>{{ intern.username }}</td>
+    <td>{{ intern.email }}</td>
+    <td>{{ intern.department }}</td>
+    <td>{{ intern.year }}</td>
+    <td>
+        <a href="{{ url_for('admin.edit_intern', user_id=intern.id) }}" class="btn btn-sm btn-warning">Edit</a>
+        <a href="{{ url_for('admin.delete_intern', user_id=intern.id) }}" class="btn btn-sm btn-danger"
+           onclick="return confirm('Delete this intern? This cannot be undone.');">Delete</a>
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+</div>
+</div>
+
+{% endblock %}
