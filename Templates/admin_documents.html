@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+Documents
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">All Uploaded Documents</h2>
+
+<div class="card shadow">
+<div class="card-body">
+
+{% if documents|length == 0 %}
+
+    <p>No documents uploaded yet.</p>
+
+{% else %}
+
+<table class="table table-bordered align-middle">
+
+<thead>
+<tr>
+    <th>Intern</th>
+    <th>File Name</th>
+    <th>Uploaded On</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for doc in documents %}
+
+<tr>
+    <td>{{ doc.intern.name if doc.intern else "N/A" }}</td>
+    <td>{{ doc.filename }}</td>
+    <td>{{ doc.uploaded_at.strftime("%d-%m-%Y %H:%M") }}</td>
+    <td>
+        <a href="{{ url_for('admin.download_document', doc_id=doc.id) }}" class="btn btn-sm btn-primary">Download</a>
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+</div>
+</div>
+
+{% endblock %}

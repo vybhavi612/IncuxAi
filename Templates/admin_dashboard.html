@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block title %}
+Admin Dashboard
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Admin Dashboard</h2>
+
+<div class="row mb-4">
+
+<div class="col-md-3">
+<div class="card shadow text-center p-3">
+<h5>Total Interns</h5>
+<h2>{{ total_interns }}</h2>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card shadow text-center p-3">
+<h5>Total Tasks</h5>
+<h2>{{ total_tasks }}</h2>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card shadow text-center p-3">
+<h5>Completed Tasks</h5>
+<h2>{{ completed_tasks }}</h2>
+</div>
+</div>
+
+<div class="col-md-3">
+<div class="card shadow text-center p-3">
+<h5>Avg Attendance</h5>
+<h2>{{ avg_attendance }}%</h2>
+</div>
+</div>
+
+</div>
+
+<div class="row mb-4">
+<div class="col-md-3">
+<div class="card shadow text-center p-3">
+<h5>Avg Progress</h5>
+<h2>{{ avg_progress }}%</h2>
+</div>
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<h5>Quick Links</h5>
+<hr>
+
+<a href="{{ url_for('admin.manage_interns') }}" class="btn btn-primary me-2 mb-2">Manage Interns</a>
+<a href="{{ url_for('admin.performance_page') }}" class="btn btn-primary me-2 mb-2">Performance Evaluation</a>
+<a href="{{ url_for('admin.reports_page') }}" class="btn btn-primary me-2 mb-2">Reports</a>
+<a href="{{ url_for('admin.notifications_page') }}" class="btn btn-primary me-2 mb-2">Notifications</a>
+<a href="{{ url_for('admin.messages_overview') }}" class="btn btn-primary me-2 mb-2">Messages</a>
+<a href="{{ url_for('admin.documents_page') }}" class="btn btn-primary me-2 mb-2">Documents</a>
+<a href="{{ url_for('admin.certificates_page') }}" class="btn btn-primary me-2 mb-2">Certificates</a>
+
+</div>
+</div>
+
+{% endblock %}

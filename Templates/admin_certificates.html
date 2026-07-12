@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}
+Certificates
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Certificates</h2>
+
+<div class="card shadow mb-4">
+<div class="card-body">
+
+<h5>Generate Certificate</h5>
+<hr>
+
+<form method="POST" action="{{ url_for('admin.certificates_page') }}">
+
+<div class="mb-3">
+    <label class="form-label">Intern</label>
+    <select name="intern_id" class="form-select" required>
+        {% for intern in interns %}
+        <option value="{{ intern.id }}">{{ intern.name }} ({{ intern.username }})</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Certificate Title</label>
+    <input type="text" name="title" class="form-control" placeholder="e.g. Web Development Internship" required>
+</div>
+
+<button type="submit" class="btn btn-primary">Generate Certificate</button>
+
+</form>
+
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<h5>Issued Certificates</h5>
+<hr>
+
+{% if certificates|length == 0 %}
+
+    <p>No certificates issued yet.</p>
+
+{% else %}
+
+<table class="table table-bordered align-middle">
+
+<thead>
+<tr>
+    <th>Intern</th>
+    <th>Title</th>
+    <th>Issued On</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for cert in certificates %}
+
+<tr>
+    <td>{{ cert.intern.name if cert.intern else "N/A" }}</td>
+    <td>{{ cert.title }}</td>
+    <td>{{ cert.issued_at.strftime("%d-%m-%Y") }}</td>
+    <td>
+        <a href="{{ url_for('admin.download_certificate', cert_id=cert.id) }}" class="btn btn-sm btn-success">Download</a>
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+</div>
+</div>
+
+{% endblock %}

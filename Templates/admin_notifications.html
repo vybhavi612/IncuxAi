@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}
+Notifications
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Notifications</h2>
+
+<div class="card shadow mb-4">
+<div class="card-body">
+
+<h5>Send Notification</h5>
+<hr>
+
+<form method="POST" action="{{ url_for('admin.notifications_page') }}" id="notifForm">
+
+<div class="mb-3">
+    <label class="form-label">Title</label>
+    <input type="text" name="title" class="form-control" required>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Message</label>
+    <textarea name="message" class="form-control" required></textarea>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Send To</label>
+    <select name="target_type" class="form-select" id="targetType" onchange="toggleInternSelect()">
+        <option value="all">All Interns</option>
+        <option value="specific">Specific Intern</option>
+    </select>
+</div>
+
+<div class="mb-3" id="internSelectWrapper" style="display:none;">
+    <label class="form-label">Select Intern</label>
+    <select name="target_intern_id" class="form-select">
+        {% for intern in interns %}
+        <option value="{{ intern.id }}">{{ intern.name }} ({{ intern.username }})</option>
+        {% endfor %}
+    </select>
+</div>
+
+<button type="submit" class="btn btn-primary">Send Notification</button>
+
+</form>
+
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<h5>Sent Notifications</h5>
+<hr>
+
+{% if notifications|length == 0 %}
+
+    <p>No notifications sent yet.</p>
+
+{% else %}
+
+<table class="table table-bordered align-middle">
+
+<thead>
+<tr>
+    <th>Title</th>
+    <th>Message</th>
+    <th>Target</th>
+    <th>Date</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for n in notifications %}
+
+<tr>
+    <td>{{ n.title }}</td>
+    <td>{{ n.message }}</td>
+    <td>
+        {% if n.target_type == "all" %}
+            All Interns
+        {% else %}
+            {{ n.target_intern.name if n.target_intern else "N/A" }}
+        {% endif %}
+    </td>
+    <td>{{ n.created_at.strftime("%d-%m-%Y") }}</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+</div>
+</div>
+
+<script>
+function toggleInternSelect() {
+    var type = document.getElementById("targetType").value;
+    document.getElementById("internSelectWrapper").style.display = (type === "specific") ? "block" : "none";
+}
+</script>
+
+{% endblock %}

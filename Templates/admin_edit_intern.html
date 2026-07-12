@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block title %}
+Edit Intern
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Edit Intern</h2>
+
+<div class="card shadow">
+<div class="card-body">
+
+<form method="POST" action="{{ url_for('admin.edit_intern', user_id=intern.id) }}">
+
+<div class="row">
+
+<div class="col-md-6 mb-3">
+    <label class="form-label">Name</label>
+    <input type="text" name="name" class="form-control" value="{{ intern.name }}" required>
+</div>
+
+<div class="col-md-6 mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" name="email" class="form-control" value="{{ intern.email }}" required>
+</div>
+
+<div class="col-md-6 mb-3">
+    <label class="form-label">Phone</label>
+    <input type="text" name="phone" class="form-control" value="{{ intern.phone }}" required>
+</div>
+
+<div class="col-md-6 mb-3">
+    <label class="form-label">College</label>
+    <input type="text" name="college" class="form-control" value="{{ intern.college }}" required>
+</div>
+
+<div class="col-md-6 mb-3">
+    <label class="form-label">Department</label>
+    <input type="text" name="department" class="form-control" value="{{ intern.department }}" required>
+</div>
+
+<div class="col-md-6 mb-3">
+    <label class="form-label">Year</label>
+    <input type="text" name="year" class="form-control" value="{{ intern.year }}" required>
+</div>
+
+</div>
+
+<button type="submit" class="btn btn-primary">Save Changes</button>
+<a href="{{ url_for('admin.manage_interns') }}" class="btn btn-secondary">Cancel</a>
+
+</form>
+
+</div>
+</div>
+
+{% endblock %}

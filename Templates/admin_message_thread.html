@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}
+Conversation
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Conversation with {{ intern.name }}</h2>
+
+<a href="{{ url_for('admin.messages_overview') }}" class="btn btn-secondary btn-sm mb-3">Back to All Conversations</a>
+
+<div class="card shadow mb-4">
+<div class="card-body" style="max-height: 400px; overflow-y: auto;">
+
+{% if thread|length == 0 %}
+
+    <p>No messages yet.</p>
+
+{% else %}
+
+    {% for msg in thread %}
+
+    {% if msg.sender_id == current_user_id %}
+
+    <div class="text-end mb-2">
+        <span class="badge bg-primary p-2">{{ msg.content }}</span>
+        <div class="text-muted small">You — {{ msg.created_at.strftime("%d-%m-%Y %H:%M") }}</div>
+    </div>
+
+    {% else %}
+
+    <div class="text-start mb-2">
+        <span class="badge bg-secondary p-2">{{ msg.content }}</span>
+        <div class="text-muted small">{{ intern.name }} — {{ msg.created_at.strftime("%d-%m-%Y %H:%M") }}</div>
+    </div>
+
+    {% endif %}
+
+    {% endfor %}
+
+{% endif %}
+
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<form method="POST" action="{{ url_for('admin.message_thread', intern_id=intern.id) }}">
+
+    <div class="mb-3">
+        <textarea name="content" class="form-control" placeholder="Type your reply..." required></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Send Reply</button>
+
+</form>
+
+</div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+
+{% block title %}
+Performance Evaluation
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">Performance Evaluation</h2>
+
+<div class="card shadow mb-4">
+<div class="card-body">
+
+<h5>Add Evaluation</h5>
+<hr>
+
+<form method="POST" action="{{ url_for('admin.performance_page') }}">
+
+<div class="mb-3">
+    <label class="form-label">Intern</label>
+    <select name="intern_id" class="form-select" required>
+        {% for intern in interns %}
+        <option value="{{ intern.id }}">{{ intern.name }} ({{ intern.username }})</option>
+        {% endfor %}
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Rating (1-5)</label>
+    <select name="rating" class="form-select" required>
+        <option value="1">1 - Poor</option>
+        <option value="2">2 - Below Average</option>
+        <option value="3">3 - Average</option>
+        <option value="4">4 - Good</option>
+        <option value="5">5 - Excellent</option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Remarks</label>
+    <textarea name="remarks" class="form-control"></textarea>
+</div>
+
+<button type="submit" class="btn btn-primary">Submit Evaluation</button>
+
+</form>
+
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<h5>Evaluation History</h5>
+<hr>
+
+{% if evaluations|length == 0 %}
+
+    <p>No evaluations yet.</p>
+
+{% else %}
+
+<table class="table table-bordered align-middle">
+
+<thead>
+<tr>
+    <th>Intern</th>
+    <th>Rating</th>
+    <th>Remarks</th>
+    <th>Evaluated By</th>
+    <th>Date</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for eval in evaluations %}
+
+<tr>
+    <td>{{ eval.intern.name if eval.intern else "N/A" }}</td>
+    <td>{{ eval.rating }} / 5</td>
+    <td>{{ eval.remarks }}</td>
+    <td>{{ eval.evaluated_by }}</td>
+    <td>{{ eval.created_at.strftime("%d-%m-%Y") }}</td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+</div>
+</div>
+
+{% endblock %}

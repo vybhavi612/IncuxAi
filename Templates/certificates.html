@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}
+Certificates
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">My Certificates</h2>
+
+<div class="card shadow">
+<div class="card-body">
+
+{% if certificates|length == 0 %}
+
+    <p>No certificates issued yet.</p>
+
+{% else %}
+
+<table class="table table-bordered align-middle">
+
+<thead>
+<tr>
+    <th>Title</th>
+    <th>Issued By</th>
+    <th>Issued On</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for cert in certificates %}
+
+<tr>
+    <td>{{ cert.title }}</td>
+    <td>{{ cert.issued_by }}</td>
+    <td>{{ cert.issued_at.strftime("%d-%m-%Y") }}</td>
+    <td>
+        <a href="{{ url_for('certificates.download_certificate', cert_id=cert.id) }}" class="btn btn-sm btn-success">Download PDF</a>
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+</div>
+</div>
+
+{% endblock %}

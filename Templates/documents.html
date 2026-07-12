@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}
+Documents
+{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">My Documents</h2>
+
+<div class="card shadow mb-4">
+<div class="card-body">
+
+<h5>Upload Document</h5>
+<hr>
+
+<form method="POST" action="{{ url_for('documents.documents_page') }}" enctype="multipart/form-data">
+
+    <div class="mb-3">
+        <input type="file" name="document" class="form-control" required>
+        <div class="form-text">Allowed: pdf, doc, docx, png, jpg, jpeg, txt</div>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
+
+</form>
+
+</div>
+</div>
+
+<div class="card shadow">
+<div class="card-body">
+
+<h5>Uploaded Documents</h5>
+<hr>
+
+{% if documents|length == 0 %}
+
+    <p>No documents uploaded yet.</p>
+
+{% else %}
+
+<table class="table table-bordered align-middle">
+
+<thead>
+<tr>
+    <th>File Name</th>
+    <th>Uploaded On</th>
+    <th>Action</th>
+</tr>
+</thead>
+
+<tbody>
+
+{% for doc in documents %}
+
+<tr>
+    <td>{{ doc.filename }}</td>
+    <td>{{ doc.uploaded_at.strftime("%d-%m-%Y %H:%M") }}</td>
+    <td>
+        <a href="{{ url_for('documents.download_document', doc_id=doc.id) }}" class="btn btn-sm btn-primary">Download</a>
+    </td>
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+</table>
+
+{% endif %}
+
+</div>
+</div>
+
+{% endblock %}
