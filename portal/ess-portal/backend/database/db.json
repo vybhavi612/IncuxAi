@@ -1,0 +1,33 @@
+{
+  "employees": [
+    {
+      "id": "1",
+      "name": "System Admin",
+      "email": "admin@company.com",
+      "password": "$2b$10$hz54ua7fq.6FrA4RPzcq0OWUpbEUBsboM5T6imXwny01SSBt/PegO",
+      "role": "System Administrator",
+      "joining_date": "2026-07-07T09:47:07.671Z",
+      "status": "Active"
+    },
+    {
+      "id": "2",
+      "name": "John Doe",
+      "email": "john@company.com",
+      "password": "$2b$10$HYRd0Fqw7EmGm9/Vv8xrreK3jTUJWlIRcwzqLzVyAGv4KBVoA3OqG",
+      "role": "Employee",
+      "joining_date": "2026-07-07T09:47:07.672Z",
+      "status": "Active"
+    }
+  ],
+  "departments": [],
+  "attendance": [],
+  "leaves": [],
+  "payroll": [],
+  "payslips": [],
+  "performance": [],
+  "tasks": [],
+  "announcements": [],
+  "training": [],
+  "tickets": [],
+  "assets": []
+}
