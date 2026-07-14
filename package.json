@@ -1,0 +1,23 @@
+{
+  "name": "video-collab-platform",
+  "version": "1.0.0",
+  "description": "Video Communication & Virtual Collaboration Platform",
+  "scripts": {
+    "install:all": "npm install --prefix server && npm install --prefix client",
+    "dev:server": "npm run dev --prefix server",
+    "dev:client": "npm run dev --prefix client",
+    "build:server": "npm run build --prefix server",
+    "build:client": "npm run build --prefix client",
+    "build": "npm run build:client && npm run build:server",
+    "start": "npm run start --prefix server"
+  },
+  "keywords": [
+    "webrtc",
+    "socket.io",
+    "express",
+    "react",
+    "collaboration"
+  ],
+  "author": "",
+  "license": "ISC"
+}
