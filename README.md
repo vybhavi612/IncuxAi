@@ -1,22 +1,14 @@
-# VibeSync - Enterprise Video Conferencing & Virtual Collaboration Suite
+# V2 - Video Conferencing & Virtual Collaboration Platform
 
-VibeSync is a premium, high-fidelity enterprise-grade virtual meeting and collaboration platform. Built with a sleek, dark-mode-first glassmorphic UI inspired by the Yoom application, it combines real-time video communication, screen sharing, and recording with powerful collaborative utilities (interactive whiteboard, shared notes, live chat, polls, Q&A, and AI-assisted summaries).
+VibeSync is a premium, high-fidelity enterprise-grade virtual meeting and collaboration platform. Built a Zoom application, it combines real-time video communication, screen sharing, and recording with powerful collaborative utilities (interactive whiteboard, shared notes, live chat, polls, Q&A, and AI-assisted summaries).
 
----
-
-## 📋 Table of Contents
-1. [Introduction](#-introduction)
-2. [Tech Stack](#-tech-stack)
-3. [Features](#-features)
-4. [Project Structure](#-project-structure)
-5. [Quick Start](#-quick-start)
-6. [Database Sync](#-database-sync)
-7. [Visuals & Walkthrough](#-visuals--walkthrough)
+<img width="1918" height="917" alt="Screenshot 2026-07-14 084753" src="https://github.com/user-attachments/assets/3e678502-514b-4bed-992f-59d424efa7a4" />
 
 ---
+
 
 ## 🤖 Introduction
-VibeSync provides businesses, educational institutions, and distributed teams with a comprehensive collaborative workspace. Unlike simple video calling apps, VibeSync integrates meeting audio/video streams directly with:
+V2 provides businesses, educational institutions, and distributed teams with a comprehensive collaborative workspace. Unlike simple video calling apps, V2 integrates meeting audio/video streams directly with:
 - A real-time vector whiteboard.
 - Formatted shared meeting notes.
 - Threaded channel chat.
@@ -82,7 +74,7 @@ The application works completely out of the box locally, utilizing browser media
 ```
 src/
 ├── app/
-│   ├── globals.css                # Custom Tailwind imports & glassmorphic system
+│   ├── globals.css                # Custom Tailwind
 │   ├── layout.tsx                 # Root layout wrapping AppProvider
 │   ├── page.tsx                   # Hero Landing page
 │   ├── login/                     # Auth portal (MFA/SSO)
@@ -150,10 +142,3 @@ Then define your environment connection string in a `.env` file:
 ```env
 DATABASE_URL="postgresql://user:password@localhost:5400/vibesync?schema=public"
 ```
-
----
-
-## 🔬 Visuals & Walkthrough
-A detailed architectural breakdown, validation metrics, compile logs, and visual walkthrough steps can be found in the local artifact files:
-- [walkthrough.md](file:///C:/Users/ravik/.gemini/antigravity/brain/8fe38901-a5db-4a71-8d0f-3475a2977bca/walkthrough.md)
-- [task.md](file:///C:/Users/ravik/.gemini/antigravity/brain/8fe38901-a5db-4a71-8d0f-3475a2977bca/task.md)
