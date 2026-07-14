@@ -1,0 +1,106 @@
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+generator client {
+  generator_type = "prisma-client-js"
+  provider = "prisma-client-js"
+}
+
+model User {
+  id           String        @id @default(uuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         String        @default("ATTENDEE") // ADMIN, ORGANIZER, ATTENDEE
+  mfaEnabled   Boolean       @default(false)
+  mfaSecret    String?
+  ssoProvider  String?       // "google", "github", null
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  meetings     Meeting[]     @relation("HostMeetings")
+  participants Participant[]
+  messages     Message[]
+  auditLogs    AuditLog[]
+}
+
+model Meeting {
+  id                 String        @id @default(uuid())
+  title              String
+  description        String?
+  isInstant          Boolean       @default(false)
+  scheduledAt        DateTime      @default(now())
+  durationMinutes    Int           @default(40)
+  hostId             String
+  host               User          @relation("HostMeetings", fields: [hostId], references: [id], onDelete: Cascade)
+  personalRoom       Boolean       @default(false)
+  passcode           String?
+  waitingRoomEnabled Boolean       @default(false)
+  recordingEnabled   Boolean       @default(true)
+  endedAt            DateTime?
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+  participants       Participant[]
+  messages           Message[]
+  recordings         Recording[]
+}
+
+model Participant {
+  id        String    @id @default(uuid())
+  meetingId String
+  meeting   Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id], onDelete: SetNull)
+  name      String
+  role      String    @default("ATTENDEE") // HOST, PRESENTER, PANELIST, ATTENDEE
+  joinedAt  DateTime  @default(now())
+  leftAt    DateTime?
+}
+
+model Message {
+  id         String    @id @default(uuid())
+  content    String
+  senderId   String?
+  sender     User?     @relation(fields: [senderId], references: [id], onDelete: SetNull)
+  senderName String
+  meetingId  String?
+  meeting    Meeting?  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  channelId  String?
+  channel    Channel?  @relation(fields: [channelId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+}
+
+model Channel {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  description String?
+  isGroup     Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  messages    Message[]
+}
+
+model Recording {
+  id              String   @id @default(uuid())
+  meetingId       String
+  meeting         Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  videoUrl        String   // Can point to client-recorded blob URL or a local static path
+  transcript      String   // JSON string of full transcript with timestamps
+  summary         String   // AI Summary
+  actionItems     String   // JSON string of action items extracted
+  durationSeconds Int
+  sizeBytes       Int      @default(0)
+  createdAt       DateTime @default(now())
+}
+
+model AuditLog {
+  id        String   @id @default(uuid())
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userName  String
+  action    String   // e.g. "LOGIN", "CREATE_MEETING", "DELETE_USER", etc.
+  details   String
+  ipAddress String?
+  createdAt DateTime @default(now())
+}
